@@ -6,6 +6,7 @@ public class User {
     private String name;
     private String password;
     private String email;
+    private String userid;
     private Map<User, ArrayList<String>> messages_sent ;
     /*For messages_sent, The key is the user they are sending a message to, value is the message*/
     private Map<User, ArrayList<String>> messages_received;
@@ -13,7 +14,8 @@ public class User {
     private ArrayList<String> events_attending;
     private ArrayList<String> contacts;
 
-    User(String name, String password, String email){
+    User(String userid, String name, String password, String email){
+        this.userid = userid;
         this.name = name;
         this.password = password;
         this.email = email;
