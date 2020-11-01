@@ -2,8 +2,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Event {
-    private static int num_of_events;
-    private int event_id;
+    private static int num_of_events; /*Will delete if not needed */
+    private int event_id; /*Will delete if not needed */
     private String name;
     private String event_description;
     private LocalDateTime start_time;
@@ -11,10 +11,10 @@ public class Event {
     private ArrayList<Attendee> attendees;
     private ArrayList<Organizer> organizers;
     private ArrayList<Talk> talks;
-    /*Speakers stored inside Talks? */
 
     public Event(String name, String event_description, LocalDateTime start_time, LocalDateTime end_time){
         num_of_events += 1;
+        this.event_id = num_of_events;
         this.name = name;
         this.event_description = event_description;
         this.start_time = start_time;
@@ -24,6 +24,7 @@ public class Event {
         this.talks = new ArrayList<Talk>();
     }
 
+    /*Getters*/
     public String getName() {return name;}
 
     public String getEvent_description() {return event_description;}
@@ -40,11 +41,16 @@ public class Event {
 
     public ArrayList<Talk> getTalks() {return talks;}
 
-    public ArrayList<Speakers> getSpeakers() {
-        ArrayList x = new ArrayList();
-        /* to be implemented later depending on class Talk */
-        return x
+    /* To get a list of all speakers in the event */
+    public ArrayList<Speaker> getSpeakers() {
+        ArrayList<Speaker> x = new ArrayList<Speaker>();
+        for (int i = 0; i < talks.size(); i++) {
+            x.add(talks.get(i).getSpeaker());
+        }
+        return x;
     }
+
+
     protected void add_attendee(Attendee attendee) {
         attendees.add(attendee);
     }
