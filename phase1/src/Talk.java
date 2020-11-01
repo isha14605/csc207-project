@@ -7,8 +7,7 @@ public class Talk {
     private Speaker speaker;
     private Event event;
 
-    /* Call this constructor only if this will be the only talk of an event. i.e., each room has at most
-    one speaker at any given time. */
+    /* Call this constructor only if there's no overlapping between talks of a particular event */
     public Talk(String date, String startTime, String endTime, Event event)
     {
         this.date = date;
