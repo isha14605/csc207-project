@@ -7,7 +7,8 @@ public class Talk {
     private Speaker speaker;
     private Event event;
 
-    /* Call this constructor only if there's no overlapping between talks of a particular event */
+    /* Call this constructor only if there's no overlapping between talks of a particular event and
+    this talk happens 9-5. */
     public Talk(String date, String startTime, String endTime, Event event)
     {
         this.date = date;
