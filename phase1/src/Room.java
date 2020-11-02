@@ -9,7 +9,7 @@ public class Room {
     private LocalTime open_time;
     private LocalTime close_time;
     /* The values in bookings should contain start_time and end_time of event consecutively. Addition to
-    * bookings should be made through Event Manager when a room is added to an Event*/
+    * bookings should be made through Event Manager/Room Manager when a room is added to an Event*/
     protected HashMap<Event, ArrayList<LocalDateTime>> bookings;
 
     public Room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time) {

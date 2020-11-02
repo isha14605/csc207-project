@@ -11,8 +11,8 @@ public class Event {
     private ArrayList<Attendee> attendees;
     private ArrayList<Organizer> organizers;
     private ArrayList<Talk> talks;
-    /*Event Manager will be responsible for checking room availability and booking the room for required time as
-    * per start_time and end_time of event. An event can only be assigned to 1 room.*/
+    /*Event Manager/Room Manager will be responsible for checking room availability and booking the room for required
+    * time as per start_time and end_time of event. An event can only be assigned to 1 room.*/
     protected Room event_room;
 
     public Event(String name, String event_description, LocalDateTime start_time, LocalDateTime end_time){
