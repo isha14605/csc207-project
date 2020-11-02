@@ -13,7 +13,7 @@ public class Event {
     private ArrayList<Talk> talks;
     /*Event Manager will be responsible for checking room availability and booking the room for required time as
     * per start_time and end_time of event. An event can only be assigned to 1 room.*/
-    private Room event_room;
+    protected Room event_room;
 
     public Event(String name, String event_description, LocalDateTime start_time, LocalDateTime end_time){
         num_of_events += 1;
