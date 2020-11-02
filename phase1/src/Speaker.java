@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.Map;
 
-// This class is NOT complete yet. Will take another look at it in a while.
-
 public class Speaker extends User{
     private ArrayList<String> talks_speaking;
 
