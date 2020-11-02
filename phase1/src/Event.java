@@ -11,6 +11,9 @@ public class Event {
     private ArrayList<Attendee> attendees;
     private ArrayList<Organizer> organizers;
     private ArrayList<Talk> talks;
+    /*Event Manager will be responsible for checking room availability and booking the room for required time as
+    * per start_time and end_time of event. An event can only be assigned to 1 room.*/
+    private Room event_room;
 
     public Event(String name, String event_description, LocalDateTime start_time, LocalDateTime end_time){
         num_of_events += 1;
@@ -40,6 +43,8 @@ public class Event {
     public ArrayList<Organizer> getOrganizers() {return organizers;}
 
     public ArrayList<Talk> getTalks() {return talks;}
+
+    public Room getEvent_room() {return event_room;}
 
     /* To get a list of all speakers in the event */
     public ArrayList<Speaker> getSpeakers() {
