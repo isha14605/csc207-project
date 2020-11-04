@@ -8,6 +8,7 @@ public class Attendee extends User{
     private ArrayList<User> contacts;
     private ArrayList<Event> events_attending;
 
+//  Constructor for Attendee
     Attendee(String name, String email, String password) {
         super(name, password, email);
         this.messages_sent = new HashMap<User, ArrayList<String>>();
@@ -16,5 +17,8 @@ public class Attendee extends User{
         this.events_attending = new ArrayList<Event>();
     }
 
-
+//  To remove an Event that the Attendee is attending
+    protected void remove_event(Event event) {
+        this.events_attending.remove(event);
+    }
 }
