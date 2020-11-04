@@ -77,19 +77,6 @@ public class Event_Manager{
     }
     protected void schedule_room(Talk talk, Room room, Event event){ }
 
-    protected boolean join_talk(User user,Talk talk) {
-        if(talk.getAttending() == talk.getCapacity()){ return false; }
-
-        for (Talk attending_event : user.getEvents_attending()) {
-            if (talk.getStartTime().equals(attending_event.getStartTime())) {
-                return false;
-            }
-        }
-
-        talk.attending += 1;
-        user.events_attending.add(talk);
-        return true;
-    }
     protected void send_all(User organizer, Event event, String message) {
         for(User attendant: event.getAttendees()) {
             attendant.receive_message(organizer, message);
