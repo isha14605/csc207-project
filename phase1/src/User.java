@@ -3,15 +3,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class User {
-    private String name;
-    private String password;
-    private String email;
-    private Map<User, ArrayList<String>> messages_sent ;
+    protected String name;
+    protected String password;
+    protected String email;
+    protected Map<User, ArrayList<String>> messages_sent ;
     /*For messages_sent, The key is the user they are sending a message to, value is the message*/
-    private Map<User, ArrayList<String>> messages_received;
+    protected Map<User, ArrayList<String>> messages_received;
     /*For messages_received, The key is the user who sent them a message, value is the message*/
-    private ArrayList<String> events_attending;
-    private ArrayList<String> contacts;
+    protected ArrayList<String> events_attending;
+    protected ArrayList<User> contacts;
 
     User(String name, String password, String email){
         this.name = name;
@@ -19,7 +19,7 @@ public class User {
         this.email = email;
         this.messages_sent = new HashMap<User, ArrayList<String>>();
         this.messages_received = new HashMap<User, ArrayList<String>>();
-        this.contacts = new ArrayList<String>();
+        this.contacts = new ArrayList<User>();
         this.events_attending = new ArrayList<String>();
     }
 
@@ -40,7 +40,7 @@ public class User {
     }
 
     protected void add_contact(User user){
-        this.contacts.add(user.getName());
+        this.contacts.add(user);
         this.messages_sent.put(user, new ArrayList<String>());
         this.messages_received.put(user, new ArrayList<String>());
     }
