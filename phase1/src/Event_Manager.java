@@ -34,15 +34,8 @@ public class Event_Manager{
                 return false;
             }
         }
-        event.getTalks().add(talk);
+        event.add_talk(talk);
         return true;
-    }
-    protected boolean remove_talk(Talk talk, Event event){
-        if(event.talks.contains(talk)){
-            event.talks.remove(talk);
-            return true;
-        }
-        return false;
     }
     protected boolean schedule_speaker(Speaker speaker, Talk talk, Event event){
         if(talk.getSpeaker() != null || Objects.equals(talk.getSpeaker(), speaker)){
@@ -53,7 +46,7 @@ public class Event_Manager{
                 return false;
             }
         }
-        speaker.events_attending.add(talk);
+        speaker.setTalks_speaking(talk);
         talk.setSpeaker(speaker);
         return true;
     }
@@ -77,28 +70,15 @@ public class Event_Manager{
     }
     protected void schedule_room(Talk talk, Room room, Event event){ }
 
-    protected boolean join_talk(User user,Talk talk) {
-        if(talk.getAttending() == talk.getCapacity()){ return false; }
-
-        for (Talk attending_event : user.getEvents_attending()) {
-            if (talk.getStartTime().equals(attending_event.getStartTime())) {
-                return false;
-            }
-        }
-
-        talk.attending += 1;
-        user.events_attending.add(talk);
-        return true;
-    }
     protected void send_all(User organizer, Event event, String message) {
-        for(User attendant: event.getAttendees()) {
+        for(Attendee attendant: event.getAttendees()) {
             attendant.receive_message(organizer, message);
         }
     }
 
     protected ArrayList<Talk> get_talks_at(String time, Event event){
         ArrayList<Talk> same_time = new ArrayList<>();
-        for(Talk talk: event.talks){
+        for(Talk talk: event.getTalks()){
             if(talk.getStartTime().equals(time)){
                 same_time.add(talk);
             }
@@ -106,4 +86,4 @@ public class Event_Manager{
         return same_time;
     }
 
-}p
+}
