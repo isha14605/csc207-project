@@ -11,9 +11,7 @@ public class Event {
     private ArrayList<Attendee> attendees;
     private ArrayList<Organizer> organizers;
     private ArrayList<Talk> talks;
-    /*Event Manager/Room Manager will be responsible for checking room availability and booking the room for required
-    * time as per start_time and end_time of event. An event can only be assigned to 1 room.*/
-    protected Room event_room;
+    private Room event_room;
 
     public Event(String name, String event_description, LocalDateTime start_time, LocalDateTime end_time){
         num_of_events += 1;
@@ -54,6 +52,13 @@ public class Event {
         }
         return x;
     }
+
+    /*Setters*/
+
+    /*setEvent_room should be called by EventManager/RoomManager to set a room for an event.
+     * Event Manager/Room Manager will be responsible for checking room availability and booking the room for required
+     * time as per start_time and end_time of event. An event can only be assigned to 1 room.*/
+    protected void setEvent_room(Room room) {this.event_room = room;}
 
 
     protected void add_attendee(Attendee attendee) {

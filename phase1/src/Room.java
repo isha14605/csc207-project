@@ -8,9 +8,8 @@ public class Room {
     private int room_capacity;
     private LocalTime open_time;
     private LocalTime close_time;
-    /* The values in bookings should contain start_time and end_time of event consecutively. Addition to
-    * bookings should be made through Event Manager/Room Manager when a room is added to an Event*/
-    protected HashMap<Event, ArrayList<LocalDateTime>> bookings;
+    /* The values in bookings contain start_time and end_time of event consecutively*/
+    private HashMap<Event, ArrayList<LocalDateTime>> bookings;
 
     public Room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time) {
         this.name = name;
@@ -30,4 +29,12 @@ public class Room {
     public LocalTime getClose_time() {return close_time;}
 
     public HashMap<Event, ArrayList<LocalDateTime>> getBookings() {return bookings;}
+
+    /*This method should be called by Event Manager/Room Manager when a room is added to an Event*/
+    protected void add_bookings(Event event, LocalDateTime start_time, LocalDateTime end_time) {
+        ArrayList<LocalDateTime> time = new ArrayList<LocalDateTime>();
+        time.add(start_time);
+        time.add(end_time);
+        this.bookings.put(event, time);
+    }
 }
