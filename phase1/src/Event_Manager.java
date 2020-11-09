@@ -46,7 +46,8 @@ public class Event_Manager{
                 return false;
             }
         }
-        speaker.setTalks_speaking(talk);
+        /*REDISCUSS THIS!*/
+        speaker.add_talk(talk);
         talk.setSpeaker(speaker);
         return true;
     }
