@@ -27,19 +27,17 @@ public class User_Manager {
     }
 
     protected String message(String type, User u){
-        String t = "";
-        switch (type) {
-            case "Speaker":
-                t =  "";
-                break;
-            case "Organizer":
-                 t = "";
-                 break;
-            default:
-                t = "";
-                break;
-        }
+        String t = switch (type) {
+            case "Speaker" -> "";
+            case "Organizer" -> "";
+            default -> "";
+        };
         return t;
     }
+
+    private String message_attendee(String type, User to, User from, String message){return "HELLO";}
+    private String message_organizer(String type, User to, User from, String message){return "HELLO";}
+
+
 
 }
