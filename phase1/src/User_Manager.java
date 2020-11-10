@@ -16,6 +16,13 @@ public class User_Manager {
     }
 
     protected boolean verify_login(String email, String password){
-        return true;
+        if (this.email.contains(email)){
+            for(User u: users){
+                if (u.getEmail().equals(email) && u.getPassword().equals(password)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
