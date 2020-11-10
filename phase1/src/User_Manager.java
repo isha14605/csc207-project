@@ -25,4 +25,21 @@ public class User_Manager {
         }
         return false;
     }
+
+    protected String message(String type, User u){
+        String t = "";
+        switch (type) {
+            case "Speaker":
+                t =  "";
+                break;
+            case "Organizer":
+                 t = "";
+                 break;
+            default:
+                t = "";
+                break;
+        }
+        return t;
+    }
+
 }
