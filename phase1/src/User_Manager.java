@@ -26,17 +26,30 @@ public class User_Manager {
         return false;
     }
 
-    protected String message(String type, User u){
-        String t = switch (type) {
-            case "Speaker" -> "";
-            case "Organizer" -> "";
-            default -> "";
+    protected boolean message(String type, User from, User to, String message, User u){
+        Boolean t = switch (type) {
+            case "Speaker" -> speaker_message((Speaker) from, to, message);
+            case "Organizer" -> false;
+            default -> true;
         };
         return t;
     }
 
-    private String message_attendee(String type, User to, User from, String message){return "HELLO";}
-    private String message_organizer(String type, User to, User from, String message){return "HELLO";}
+    private boolean attendee_message(String type, User to, User from, String message){return true;}
+
+
+    private boolean speaker_message(Speaker from, User to, String message){
+        for (Talk t: from.getTalks_speaking()){
+            Event e = t.getEvent();
+            if (e.getAttendees().contains(to)){
+                to.receive_message(from, message);
+                from.send_message(to, message);
+                return true;
+
+            }
+        }
+        return false;
+    }
 
 
 
