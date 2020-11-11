@@ -35,6 +35,8 @@ public class User {
         return this.email;
     }
 
+    public ArrayList<User> getContacts(){return this.contacts;}
+
     public ArrayList<Event> getEvents_attending(){
         return this.events_attending;
     }
@@ -57,11 +59,6 @@ public class User {
         ArrayList<String> x = this.messages_received.get(who);
         x.add(message);
         this.messages_sent.replace(who, x);
-    }
-
-    /* To add an event user is attending*/
-    protected void add_event(Event event){
-        this.events_attending.add(event);
     }
 
 
