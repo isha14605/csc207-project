@@ -6,7 +6,7 @@ public class User_Manager {
 
     protected User_Manager(){}
 
-    protected boolean add_user(String name, String password, String email){
+    protected boolean create_user(String name, String password, String email){
         if (!this.email.contains(email)){
             User u1 = new User(name, password, email);
             users.add(u1);
@@ -15,13 +15,24 @@ public class User_Manager {
         return false;
     }
 
-    protected boolean sign_up_event(Attendee person, Event event){
-        if (!this.users.contains(event)) {
+    // Allows an Attendee to sign up for an event
+    protected boolean sign_up(Attendee attendee, Event event){
+        if (!attendee.events_attending.contains(event)) {
+            attendee.events_attending.add(event);
             return true;
         }
         return false;
     }
-    
+
+    // Allows an Attendee to cancel their registration for an event
+    protected boolean cancel_registration(Attendee attendee, Event event){
+        if (attendee.events_attending.contains(event)) {
+            attendee.events_attending.remove(event);
+            return true;
+        }
+        return false;
+    }
+
     protected boolean verify_login(String email, String password){
         if (this.email.contains(email)){
             for(User u: users){
