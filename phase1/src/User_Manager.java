@@ -16,18 +16,21 @@ public class User_Manager {
     }
 
     // Allows an Attendee to sign up for an event
-    protected boolean sign_up(Attendee attendee, Event event){
-        if (!attendee.events_attending.contains(event)) {
-            attendee.events_attending.add(event);
+    protected boolean signUp(Attendee attendee, Event event){
+        if ((event.getEvent_room().getRoom_capacity() < event.getAttendees().size()) &&
+                !attendee.getEventsAttending().contains(event)) {
+            attendee.attendEvent(event);
+            event.add_attendee(attendee);
             return true;
         }
         return false;
     }
 
     // Allows an Attendee to cancel their registration for an event
-    protected boolean cancel_registration(Attendee attendee, Event event){
-        if (attendee.events_attending.contains(event)) {
-            attendee.events_attending.remove(event);
+    protected boolean cancelRegistration(Attendee attendee, Event event){
+        if (attendee.getEventsAttending().contains(event)) {
+            attendee.removeEvent(event);
+            event.remove_attendee(attendee);
             return true;
         }
         return false;
