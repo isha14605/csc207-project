@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 
-public class User_Manager {
+public class UserManager {
     protected ArrayList<User> users = new ArrayList<User>();
     protected ArrayList<String> email = new ArrayList<String>();
 
-    protected User_Manager(){}
+    protected UserManager(){}
 
-    protected boolean create_user(String name, String password, String email){
+    protected boolean createUser(String name, String password, String email){
         if (!this.email.contains(email)){
             User u1 = new User(name, password, email);
             users.add(u1);
@@ -36,7 +36,7 @@ public class User_Manager {
         return false;
     }
 
-    protected boolean verify_login(String email, String password){
+    protected boolean verifyLogin(String email, String password){
         if (this.email.contains(email)){
             for(User u: users){
                 if (u.getEmail().equals(email) && u.getPassword().equals(password)){
@@ -49,17 +49,17 @@ public class User_Manager {
 
     protected boolean message(String type, User from, User to, String message, User u){
         Boolean t = switch (type) {
-            case "Speaker" -> speaker_message((Speaker) from, to, message);
+            case "Speaker" -> speakerMessage((Speaker) from, to, message);
             case "Organizer" -> false;
             default -> true;
         };
         return t;
     }
 
-    private boolean attendee_message(String type, User to, User from, String message){return true;}
+    private boolean attendeeMessage(String type, User to, User from, String message){return true;}
 
 
-    private boolean speaker_message(Speaker from, User to, String message){
+    private boolean speakerMessage(Speaker from, User to, String message){
         for (Talk t: from.getTalks_speaking()){
             Event e = t.getEvent();
             if (e.getAttendees().contains(to)){
