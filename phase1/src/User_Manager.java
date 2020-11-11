@@ -15,6 +15,13 @@ public class User_Manager {
         return false;
     }
 
+    protected boolean sign_up_event(Attendee person, Event event){
+        if (!this.users.contains(event)) {
+            return true;
+        }
+        return false;
+    }
+    
     protected boolean verify_login(String email, String password){
         if (this.email.contains(email)){
             for(User u: users){
