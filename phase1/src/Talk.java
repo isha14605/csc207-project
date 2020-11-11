@@ -1,17 +1,15 @@
+import java.time.LocalDateTime;
+
 public class Talk {
-    /* Form: yyyy-mm-dd */
-    private String date;
-    /* Form: hh-mm */
-    private String startTime;
-    private String endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private Speaker speaker;
     private Event event;
 
     /* Call this constructor only if there's no overlapping between talks of a particular event and
     this talk happens 9-5. */
-    public Talk(String date, String startTime, String endTime, Event event)
+    public Talk(LocalDateTime startTime, LocalDateTime endTime, Event event)
     {
-        this.date = date;
         this.startTime = startTime;
         this.endTime = endTime;
         this.event = event;
@@ -19,9 +17,8 @@ public class Talk {
     }
 
     /* getters */
-    public String getDate() {return this.date;}
-    public String getEndTime() {return this.endTime;}
-    public String getStartTime() {return this.startTime;}
+    public LocalDateTime getEndTime() {return this.endTime;}
+    public LocalDateTime getStartTime() {return this.startTime;}
     public Speaker getSpeaker() {return this.speaker;}
     public Event getEvent() {return this.event;}
 

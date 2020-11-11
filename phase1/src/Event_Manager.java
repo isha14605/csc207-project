@@ -25,8 +25,8 @@ public class Event_Manager{
         return true;
     }
 
-    private Talk create_talk(String date, String startTime, String endTime, Event event){
-        return new Talk(date, startTime, endTime, event);
+    private Talk create_talk(String date, LocalDateTime startTime, LocalDateTime endTime, Event event){
+        return new Talk(startTime, endTime, event);
     }
     protected boolean add_talk(Talk talk, Event event) {
         for (Talk scheduled : event.getTalks()) {
@@ -77,7 +77,7 @@ public class Event_Manager{
         }
     }
 
-    protected ArrayList<Talk> get_talks_at(String time, Event event){
+    protected ArrayList<Talk> get_talks_at(LocalDateTime time, Event event){
         ArrayList<Talk> same_time = new ArrayList<>();
         for(Talk talk: event.getTalks()){
             if(talk.getStartTime().equals(time)){
