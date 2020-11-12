@@ -55,7 +55,7 @@ public class Event {
 
     /*Setters*/
 
-    /*setEvent_room should be called by EventManager/RoomManager to set a room for an event.
+    /* setEvent_room should be called by EventManager/RoomManager to set a room for an event.
      * Event Manager/Room Manager will be responsible for checking room availability and booking the room for required
      * time as per start_time and end_time of event. An event can only be assigned to 1 room.*/
     protected void setEvent_room(Room room) {this.event_room = room;}
