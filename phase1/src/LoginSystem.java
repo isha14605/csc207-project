@@ -11,7 +11,7 @@ public class LoginSystem {
 
     public boolean checkLogIn(String email, String password) throws
             FileNotFoundException {
-        Scanner scanner = new Scanner(new FileInputStream("login.txt"));
+        Scanner scanner = new Scanner(new FileInputStream("phase1/login.txt"));
         String[] record;
 
         while (scanner.hasNextLine()) {
@@ -24,5 +24,4 @@ public class LoginSystem {
         scanner.close();
         return false;
     }
-
-}
+    }
