@@ -1,18 +1,18 @@
 import java.util.ArrayList;
 
 public class Organizer extends Attendee {
-    protected ArrayList<Event> events_organizing;
+    protected ArrayList<Event> eventsOrganizing;
 
     Organizer(String name, String email, String password) {
         super(name, password, email);
-        this.events_organizing = new ArrayList<Event>();
+        this.eventsOrganizing = new ArrayList<Event>();
     }
 
-    public ArrayList<Event> getEvents_organizing() {
-        return events_organizing;
+    public ArrayList<Event> getEventsOrganizing() {
+        return eventsOrganizing;
     }
 
-    protected void add_event(Event event) {
-        this.events_organizing.add(event);
+    protected void addEvent(Event event) {
+        this.eventsOrganizing.add(event);
     }
 }

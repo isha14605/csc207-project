@@ -3,11 +3,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class Event_Manager{
+public class EventManager {
     protected static ArrayList<Event> events = new ArrayList<Event>();
     protected static ArrayList<Room> rooms = new ArrayList<Room>();
 
-    protected Event_Manager() { }
+    protected EventManager() { }
 
     /* code use case classes that directly add/ create new entities */
     protected boolean add_Event(String name, String desc, LocalDateTime start, LocalDateTime end) {
