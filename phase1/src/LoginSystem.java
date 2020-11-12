@@ -9,16 +9,15 @@ public class LoginSystem {
         this.userManager = usermanager;
     }
 
-    public boolean checkLogIn(String name, String email, String password, String typeOfUser) throws
+    public boolean checkLogIn(String email, String password) throws
             FileNotFoundException {
         Scanner scanner = new Scanner(new FileInputStream("login.txt"));
         String[] record;
 
         while (scanner.hasNextLine()) {
             record = scanner.nextLine().split(" ");
-            if (record[0].equals(name) & record[1].equals(email) & record[2].equals(password) &
-                    record[3].equals(typeOfUser)) {
-                userManager.addUser(name, email, password, typeOfUser);
+            if (record[1].equals(email) & record[2].equals(password)) {
+                userManager.addUser(record[0], email, password, record[3]);
                 return true;
             }
         }
