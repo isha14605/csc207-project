@@ -10,7 +10,6 @@ public class User {
     /*For messages_sent, The key is the user they are sending a message to, value is the message*/
     protected Map<User, ArrayList<String>> messages_received;
     /*For messages_received, The key is the user who sent them a message, value is the message*/
-    protected ArrayList<Event> events_attending;
     protected ArrayList<User> contacts;
 
     User(String name, String password, String email){
@@ -20,7 +19,6 @@ public class User {
         this.messages_sent = new HashMap<User, ArrayList<String>>();
         this.messages_received = new HashMap<User, ArrayList<String>>();
         this.contacts = new ArrayList<User>();
-        this.events_attending = new ArrayList<Event>();
     }
 
     public String getName(){
@@ -37,9 +35,6 @@ public class User {
 
     public ArrayList<User> getContacts(){return this.contacts;}
 
-    public ArrayList<Event> getEvents_attending(){
-        return this.events_attending;
-    }
 
     protected void add_contact(User user){
         this.contacts.add(user);
