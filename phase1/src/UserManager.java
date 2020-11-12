@@ -15,6 +15,18 @@ public class UserManager {
         return false;
     }
 
+    public void addUser(String name, String email, String password, String typeOfUser) {
+        if (typeOfUser.equals("organizer")) {
+            users.add(new Organizer(name, email, password));
+        }
+        else if (typeOfUser.equals("speaker")) {
+            users.add(new Speaker(name, email, password));
+        }
+        else if (typeOfUser.equals("attendee")) {
+            users.add(new Attendee(name, email, password));
+        }
+    }
+
     // Allows an Attendee to sign up for an event
     protected boolean signUp(Attendee attendee, Event event){
         if ((event.getEvent_room().getRoom_capacity() < event.getAttendees().size()) &&
