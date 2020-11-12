@@ -47,16 +47,27 @@ public class UserManager {
         return false;
     }
 
-    protected boolean message(String type, User from, User to, String message, User u){
-        Boolean t = switch (type) {
-            case "Speaker" -> speakerMessage((Speaker) from, to, message);
-            case "Organizer" -> false;
-            default -> true;
-        };
+    protected boolean message(String type, User from, User to, String message){
+        boolean t = false;
+
+        if (type.equals("Speaker")){
+            t = speakerMessage((Speaker) from, to, message);
+        } else if (type.equals("Organizer")){
+            t = organizerMessage((Organizer) from, to, message);
+        } else {
+            t = true;
+        }
         return t;
     }
 
-    private boolean attendeeMessage(String type, User to, User from, String message){return true;}
+    private boolean organizerMessage(Organizer from, User to, String message){
+        if (users.contains(to)){
+            from.send_message(from, message);
+            to.receive_message(to, message);
+            return true;
+        }
+        return false;
+    }
 
 
     private boolean speakerMessage(Speaker from, User to, String message){
@@ -71,6 +82,8 @@ public class UserManager {
         }
         return false;
     }
+
+
 
 
 
