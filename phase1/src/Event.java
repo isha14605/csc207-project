@@ -65,6 +65,10 @@ public class Event {
         attendees.add(attendee);
     }
 
+    protected void remove_attendee(Attendee attendee) {
+        attendees.remove(attendee);
+    }
+
     protected void add_organizer(Organizer organizer) {
         organizers.add(organizer);
     }
