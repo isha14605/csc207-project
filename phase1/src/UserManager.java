@@ -4,7 +4,14 @@ public class UserManager {
     protected ArrayList<User> users = new ArrayList<User>();
     protected ArrayList<String> email = new ArrayList<String>();
 
-    protected UserManager(){}
+    protected UserManager(){
+        users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
+        users.add(new User("Test1", "12345", "Test1@gmail.com"));
+        users.add(new User("Test2", "12345", "Test2@gmail.com"));
+        email.add("liuhao@gmail.com");
+        email.add("Test1@gmail.com");
+        email.add("Test2@gmail.com");
+    }
 
     protected boolean createUser(String name, String password, String email){
         if (!this.email.contains(email)){
