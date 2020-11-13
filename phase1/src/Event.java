@@ -1,4 +1,6 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event {
@@ -6,20 +8,22 @@ public class Event {
     private int event_id; /*Will delete if not needed */
     private String name;
     private String event_description;
-    private LocalDateTime start_time;
-    private LocalDateTime end_time;
+    private LocalTime start_time;
+    private LocalTime end_time;
+    private LocalDate event_date;
     private ArrayList<Attendee> attendees;
     private ArrayList<Organizer> organizers;
     private ArrayList<Talk> talks;
     private Room event_room;
 
-    public Event(String name, String event_description, LocalDateTime start_time, LocalDateTime end_time){
+    public Event(String name, String event_description, LocalTime start_time, LocalTime end_time, LocalDate event_date){
         num_of_events += 1;
         this.event_id = num_of_events;
         this.name = name;
         this.event_description = event_description;
         this.start_time = start_time;
         this.end_time = end_time;
+        this.event_date = event_date;
         this.attendees = new ArrayList<Attendee>();
         this.organizers = new ArrayList<Organizer>();
         this.talks = new ArrayList<Talk>();
@@ -32,9 +36,11 @@ public class Event {
 
     public int getEvent_id() {return event_id;}
 
-    public LocalDateTime getStart_time() {return start_time;}
+    public LocalTime getStart_time() {return start_time;}
 
-    public LocalDateTime getEnd_time() {return end_time;}
+    public LocalTime getEnd_time() {return end_time;}
+
+    public LocalDate getEvent_date() {return event_date;}
 
     public ArrayList<Attendee> getAttendees() {return attendees;}
 
