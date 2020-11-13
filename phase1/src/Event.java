@@ -29,6 +29,9 @@ public class Event {
         this.talks = new ArrayList<Talk>();
     }
 
+    public Event(String name, String desc, LocalDateTime start, LocalDateTime end) {
+    }
+
     /*Getters*/
     public String getName() {return name;}
 
