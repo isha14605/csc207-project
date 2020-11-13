@@ -19,4 +19,8 @@ public class Speaker extends User{
     protected void add_talk(Talk talk){
         this.talks_speaking.add(talk);
     }
+
+    protected char userType(){
+        return 'S';
+    }
 }

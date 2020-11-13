@@ -56,5 +56,9 @@ public class User {
         this.messages_sent.replace(who, x);
     }
 
+    protected char userType(){
+        return 'N';
+    };
+
 
 }

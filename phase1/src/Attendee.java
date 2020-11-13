@@ -25,4 +25,8 @@ public class Attendee extends User{
     protected void removeEvent(Event event) {
         this.events_attending.remove(event);
     }
+
+    protected char userType(){
+        return 'A';
+    }
 }

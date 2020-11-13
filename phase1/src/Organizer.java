@@ -15,4 +15,8 @@ public class Organizer extends Attendee {
     protected void addEvent(Event event) {
         this.eventsOrganizing.add(event);
     }
+
+    protected char userType(){
+        return 'O';
+    }
 }

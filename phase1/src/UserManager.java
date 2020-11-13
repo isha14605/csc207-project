@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class UserManager {
+public class UserManager{
     protected ArrayList<User> users = new ArrayList<User>();
     protected ArrayList<String> email = new ArrayList<String>();
 
@@ -66,35 +66,35 @@ public class UserManager {
         return false;
     }
 
-    protected boolean message(String type, User from, User to, String message){
+    protected boolean message(Messagable from, Messagable to, String message){
         boolean t = false;
 
-        if (type.equals("Speaker")){
+        if (from.userType() == 'S'){
             t = speakerMessage((Speaker) from, to, message);
-        } else if (type.equals("Organizer")){
+        } else if (from.userType() == 'O'){
             t = organizerMessage((Organizer) from, to, message);
-        } else {
-            t = true;
+        } else if (from.userType() == 'A') {
+            t = attendeeMessage((Attendee) from, to, message);
         }
         return t;
     }
 
-    private boolean organizerMessage(Organizer from, User to, String message){
+    private boolean organizerMessage(Organizer from, Messagable to, String message){
         if (users.contains(to)){
             from.send_message(from, message);
-            to.receive_message(to, message);
+            to.receive_message((User) to, message);
             return true;
         }
         return false;
     }
 
 
-    private boolean speakerMessage(Speaker from, User to, String message){
+    private boolean speakerMessage(Speaker from, Messagable to, String message){
         for (Talk t: from.getTalks_speaking()){
             Event e = t.getEvent();
             if (e.getAttendees().contains(to)){
                 to.receive_message(from, message);
-                from.send_message(to, message);
+                from.send_message((User) to, message);
                 return true;
 
             }
@@ -102,7 +102,14 @@ public class UserManager {
         return false;
     }
 
-
+    private boolean attendeeMessage(Attendee from, Messagable to, String message){
+        if (to.userType() == 'A' |  to.userType()=='S'){
+            to.receive_message(from, message);
+            from.send_message((User) to, message);
+            return true;
+        }
+        return false;
+    }
 
 
 
