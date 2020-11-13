@@ -105,6 +105,7 @@ public class EventManager {
     }
     protected boolean is_room_booked(Room room, Event unbooked){
         for(Event booked: room.getBookings().keySet()){
+            if(booked.getEvent_date().equals(unbooked.getEvent_date()))
             if(time_conflict(unbooked, booked)){
                 return true;
             }
@@ -129,15 +130,18 @@ public class EventManager {
         return false;
     }
 
-//    protected boolean time_conflict(Event event1, Event event2) {
-//        if (event1.getStart_time().isEqual(event2.getStart_time())) {
-//            return true;
-//        } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
-//                    event1.getStart_time().isBefore(event2.getEnd_time())) {
-//            return true;
-//        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
-//                    event1.getEnd_time().isBefore(event2.getEnd_time());
-//    }
+    protected boolean time_conflict(Event event1, Event event2) {
+       if (event1.getStart_time().equals((event2.getStart_time()))) {
+            return true;
+       } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
+                    event1.getStart_time().isBefore(event2.getEnd_time())) {
+            return true;
+        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
+                    event1.getEnd_time().isBefore(event2.getEnd_time());
+    }
+    protected LocalDateTime get_localDateTime(LocalDate date, LocalTime time){
+        return LocalDateTime.of(date, time);
+    }
 
     protected ArrayList<Talk> get_talks_at(LocalDateTime time, Event event){
         ArrayList<Talk> same_time = new ArrayList<>();

@@ -15,7 +15,9 @@ public class SchedulingSystem {
     public void add_talk(String start, String end, Integer event_id){
         Talk talk = em.create_talk(em.date_formatting_DT(start),
                 em.date_formatting_DT(end), em.find_event(event_id));
-        if(em.time_conflict(talk,em.find_event(event_id))){
+        if(!em.time_conflict(talk,em.find_event(event_id)) && em.is_room_open(talk,
+                em.find_event(event_id).getEvent_room())){
+
             em.add_talk(talk, em.find_event(event_id));
         }
 
@@ -25,8 +27,9 @@ public class SchedulingSystem {
         Event event = em.find_event(event_id);
         Room room = em.find_room(room_name);
         if(!em.is_room_booked(room, event) && event.getEvent_room() != null){
-            event.setEvent_room(room);
-            room.add_bookings(event, event.getStart_time(), event.getEnd_time());
+            em.schedule_room(room, event);
+            room.add_bookings(event, em.get_localDateTime(event.getEvent_date(),event.getStart_time()),
+                    em.get_localDateTime(event.getEvent_date(),event.getEnd_time()));
         }
     }
 
