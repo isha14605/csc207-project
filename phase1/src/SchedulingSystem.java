@@ -21,8 +21,13 @@ public class SchedulingSystem {
 
     }
 
-    public void schedule_room(Room room, Event event){
-
+    public void schedule_room(String room_name, Integer event_id){
+        Event event = em.find_event(event_id);
+        Room room = em.find_room(room_name);
+        if(!em.is_room_booked(room, event) && event.getEvent_room() != null){
+            event.setEvent_room(room);
+            room.add_bookings(event, event.getStart_time(), event.getEnd_time());
+        }
     }
 
     public void schedule_speaker(Speaker speaker, Talk talk, Event event){

@@ -3,6 +3,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class EventManager {
@@ -79,7 +80,9 @@ public class EventManager {
         }
         return false;
     }
-    protected void schedule_room(Talk talk, Room room, Event event){ }
+    protected void schedule_room(Room room, Event event){
+        event.setEvent_room(room);
+    }
     protected Room find_room(String name){
         for(Room room: rooms){
             if(room.getName().equals(name)){
@@ -87,6 +90,26 @@ public class EventManager {
             }
         }
         return null;
+    }
+    protected boolean is_room_open(Talk talk, Room room){
+        if(talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
+                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+            return true;
+        }
+        else if(talk.getStartTime().toLocalTime().equals(room.getOpen_time()) &&
+                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+            return true;
+        }
+        return talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
+                talk.getEndTime().toLocalTime().equals(room.getClose_time());
+    }
+    protected boolean is_room_booked(Room room, Event unbooked){
+        for(Event booked: room.getBookings().keySet()){
+            if(time_conflict(unbooked, booked)){
+                return true;
+            }
+        }
+        return false;
     }
 
     protected boolean time_conflict(Talk scheduling, Event event){
