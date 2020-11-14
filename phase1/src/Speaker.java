@@ -1,23 +1,22 @@
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Speaker extends User{
-    private ArrayList<Talk> talks_speaking;
+    private ArrayList<Talk> talksSpeaking;
 
     // Constructor Method for Speaker
     Speaker(String name, String password, String email) {
         super(name, password, email);
-        this.talks_speaking = new ArrayList<Talk>();
+        this.talksSpeaking = new ArrayList<Talk>();
     }
 
     // Getter Method for the List of Talks that the Speaker is talking at.
-    public ArrayList<Talk> getTalks_speaking(){
-        return this.talks_speaking;
+    public ArrayList<Talk> getTalksSpeaking(){
+        return this.talksSpeaking;
     }
 
     // Add a talk that this Speaker is talking at to the list talks_speaking.
-    protected void add_talk(Talk talk){
-        this.talks_speaking.add(talk);
+    protected void addTalk(Talk talk){
+        this.talksSpeaking.add(talk);
     }
 
     protected char userType(){

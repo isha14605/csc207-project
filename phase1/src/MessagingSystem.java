@@ -6,7 +6,7 @@ public class MessagingSystem {
 
     public MessagingSystem(){};
 
-    public String[] read_message() {
+    public String[] readMessage() {
         Scanner scanner = new Scanner(System.in);
         String[] record;
         record = scanner.nextLine().split("\n");
@@ -14,8 +14,8 @@ public class MessagingSystem {
         return record;
     }
 
-    public boolean send_messages(Messageable from, Messageable to, String message){
-        message = read_message().toString();
+    public boolean sendMessages(Messageable from, Messageable to, String message){
+        message = readMessage().toString();
         return um.message(from, to, message);
     }
 

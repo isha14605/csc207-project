@@ -2,7 +2,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -14,7 +13,7 @@ public class SignUpSystem {
         this.userManager = usermanager;
     }
 
-    public boolean signUp(String name, String email, String password, String typeOfUser) throws
+    public boolean signUpCheck(String name, String email, String password, String typeOfUser) throws
             FileNotFoundException {
         PrintWriter printWriter = new PrintWriter(new FileOutputStream("phase1/login.txt", true));
         Scanner scanner = new Scanner(new FileInputStream("phase1/login.txt"));

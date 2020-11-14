@@ -20,15 +20,15 @@ public class EventManager {
             return;
         }
         for(Event scheduled: events){
-            if (event.getStart_time().equals(scheduled.getStart_time())){
+            if (event.getStartTime().equals(scheduled.getStartTime())){
                 return;
             }
         }
         events.add(event);
     }
-    protected Event findEvent(Integer event_id){
+    protected Event findEvent(Integer eventId){
         for(Event event: events){
-            if(event_id == event.getEvent_id()){
+            if(eventId == event.getEventId()){
                 return event;
             }
         }
@@ -46,7 +46,7 @@ public class EventManager {
                 return;
             }
         }
-        event.add_talk(talk);
+        event.addTalk(talk);
     }
 
     protected void scheduleSpeaker(Speaker speaker, Talk talk, Event event){
@@ -58,13 +58,13 @@ public class EventManager {
                 return;
             }
         }
-        speaker.add_talk(talk);
+        speaker.addTalk(talk);
         talk.setSpeaker(speaker);
     }
 
 
-    protected Room createRoom(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time){
-        return new Room(name, room_capacity, open_time, close_time);
+    protected Room createRoom(String name, Integer roomCapacity, LocalTime openTime, LocalTime closeTime){
+        return new Room(name, roomCapacity, openTime, closeTime);
     }
     protected void addRoom(Room room, Event event){
         if (rooms.contains(room)) {
@@ -80,7 +80,7 @@ public class EventManager {
         return false;
     }
     protected void scheduleRoom(Room room, Event event){
-        event.setEvent_room(room);
+        event.setEventRoom(room);
     }
     protected Room findRoom(String name){
         for(Room room: rooms){
@@ -91,20 +91,20 @@ public class EventManager {
         return null;
     }
     protected boolean isRoomOpen(Talk talk, Room room){
-        if(talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+        if(talk.getStartTime().toLocalTime().isAfter(room.getOpenTime()) &&
+                talk.getEndTime().toLocalTime().isBefore(room.getCloseTime())){
             return true;
         }
-        else if(talk.getStartTime().toLocalTime().equals(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+        else if(talk.getStartTime().toLocalTime().equals(room.getOpenTime()) &&
+                talk.getEndTime().toLocalTime().isBefore(room.getCloseTime())){
             return true;
         }
-        return talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().equals(room.getClose_time());
+        return talk.getStartTime().toLocalTime().isAfter(room.getOpenTime()) &&
+                talk.getEndTime().toLocalTime().equals(room.getCloseTime());
     }
     protected boolean isRoomBooked(Room room, Event unbooked){
         for(Event booked: room.getBookings().keySet()){
-            if(booked.getEvent_date().equals(unbooked.getEvent_date()))
+            if(booked.getEventDate().equals(unbooked.getEventDate()))
             if(timeConflict(unbooked, booked)){
                 return true;
             }
@@ -130,26 +130,26 @@ public class EventManager {
     }
 
     protected boolean timeConflict(Event event1, Event event2) {
-       if (event1.getStart_time().equals((event2.getStart_time()))) {
+       if (event1.getStartTime().equals((event2.getStartTime()))) {
             return true;
-       } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
-                    event1.getStart_time().isBefore(event2.getEnd_time())) {
+       } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
+                    event1.getStartTime().isBefore(event2.getEndTime())) {
             return true;
-        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
-                    event1.getEnd_time().isBefore(event2.getEnd_time());
+        } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
+                    event1.getEndTime().isBefore(event2.getEndTime());
     }
     protected LocalDateTime getLocalDateTime(LocalDate date, LocalTime time){
         return LocalDateTime.of(date, time);
     }
 
     protected ArrayList<Talk> getTalksAt(LocalDateTime time, Event event){
-        ArrayList<Talk> same_time = new ArrayList<>();
+        ArrayList<Talk> sameTime = new ArrayList<>();
         for(Talk talk: event.getTalks()){
             if(talk.getStartTime().equals(time)){
-                same_time.add(talk);
+                sameTime.add(talk);
             }
         }
-        return same_time;
+        return sameTime;
     }
 
     protected LocalDateTime dateFormattingDT(String date){

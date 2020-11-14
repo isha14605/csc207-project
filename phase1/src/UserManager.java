@@ -36,10 +36,10 @@ public class UserManager{
 
     // Allows an Attendee to sign up for an event
     protected boolean signUp(Attendee attendee, Event event){
-        if ((event.getEvent_room().getRoom_capacity() < event.getAttendees().size()) &&
+        if ((event.getEventRoom().getRoomCapacity() < event.getAttendees().size()) &&
                 !attendee.getEventsAttending().contains(event)) {
             attendee.attendEvent(event);
-            event.add_attendee(attendee);
+            event.addAttendee(attendee);
             return true;
         }
         return false;
@@ -49,7 +49,7 @@ public class UserManager{
     protected boolean cancelRegistration(Attendee attendee, Event event){
         if (attendee.getEventsAttending().contains(event)) {
             attendee.removeEvent(event);
-            event.remove_attendee(attendee);
+            event.removeAttendee(attendee);
             return true;
         }
         return false;
@@ -81,8 +81,8 @@ public class UserManager{
 
     private boolean organizerMessage(Organizer from, Messageable to, String message){
         if (users.contains(to)){
-            from.send_message(from, message);
-            to.receive_message((User) to, message);
+            from.sendMessage(from, message);
+            to.receiveMessage((User) to, message);
             return true;
         }
         return false;
@@ -90,11 +90,11 @@ public class UserManager{
 
 
     private boolean speakerMessage(Speaker from, Messageable to, String message){
-        for (Talk t: from.getTalks_speaking()){
+        for (Talk t: from.getTalksSpeaking()){
             Event e = t.getEvent();
             if (e.getAttendees().contains(to)){
-                to.receive_message(from, message);
-                from.send_message((User) to, message);
+                to.receiveMessage(from, message);
+                from.sendMessage((User) to, message);
                 return true;
 
             }
@@ -104,8 +104,8 @@ public class UserManager{
 
     private boolean attendeeMessage(Attendee from, Messageable to, String message){
         if (to.userType() == 'A' |  to.userType()=='S'){
-            to.receive_message(from, message);
-            from.send_message((User) to, message);
+            to.receiveMessage(from, message);
+            from.sendMessage((User) to, message);
             return true;
         }
         return false;
