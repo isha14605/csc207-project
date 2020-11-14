@@ -2,38 +2,38 @@ public class SchedulingSystem {
     EventManager em = new EventManager();
 
     public void add_event(String name, String description, String start, String end){
-        em.add_Event(name, description,
-                em.date_formatting_DT(start), em.date_formatting_DT(end));
+        em.addEvent(name, description,
+                em.dateFormattingDT(start), em.dateFormattingDT(end));
     }
 
     public void add_room(String name, Integer capacity, String start, String end, Integer event_id){
-        em.add_room(em.create_room(name, capacity,
-                em.date_formatting_time(start), em.date_formatting_time(end)),
-                em.find_event(event_id));
+        em.addRoom(em.createRoom(name, capacity,
+                em.dateFormattingTime(start), em.dateFormattingTime(end)),
+                em.findEvent(event_id));
     }
 
     public void add_talk(String start, String end, Integer event_id){
-        Talk talk = em.create_talk(em.date_formatting_DT(start),
-                em.date_formatting_DT(end), em.find_event(event_id));
-        if(!em.time_conflict(talk,em.find_event(event_id)) && em.is_room_open(talk,
-                em.find_event(event_id).getEvent_room())){
+        Talk talk = em.createTalk(em.dateFormattingDT(start),
+                em.dateFormattingDT(end), em.findEvent(event_id));
+        if(!em.timeConflict(talk,em.findEvent(event_id)) && em.isRoomOpen(talk,
+                em.findEvent(event_id).getEvent_room())){
 
-            em.add_talk(talk, em.find_event(event_id));
+            em.addTalk(talk, em.findEvent(event_id));
         }
 
     }
 
     public void schedule_room(String room_name, Integer event_id){
-        Event event = em.find_event(event_id);
-        Room room = em.find_room(room_name);
-        if(!em.is_room_booked(room, event) && event.getEvent_room() != null){
-            em.schedule_room(room, event);
-            room.add_bookings(event, em.get_localDateTime(event.getEvent_date(),event.getStart_time()),
-                    em.get_localDateTime(event.getEvent_date(),event.getEnd_time()));
+        Event event = em.findEvent(event_id);
+        Room room = em.findRoom(room_name);
+        if(!em.isRoomBooked(room, event) && event.getEvent_room() != null){
+            em.scheduleRoom(room, event);
+            room.add_bookings(event, em.getLocalDateTime(event.getEvent_date(),event.getStart_time()),
+                    em.getLocalDateTime(event.getEvent_date(),event.getEnd_time()));
         }
     }
 
     public void schedule_speaker(Speaker speaker, Talk talk, Event event){
-        em.schedule_speaker(speaker, talk, event);
+        em.scheduleSpeaker(speaker, talk, event);
     }
 }
