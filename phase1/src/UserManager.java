@@ -1,5 +1,11 @@
 import java.util.ArrayList;
 
+/**
+ * Manages all Users.
+ *
+ * @authors Isha Sharma and Tanya Thaker
+ * @version 1.0
+ */
 public class UserManager{
     protected ArrayList<User> users = new ArrayList<User>();
     protected ArrayList<String> email = new ArrayList<String>();
@@ -34,7 +40,19 @@ public class UserManager{
         }
     }
 
-    // Allows an Attendee to sign up for an event
+    /**
+     * Allows an Attendee to sign up for an Event. Checks to see if the Room where the Event is held is not at full
+     * capacity and that the Attendee has not already signed up for the Event, before signing up the specified Attendee
+     * for the specified Event.
+     * @param attendee the Attendee who wants to sign up for an event
+     * @param event the Event that the attendee would like to attend
+     * @see Attendee#getEventsAttending() 
+     * @see Attendee#attendEvent(Event) 
+     * @see Event#getEventRoom() 
+     * @see Event#getAttendees()
+     * @see Event#addAttendee(Attendee) 
+     * @see Room#getRoomCapacity() 
+     */
     protected void signUp(Attendee attendee, Event event){
         if ((event.getEventRoom().getRoomCapacity() < event.getAttendees().size()) &&
                 !attendee.getEventsAttending().contains(event)) {
@@ -43,7 +61,15 @@ public class UserManager{
         }
     }
 
-    // Allows an Attendee to cancel their registration for an event
+    /**
+     * Cancels Attendee's registration for an Event. Checks to see that the specified Attendee is actually signed up
+     * for the specified Event, before removing the Attendee from the Event.
+     * @param attendee the Attendee who wants to cancel registration for an event
+     * @param event the Event that the attendee would no longer like to attend
+     * @see Attendee#getEventsAttending() 
+     * @see Attendee#removeEvent(Event)
+     * @see Event#removeAttendee(Attendee) 
+     */
     protected void cancelRegistration(Attendee attendee, Event event){
         if (attendee.getEventsAttending().contains(event)) {
             attendee.removeEvent(event);

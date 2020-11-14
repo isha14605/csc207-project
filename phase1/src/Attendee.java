@@ -11,7 +11,6 @@ public class Attendee extends User{
     private ArrayList<Event> eventsAttending;
 
     // Constructor for Attendee
-
     /**
      * Creates an Attendee with the specified name, email, and password.
      * @param name the name of the specified Attendee
