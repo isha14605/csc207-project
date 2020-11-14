@@ -26,6 +26,11 @@ public class EventManager {
         }
         events.add(event);
     }
+
+    protected ArrayList<Event> getEvents() {
+        return events;
+    }
+
     protected Event findEvent(Integer eventId){
         for(Event event: events){
             if(eventId == event.getEventId()){
