@@ -1,5 +1,3 @@
-import java.io.FileInputStream;
-
 import java.util.Scanner;
 
 public class MessagingSystem {
@@ -16,7 +14,7 @@ public class MessagingSystem {
         return record;
     }
 
-    public boolean send_messages(Messagable from, Messagable to, String message){
+    public boolean send_messages(Messageable from, Messageable to, String message){
         message = read_message().toString();
         return um.message(from, to, message);
     }

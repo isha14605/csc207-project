@@ -66,7 +66,7 @@ public class UserManager{
         return false;
     }
 
-    protected boolean message(Messagable from, Messagable to, String message){
+    protected boolean message(Messageable from, Messageable to, String message){
         boolean t = false;
 
         if (from.userType() == 'S'){
@@ -79,7 +79,7 @@ public class UserManager{
         return t;
     }
 
-    private boolean organizerMessage(Organizer from, Messagable to, String message){
+    private boolean organizerMessage(Organizer from, Messageable to, String message){
         if (users.contains(to)){
             from.send_message(from, message);
             to.receive_message((User) to, message);
@@ -89,7 +89,7 @@ public class UserManager{
     }
 
 
-    private boolean speakerMessage(Speaker from, Messagable to, String message){
+    private boolean speakerMessage(Speaker from, Messageable to, String message){
         for (Talk t: from.getTalks_speaking()){
             Event e = t.getEvent();
             if (e.getAttendees().contains(to)){
@@ -102,7 +102,7 @@ public class UserManager{
         return false;
     }
 
-    private boolean attendeeMessage(Attendee from, Messagable to, String message){
+    private boolean attendeeMessage(Attendee from, Messageable to, String message){
         if (to.userType() == 'A' |  to.userType()=='S'){
             to.receive_message(from, message);
             from.send_message((User) to, message);
