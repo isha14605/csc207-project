@@ -7,6 +7,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles signing up functionality for events.
+ * @author Isha Sharma and Anushka Saini
+ * @version 1.0
+ */
 public class SignUpSystem {
     private UserManager userManager;
 
@@ -34,6 +39,14 @@ public class SignUpSystem {
     UserManager uM = new UserManager(); // New instance of UserManager
     EventManager eM = new EventManager(); // New instance of EventManager
 
+    /**
+     * Returns a list of events that an Attendee can attend, based on a specified date, start time, and end time. Checks
+     * to see that there are events occurring on the specified date between the times provided.
+     * @param date the date that the Attendee is interested in viewing events for
+     * @param startTime the start time that the Attendee is interested in viewing events for
+     * @param endTime the end time that the Attendee is interested in viewing events for
+     * @return a list containing potential events that the Attendee is interested in attending for further perusal
+     */
     // Allows the Attendee to browse the events and decide which ones they want to see based on date and time
     public ArrayList<Event> browseEvents(LocalDate date, LocalTime startTime, LocalTime endTime){
         ArrayList<Event> interestList = new ArrayList<Event>();
