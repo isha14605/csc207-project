@@ -1,32 +1,61 @@
 import java.util.ArrayList;
 
+/**
+ * Represents an Attendee. This class is a subclass of User.
+ *
+ * @author Isha Sharma
+ * @version 1.0
+ * @see User
+ */
 public class Attendee extends User{
-    private ArrayList<Event> events_attending;
+    private ArrayList<Event> eventsAttending;
 
     // Constructor for Attendee
+    /**
+     * Creates an Attendee with the specified name, email, and password.
+     * @param name the name of the specified Attendee
+     * @param email the email of the specified Attendee
+     * @param password the password of the specified Attendee
+     */
     Attendee(String name, String email, String password) {
         super(name, password, email);
-        this.events_attending = new ArrayList<Event>();
+        this.eventsAttending = new ArrayList<Event>();
     }
 
     // Getters
-    // To allow an Attendee to see all the events that they are attending
+    /**
+     * Returns an ArrayList of Event objects, allowing an Attendee to view all the events that they are attending.
+     * @return a list containing each Event that the specified Attendee is attending
+     * @see Event
+     */
     public ArrayList<Event> getEventsAttending(){
-        return this.events_attending;
+        return this.eventsAttending;
+    }
+
+    /**
+     * Returns a string that represents the type of User this object is, eg. A for Attendee.
+     * @return a string representing the type of User this object is
+     */
+    protected char userType(){
+        return 'A';
     }
 
     // Setters
-    // To allow Attendee to sign up for an Event
+    /**
+     * Adds an Event to an Attendee's list of events that they are attending.
+     * @param event the event that the Attendee would like to attend
+     * @see Event
+     */
     protected void attendEvent(Event event){
-        this.events_attending.add(event);
+        this.eventsAttending.add(event);
     }
 
-    // To allow Attendee to cancel attendance at an Event
+    /**
+     * Removes an Event from an Attendee's list of events that they are attending.
+     * @param event the event that the Attendee would no longer like to attend
+     * @see Event
+     */
     protected void removeEvent(Event event) {
-        this.events_attending.remove(event);
-    }
-
-    protected char userType(){
-        return 'A';
+        this.eventsAttending.remove(event);
     }
 }

@@ -5,33 +5,33 @@ import java.util.HashMap;
 
 public class Room {
     private String name;
-    private int room_capacity;
-    private LocalTime open_time;
-    private LocalTime close_time;
+    private int roomCapacity;
+    private LocalTime openTime;
+    private LocalTime closeTime;
     /* The values in bookings contain start_time and end_time of event consecutively*/
     private HashMap<Event, ArrayList<LocalDateTime>> bookings;
 
-    public Room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time) {
+    public Room(String name, Integer roomCapacity, LocalTime openTime, LocalTime closeTime) {
         this.name = name;
-        this.room_capacity = room_capacity;
-        this.open_time = open_time;
-        this.close_time = close_time;
+        this.roomCapacity = roomCapacity;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
         this.bookings = new HashMap<Event, ArrayList<LocalDateTime>>();
     }
 
     /*Getters*/
     public String getName() {return name;}
 
-    public int getRoom_capacity() {return room_capacity;}
+    public int getRoomCapacity() {return roomCapacity;}
 
-    public LocalTime getOpen_time() {return open_time;}
+    public LocalTime getOpenTime() {return openTime;}
 
-    public LocalTime getClose_time() {return close_time;}
+    public LocalTime getCloseTime() {return closeTime;}
 
     public HashMap<Event, ArrayList<LocalDateTime>> getBookings() {return bookings;}
 
     /*This method should be called by Event Manager/Room Manager when a room is added to an Event*/
-    protected void add_bookings(Event event, LocalDateTime start_time, LocalDateTime end_time) {
+    protected void addBookings(Event event, LocalDateTime start_time, LocalDateTime end_time) {
         ArrayList<LocalDateTime> time = new ArrayList<LocalDateTime>();
         time.add(start_time);
         time.add(end_time);

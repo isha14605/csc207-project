@@ -4,26 +4,26 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class Event {
-    private static int num_of_events; /*Will delete if not needed */
-    private int event_id; /*Will delete if not needed */
+    private static int numOfEvents; /*Will delete if not needed */
+    private int eventId; /*Will delete if not needed */
     private String name;
-    private String event_description;
-    private LocalTime start_time;
-    private LocalTime end_time;
-    private LocalDate event_date;
+    private String eventDescription;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private LocalDate eventDate;
     private ArrayList<Attendee> attendees;
     private ArrayList<Organizer> organizers;
     private ArrayList<Talk> talks;
-    private Room event_room;
+    private Room eventRoom;
 
-    public Event(String name, String event_description, LocalTime start_time, LocalTime end_time, LocalDate event_date){
-        num_of_events += 1;
-        this.event_id = num_of_events;
+    public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate){
+        numOfEvents += 1;
+        this.eventId = numOfEvents;
         this.name = name;
-        this.event_description = event_description;
-        this.start_time = start_time;
-        this.end_time = end_time;
-        this.event_date = event_date;
+        this.eventDescription = eventDescription;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.eventDate = eventDate;
         this.attendees = new ArrayList<Attendee>();
         this.organizers = new ArrayList<Organizer>();
         this.talks = new ArrayList<Talk>();
@@ -35,15 +35,15 @@ public class Event {
     /*Getters*/
     public String getName() {return name;}
 
-    public String getEvent_description() {return event_description;}
+    public String getEventDescription() {return eventDescription;}
 
-    public int getEvent_id() {return event_id;}
+    public int getEventId() {return eventId;}
 
-    public LocalTime getStart_time() {return start_time;}
+    public LocalTime getStartTime() {return startTime;}
 
-    public LocalTime getEnd_time() {return end_time;}
+    public LocalTime getEndTime() {return endTime;}
 
-    public LocalDate getEvent_date() {return event_date;}
+    public LocalDate getEventDate() {return eventDate;}
 
     public ArrayList<Attendee> getAttendees() {return attendees;}
 
@@ -51,7 +51,7 @@ public class Event {
 
     public ArrayList<Talk> getTalks() {return talks;}
 
-    public Room getEvent_room() {return event_room;}
+    public Room getEventRoom() {return eventRoom;}
 
     /* To get a list of all speakers in the event */
     public ArrayList<Speaker> getSpeakers() {
@@ -67,22 +67,22 @@ public class Event {
     /* setEvent_room should be called by EventManager/RoomManager to set a room for an event.
      * Event Manager/Room Manager will be responsible for checking room availability and booking the room for required
      * time as per start_time and end_time of event. An event can only be assigned to 1 room.*/
-    protected void setEvent_room(Room room) {this.event_room = room;}
+    protected void setEventRoom(Room room) {this.eventRoom = room;}
 
 
-    protected void add_attendee(Attendee attendee) {
+    protected void addAttendee(Attendee attendee) {
         attendees.add(attendee);
     }
 
-    protected void remove_attendee(Attendee attendee) {
+    protected void removeAttendee(Attendee attendee) {
         attendees.remove(attendee);
     }
 
-    protected void add_organizer(Organizer organizer) {
+    protected void addOrganizer(Organizer organizer) {
         organizers.add(organizer);
     }
 
-    protected void add_talk(Talk talk) {
+    protected void addTalk(Talk talk) {
         talks.add(talk);
     }
 }
