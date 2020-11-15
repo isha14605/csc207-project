@@ -10,6 +10,7 @@ public class UserManager{
     protected static ArrayList<User> users = new ArrayList<User>();
     protected static ArrayList<String> email = new ArrayList<String>();
 
+
     protected UserManager(){
         users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
         users.add(new User("Test1", "12345", "Test1@gmail.com"));
@@ -25,28 +26,19 @@ public class UserManager{
      * @param email the email of this users account.
      * @return true if the new user is created else false.
      */
-    /*
-    protected boolean createUser(String name, String password, String email){
-        if (!this.email.contains(email)){
-            User u1 = new User(name, password, email);
-            users.add(u1);
-            return true;
-        }
-        return false;
-    }
-
-     */
-
 
     public void addUser(String name, String email, String password, String typeOfUser) {
-        if (typeOfUser.equals("organizer")) {
-            users.add(new Organizer(name, email, password));
-        }
-        else if (typeOfUser.equals("speaker")) {
-            users.add(new Speaker(name, email, password));
-        }
-        else if (typeOfUser.equals("attendee")) {
-            users.add(new Attendee(name, email, password));
+        if (!UserManager.email.contains(email)) {
+            UserManager.email.add(email);
+            if (typeOfUser.equals("organizer")) {
+                users.add(new Organizer(name, email, password));
+            } else if (typeOfUser.equals("speaker")) {
+                users.add(new Speaker(name, email, password));
+            } else if (typeOfUser.equals("attendee")) {
+                users.add(new Attendee(name, email, password));
+            } else {
+                users.add(new User(name, email, password));
+            }
         }
     }
 
@@ -114,7 +106,7 @@ public class UserManager{
      * @return true if the message was successfully sent.
      */
 
-    protected boolean message(Messageable from, Messageable to, String message){
+    protected boolean message(User from, User to, String message){
         boolean t = false;
 
         if (from.userType() == 'S'){
@@ -127,22 +119,22 @@ public class UserManager{
         return t;
     }
 
-    private boolean organizerMessage(Organizer from, Messageable to, String message){
+    private boolean organizerMessage(Organizer from, User to, String message){
         if (users.contains(to)){
             from.sendMessage(from, message);
-            to.receiveMessage((User) to, message);
+            to.receiveMessage(to, message);
             return true;
         }
         return false;
     }
 
 
-    private boolean speakerMessage(Speaker from, Messageable to, String message){
+    private boolean speakerMessage(Speaker from, User to, String message){
         for (Talk t: from.getTalksSpeaking()){
             Event e = t.getEvent();
             if (e.getAttendees().contains(to)){
                 to.receiveMessage(from, message);
-                from.sendMessage((User) to, message);
+                from.sendMessage(to, message);
                 return true;
 
             }
@@ -150,18 +142,23 @@ public class UserManager{
         return false;
     }
 
-    private boolean attendeeMessage(Attendee from, Messageable to, String message){
+    private boolean attendeeMessage(Attendee from, User to, String message){
         if (to.userType() == 'A' |  to.userType()=='S'){
             if (!from.getContacts().contains(to)){
-                from.addContact((User) to);
+                from.addContact(to);
             }
             to.receiveMessage(from, message);
-            from.sendMessage((User) to, message);
+            from.sendMessage(to, message);
             return true;
         }
         return false;
     }
 
+    protected User findUser(String email){
+        int i = -1;
+        i = UserManager.email.indexOf(email);
+        return UserManager.users.get(i);
+    }
 
 
 }

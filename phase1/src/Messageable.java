@@ -1,3 +1,5 @@
+/*Potentially delete later */
+
 /**
  * Represents an Interface for determining the type of users, sending and receiving messages among users.
  * @author Tanya Thaker
