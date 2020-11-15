@@ -29,11 +29,11 @@ public class TalkManager {
                 return;
             }
         }
-        event.add_talk(talk);
+        event.addTalk(talk);
     }
 
     protected void schedule_speaker(Speaker speaker, Talk talk){
-        speaker.add_talk(talk);
+        speaker.addTalk(talk);
         talk.setSpeaker(speaker);
     }
 
