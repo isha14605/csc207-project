@@ -3,12 +3,12 @@ import java.util.ArrayList;
 /**
  * Manages all Users.
  *
- * @authors Isha Sharma and Tanya Thaker
+ * @author Isha Sharma and Tanya Thaker
  * @version 1.0
  */
 public class UserManager{
-    protected ArrayList<User> users = new ArrayList<User>();
-    protected ArrayList<String> email = new ArrayList<String>();
+    protected static ArrayList<User> users = new ArrayList<User>();
+    protected static ArrayList<String> email = new ArrayList<String>();
 
     protected UserManager(){
         users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
@@ -19,6 +19,13 @@ public class UserManager{
         email.add("Test2@gmail.com");
     }
 
+    /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
+     * @param name the name of the user.
+     * @param password the password of this users account.
+     * @param email the email of this users account.
+     * @return true if the new user is created else false.
+     */
+    /*
     protected boolean createUser(String name, String password, String email){
         if (!this.email.contains(email)){
             User u1 = new User(name, password, email);
@@ -27,6 +34,9 @@ public class UserManager{
         }
         return false;
     }
+
+     */
+
 
     public void addUser(String name, String email, String password, String typeOfUser) {
         if (typeOfUser.equals("organizer")) {
@@ -77,6 +87,14 @@ public class UserManager{
         }
     }
 
+    /**
+     * Verifies the login details of the user logging in.
+     * @param email the email entered by the user
+     * @param password the password entered by the user
+     * @return boolean true if login details are correct.
+     * @see User#getEmail()
+     * @see User#getPassword()
+    */
     protected boolean verifyLogin(String email, String password){
         if (this.email.contains(email)){
             for(User u: users){
@@ -87,6 +105,14 @@ public class UserManager{
         }
         return false;
     }
+
+    /**
+     *
+     * @param from, the user who wants to send the message.
+     * @param to the user who is the recipient of this message.
+     * @param message the content of the message.
+     * @return true if the message was successfully sent.
+     */
 
     protected boolean message(Messageable from, Messageable to, String message){
         boolean t = false;
@@ -126,6 +152,9 @@ public class UserManager{
 
     private boolean attendeeMessage(Attendee from, Messageable to, String message){
         if (to.userType() == 'A' |  to.userType()=='S'){
+            if (!from.getContacts().contains(to)){
+                from.addContact((User) to);
+            }
             to.receiveMessage(from, message);
             from.sendMessage((User) to, message);
             return true;
