@@ -60,6 +60,12 @@ public class SignUpSystem {
         return interestList; // Return the list of events so the Attendee can browse
     }
 
+    /**
+     * Allows an Attendee to sign up for an Event.
+     * @param a the Attendee that wants to sign up for an an Event.
+     * @param e the Event that the Attendee wants to be signed up for.
+     * @see UserManager#signUp(Attendee, Event)
+     */
     // Method to sign up an Attendee for an Event
     public void signUp(Attendee a, Event e){
         // Sign the Attendee up for the Event
