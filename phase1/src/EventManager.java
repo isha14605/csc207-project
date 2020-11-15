@@ -1,31 +1,29 @@
+import java.io.*;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class EventManager {
-    protected static ArrayList<Event> events = new ArrayList<Event>();
-    protected static ArrayList<Room> rooms = new ArrayList<Room>();
-    protected static ArrayList<Talk> talks = new ArrayList<>();
+public class EventManager implements Serializable {
+    private static final Logger logger = Logger.getLogger(EventManager.class.getName());
 
-    protected EventManager() { }
+    protected final ArrayList<Event> events = new ArrayList<>();
 
-    /* code use case classes that directly add/ create new entities */
-    protected void add_Event(String name, String desc, LocalDateTime start, LocalDateTime end) {
+    /** creates a empty Event Manager **/
+    public EventManager() { }
 
-        Event event = new Event(name, desc, start, end);
-        if (events.contains(event)) {
-            return;
-        }
-        for(Event scheduled: events){
-            if (event.getStart_time().equals(scheduled.getStart_time())){
-                return;
-            }
-        }
+    Event event = new Event("test","test",LocalTime.of(9,0),
+            LocalTime.of(10,0), LocalDate.of(2020,10, 3));
+
+    /** code use case classes that directly add/ create new entities **/
+    protected Event create_event(String name, String desc, LocalTime start, LocalTime end, LocalDate date) {
+        Event event = new Event(name, desc, start, end, date);
         events.add(event);
+        return event;
     }
     protected Event find_event(Integer event_id){
         for(Event event: events){
@@ -35,84 +33,100 @@ public class EventManager {
         }
         return null;
     }
-
-    protected Talk create_talk(LocalDateTime startTime, LocalDateTime endTime, Event event){
-        Talk talk = new Talk(startTime, endTime, event);
-        talks.add(talk);
-        return talk;
+    protected void addEvent(Event event){
+        this.events.add(event);
     }
-    protected void add_talk(Talk talk, Event event) {
-        for (Talk scheduled : event.getTalks()) {
-            if (talk.getStartTime().equals(scheduled.getStartTime())) {
-                return;
+
+    /** getters **/
+    protected ArrayList<Event> getEvents(){
+        return this.events;
+    }
+    protected ArrayList<Talk> get_talks_in(Event event){
+        return event.getTalks();
+    }
+    protected ArrayList<Event> get_events_on(LocalDate date){
+        ArrayList<Event> on_same_day = new ArrayList<>();
+        for(Event scheduled: events){
+            if(scheduled.getEvent_date().equals(date)){
+                on_same_day.add(scheduled);
             }
         }
-        event.add_talk(talk);
+        return on_same_day;
     }
 
-    protected void schedule_speaker(Speaker speaker, Talk talk, Event event){
-        if(talk.getSpeaker() != null || Objects.equals(talk.getSpeaker(), speaker)){
-            return;
-        }
-        for(Talk scheduled: get_talks_at(talk.getStartTime(), event)){
-            if(speaker.equals(scheduled.getSpeaker())){
-                return;
+    /** checks if user can join event **/
+    protected boolean can_join_event(Attendee user, Event event){
+        for(Event attending: user.getEventsAttending()){
+            if(time_conflict(attending, event)){
+                return false;
+            }
+            if(user.getEventsAttending().contains(event)){
+                return false;
+            }
+            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEvent_room().getRoom_capacity()){
+                return false;
             }
         }
-        speaker.add_talk(talk);
-        talk.setSpeaker(speaker);
+        return true;
     }
-
-
-    protected Room create_room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time){
-        return new Room(name, room_capacity, open_time, close_time);
-    }
-    protected void add_room(Room room, Event event){
-        if (rooms.contains(room)) {
-            return;
+    protected boolean can_join_event(Organizer user, Event event){
+        for(Event attending: user.getEventsAttending()){
+            if(time_conflict(attending, event)){
+                return false;
+            }
+            if(user.getEventsAttending().contains(event)){
+                return false;
+            }
+            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEvent_room().getRoom_capacity()){
+                return false;
+            }
         }
-        rooms.add(room);
+        return true;
     }
-    protected boolean remove_room(Room room, Event event){
-        if (rooms.contains(room)) {
-            rooms.remove(room);
+    protected boolean can_schedule_speaker(Event event, Talk talk, Speaker speaker){
+        ArrayList<Event> events_on_day = get_events_on(event.getEvent_date());
+        events_on_day.remove(event);
+        for(Event scheduled: events_on_day){
+            for (Talk talk1: speaker.getTalks_speaking()) {
+                if (time_conflict(talk1, scheduled) && time_conflict(talk, talk1)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /** Converts event information to string */
+    protected String eventToString(Event event){
+        String room = new String();
+        if(event.getEvent_room() == null){
+            room = "None";
+        }
+        else{
+            room = event.getEvent_room().getName();
+        }
+        return new String("Event id:" + event.getEvent_id() + " " + event.getName() +
+                " Room: " + room);
+    }
+
+    /** adds user to events list of users **/
+    protected void add_user(Attendee user, Event event){
+        event.add_attendee(user);
+    }
+    protected void add_user(Organizer user, Event event){
+        event.add_organizer(user);
+    }
+
+    /** helper functions **/
+    protected boolean time_conflict(Event event1, Event event2) {
+        if (event1.getStart_time().equals((event2.getStart_time()))) {
             return true;
-        }
-        return false;
-    }
-    protected void schedule_room(Room room, Event event){
-        event.setEvent_room(room);
-    }
-    protected Room find_room(String name){
-        for(Room room: rooms){
-            if(room.getName().equals(name)){
-                return room;
-            }
-        }
-        return null;
-    }
-    protected boolean is_room_open(Talk talk, Room room){
-        if(talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+        } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
+                event1.getStart_time().isBefore(event2.getEnd_time())) {
             return true;
-        }
-        else if(talk.getStartTime().toLocalTime().equals(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
-            return true;
-        }
-        return talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().equals(room.getClose_time());
+        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
+                event1.getEnd_time().isBefore(event2.getEnd_time());
     }
-    protected boolean is_room_booked(Room room, Event unbooked){
-        for(Event booked: room.getBookings().keySet()){
-            if(booked.getEvent_date().equals(unbooked.getEvent_date()))
-            if(time_conflict(unbooked, booked)){
-                return true;
-            }
-        }
-        return false;
-    }
-
     protected boolean time_conflict(Talk scheduling, Event event){
         for(Talk scheduled: event.getTalks()){
             if(scheduling.getStartTime().isEqual(scheduled.getStartTime())){
@@ -129,30 +143,22 @@ public class EventManager {
         }
         return false;
     }
+    protected boolean time_conflict(Talk event1, Talk event2) {
+        if (event1.getStartTime().equals((event2.getStartTime()))) {
+            return true;
+        } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
+                event1.getStartTime().isBefore(event2.getEndTime())) {
+            return true;
+        } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
+                event1.getEndTime().isBefore(event2.getEndTime());
+    }
 
-    protected boolean time_conflict(Event event1, Event event2) {
-       if (event1.getStart_time().equals((event2.getStart_time()))) {
-            return true;
-       } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
-                    event1.getStart_time().isBefore(event2.getEnd_time())) {
-            return true;
-        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
-                    event1.getEnd_time().isBefore(event2.getEnd_time());
+    protected boolean not_valid_format(Object check){
+        return check == null;
     }
     protected LocalDateTime get_localDateTime(LocalDate date, LocalTime time){
         return LocalDateTime.of(date, time);
     }
-
-    protected ArrayList<Talk> get_talks_at(LocalDateTime time, Event event){
-        ArrayList<Talk> same_time = new ArrayList<>();
-        for(Talk talk: event.getTalks()){
-            if(talk.getStartTime().equals(time)){
-                same_time.add(talk);
-            }
-        }
-        return same_time;
-    }
-
     protected LocalDateTime date_formatting_DT(String date){
         int len = date.length();
         if(len == 16){
@@ -163,19 +169,29 @@ public class EventManager {
     }
     protected LocalDate date_formatting_date(String date){
         int len = date.length();
-        if(len == 10){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return LocalDate.parse(date, formatter);
+        try {
+            if (len == 10) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                return LocalDate.parse(date, formatter);
+            }
+        }catch (Exception e){
+            System.out.println("Date is not a valid date");
         }
         return null;
     }
     protected LocalTime date_formatting_time(String date){
         int len = date.length();
-        if(len == 5){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
-            return LocalTime.parse(date, formatter);
+        try {
+            if (len == 5) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+                return LocalTime.parse(date, formatter);
+            }
+        } catch (Exception e){
+            System.out.println("time not within hours of the day. Please chose a time using " +
+                    "the 24 hour format between 00-23 with format of hour:min");
         }
         return null;
     }
+
 
 }
