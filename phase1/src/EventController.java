@@ -40,7 +40,7 @@ public class EventController {
         Talk talk = tm.create_talk(tm.date_formatting_DT(start),
                 tm.date_formatting_DT(end), em.find_event(event_id));
         if(!rm.time_conflict(talk,em.find_event(event_id)) && rm.is_room_open(talk,
-                em.find_event(event_id).getEvent_room())){
+                em.find_event(event_id).getEventRoom())){
             tm.add_talk(talk, em.find_event(event_id));
             System.out.println("Talk was added to event");
         }
@@ -50,17 +50,17 @@ public class EventController {
     public void schedule_room(String room_name, Integer event_id){
         Event event = em.find_event(event_id);
         Room room = rm.find_room(room_name);
-        if(!rm.is_room_booked(room, event) && event.getEvent_room() == null){
+        if(!rm.is_room_booked(room, event) && event.getEventRoom() == null){
             rm.schedule_room(room, event);
-            room.add_bookings(event, em.get_localDateTime(event.getEvent_date(),event.getStart_time()),
-                    em.get_localDateTime(event.getEvent_date(),event.getEnd_time()));
+            room.addBookings(event, em.get_localDateTime(event.getEventDate(),event.getStartTime()),
+                    em.get_localDateTime(event.getEventDate(),event.getEndTime()));
             System.out.println("Room has Been Booked for event");
         }
     }
 
     public void schedule_speaker(Speaker speaker, Talk talk, Event event){
         if(em.can_schedule_speaker(event,talk,speaker) && tm.speaker_can_be_scheduled(talk)){
-            speaker.add_talk(talk);
+            speaker.addTalk(talk);
             talk.setSpeaker(speaker);
         }
     }

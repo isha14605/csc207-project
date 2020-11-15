@@ -27,7 +27,7 @@ public class EventManager implements Serializable {
     }
     protected Event find_event(Integer event_id){
         for(Event event: events){
-            if(event_id == event.getEvent_id()){
+            if(event_id == event.getEventId()){
                 return event;
             }
         }
@@ -47,7 +47,7 @@ public class EventManager implements Serializable {
     protected ArrayList<Event> get_events_on(LocalDate date){
         ArrayList<Event> on_same_day = new ArrayList<>();
         for(Event scheduled: events){
-            if(scheduled.getEvent_date().equals(date)){
+            if(scheduled.getEventDate().equals(date)){
                 on_same_day.add(scheduled);
             }
         }
@@ -63,7 +63,7 @@ public class EventManager implements Serializable {
             if(user.getEventsAttending().contains(event)){
                 return false;
             }
-            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEvent_room().getRoom_capacity()){
+            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEventRoom().getRoomCapacity()){
                 return false;
             }
         }
@@ -77,17 +77,17 @@ public class EventManager implements Serializable {
             if(user.getEventsAttending().contains(event)){
                 return false;
             }
-            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEvent_room().getRoom_capacity()){
+            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEventRoom().getRoomCapacity()){
                 return false;
             }
         }
         return true;
     }
     protected boolean can_schedule_speaker(Event event, Talk talk, Speaker speaker){
-        ArrayList<Event> events_on_day = get_events_on(event.getEvent_date());
+        ArrayList<Event> events_on_day = get_events_on(event.getEventDate());
         events_on_day.remove(event);
         for(Event scheduled: events_on_day){
-            for (Talk talk1: speaker.getTalks_speaking()) {
+            for (Talk talk1: speaker.getTalksSpeaking()) {
                 if (time_conflict(talk1, scheduled) && time_conflict(talk, talk1)) {
                     return false;
                 }
@@ -99,33 +99,33 @@ public class EventManager implements Serializable {
     /** Converts event information to string */
     protected String eventToString(Event event){
         String room = new String();
-        if(event.getEvent_room() == null){
+        if(event.getEventRoom() == null){
             room = "None";
         }
         else{
-            room = event.getEvent_room().getName();
+            room = event.getEventRoom().getName();
         }
-        return new String("Event id:" + event.getEvent_id() + " " + event.getName() +
+        return new String("Event id:" + event.getEventId() + " " + event.getName() +
                 " Room: " + room);
     }
 
     /** adds user to events list of users **/
     protected void add_user(Attendee user, Event event){
-        event.add_attendee(user);
+        event.addAttendee(user);
     }
     protected void add_user(Organizer user, Event event){
-        event.add_organizer(user);
+        event.addOrganizer(user);
     }
 
     /** helper functions **/
     protected boolean time_conflict(Event event1, Event event2) {
-        if (event1.getStart_time().equals((event2.getStart_time()))) {
+        if (event1.getStartTime().equals((event2.getStartTime()))) {
             return true;
-        } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
-                event1.getStart_time().isBefore(event2.getEnd_time())) {
+        } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
+                event1.getStartTime().isBefore(event2.getEndTime())) {
             return true;
-        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
-                event1.getEnd_time().isBefore(event2.getEnd_time());
+        } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
+                event1.getEndTime().isBefore(event2.getEndTime());
     }
     protected boolean time_conflict(Talk scheduling, Event event){
         for(Talk scheduled: event.getTalks()){
