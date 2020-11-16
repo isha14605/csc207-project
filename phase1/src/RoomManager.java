@@ -20,7 +20,7 @@ public class RoomManager {
         rooms.add(room);
     }
     protected void schedule_room(Room room, Event event){
-        event.setEvent_room(room);
+        event.setEventRoom(room);
     }
     protected Room find_room(String name){
         for(Room room: rooms){
@@ -31,20 +31,20 @@ public class RoomManager {
         return null;
     }
     protected boolean is_room_open(Talk talk, Room room){
-        if(talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+        if(talk.getStartTime().toLocalTime().isAfter(room.getOpenTime()) &&
+                talk.getEndTime().toLocalTime().isBefore(room.getCloseTime())){
             return true;
         }
-        else if(talk.getStartTime().toLocalTime().equals(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getClose_time())){
+        else if(talk.getStartTime().toLocalTime().equals(room.getOpenTime()) &&
+                talk.getEndTime().toLocalTime().isBefore(room.getCloseTime())){
             return true;
         }
-        return talk.getStartTime().toLocalTime().isAfter(room.getOpen_time()) &&
-                talk.getEndTime().toLocalTime().equals(room.getClose_time());
+        return talk.getStartTime().toLocalTime().isAfter(room.getOpenTime()) &&
+                talk.getEndTime().toLocalTime().equals(room.getCloseTime());
     }
     protected boolean is_room_booked(Room room, Event unbooked){
         for(Event booked: room.getBookings().keySet()){
-            if(booked.getEvent_date().equals(unbooked.getEvent_date()))
+            if(booked.getEventDate().equals(unbooked.getEventDate()))
                 if(time_conflict(unbooked, booked)){
                     return true;
                 }
@@ -56,8 +56,8 @@ public class RoomManager {
     }
 
     protected String roomToString(Room room){
-        return new String("Room Name: " + room.getName() + ", open from " + room.getOpen_time() + " to "
-                + room.getClose_time());
+        return new String("Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
+                + room.getCloseTime());
     }
 
     protected boolean time_conflict(Talk scheduling, Event event){
@@ -77,13 +77,13 @@ public class RoomManager {
         return false;
     }
     protected boolean time_conflict(Event event1, Event event2) {
-        if (event1.getStart_time().equals((event2.getStart_time()))) {
+        if (event1.getStartTime().equals((event2.getStartTime()))) {
             return true;
-        } else if (event1.getStart_time().isAfter(event2.getStart_time()) &&
-                event1.getStart_time().isBefore(event2.getEnd_time())) {
+        } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
+                event1.getStartTime().isBefore(event2.getEndTime())) {
             return true;
-        } else return event1.getEnd_time().isAfter(event2.getStart_time()) &&
-                event1.getEnd_time().isBefore(event2.getEnd_time());
+        } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
+                event1.getEndTime().isBefore(event2.getEndTime());
     }
 
     protected LocalDateTime get_localDateTime(LocalDate date, LocalTime time){

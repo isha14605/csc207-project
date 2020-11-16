@@ -88,7 +88,7 @@ class Interface {
                                     System.out.println(eventManager.eventToString(event));
                                 }
                                 int event_id = userInput.nextInt();
-                                if(eventManager.find_event(event_id).getEvent_room() == null){
+                                if(eventManager.find_event(event_id).getEventRoom() == null){
                                     System.out.println("Event needs to be scheduled a room before" +
                                             "talks can be added");
                                 }
@@ -113,7 +113,6 @@ class Interface {
                                 else{
                                     System.out.println("What event do you want to Schedule room for");
 
-                                    roomManager = new RoomManager();
                                     eventManager = new EventManager();
 
                                     for(Event event: eventController.get_events()){
