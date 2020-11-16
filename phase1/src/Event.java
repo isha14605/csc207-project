@@ -30,7 +30,6 @@ public class Event {
      * @param endTime the time when the event ends
      * @param eventDate the date when the event is happening
      */
-
     public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate){
         numOfEvents += 1;
         this.eventId = numOfEvents;
@@ -44,7 +43,7 @@ public class Event {
         this.talks = new ArrayList<Talk>();
     }
 
-    // Getters //
+    // Getters
 
     /**
      * Returns a String that is the name of this event.
@@ -118,7 +117,7 @@ public class Event {
         return x;
     }
 
-    // Setters //
+    // Setters
 
     /**
      * sets the designated room for this event.
