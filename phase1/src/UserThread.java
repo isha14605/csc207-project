@@ -5,14 +5,39 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class is responsible for handling the user thread of the client
+ *
+ * @author Hao Liu
+ * @version 1.0
+ */
 public class UserThread extends Thread {
 
+    /**
+     * Socket between client and server
+     */
     public Socket socket;
+
+    /**
+     * Receive user input
+     */
     public InputStream inputStream;
+
+    /**
+     * The output shown to the user
+     */
     public OutputStream outputStream;
 
+    /**
+     * Controller responsible for login function
+     */
     public LoginController loginController;
 
+    /**
+     * Constructor of UserThread
+     * Initialize user thread
+     * @param socket Socket between client and server
+     */
     public UserThread(Socket socket) {
 
         loginController = new LoginController();
@@ -25,6 +50,9 @@ public class UserThread extends Thread {
         }
     }
 
+    /**
+     * Execute user thread
+     */
     @Override
     public void run() {
         try {
@@ -72,6 +100,11 @@ public class UserThread extends Thread {
         }
     }
 
+    /**
+     * Get user information entered by the user
+     * @return Map for storing user information, including user email and password
+     * @throws Exception
+     */
     private Map<String, String> getUserInfo() throws Exception {
         Map<String, String> userInfo = new HashMap<>();
         sendMessage(outputStream, "Please input your email:");
@@ -83,13 +116,24 @@ public class UserThread extends Thread {
         return userInfo;
     }
 
-    public void sendMessage(OutputStream os, String s) throws IOException {
-        os.write(s.getBytes());
+    /**
+     * Output message to user screen
+     * @param os Output stream
+     * @param msg String message to send
+     * @throws IOException
+     */
+    public void sendMessage(OutputStream os, String msg) throws IOException {
+        os.write(msg.getBytes());
         os.write(13);
         os.write(10);
         os.flush();
     }
 
+    /**
+     * Read messages from the input stream
+     * @return String message read from the input stream
+     * @throws Exception
+     */
     public String readMessage() throws Exception {
         int value = inputStream.read();
         String str = "";

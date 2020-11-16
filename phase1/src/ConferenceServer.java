@@ -1,24 +1,36 @@
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
+/**
+ * Program entry of conference system program
+ *
+ * @author Hao Liu
+ * @version 1.0
+ */
 public class ConferenceServer {
 
-//    public static ArrayList<SpeakerThread> listSpeakerThread = new ArrayList<SpeakerThread>();
-//    public static ArrayList<OrganizerThread> listOrganizerThread = new ArrayList<OrganizerThread>();
+    /**
+     * Thread pool for storing user threads
+     */
     public static ArrayList<UserThread> listUserThread = new ArrayList<UserThread>();
 
+    /**
+     * ServerSocket is responsible for receiving client connection requests
+     * and generating a Socket connected to the client
+     */
     private ServerSocket serverSocket = null;
 
+    /**
+     * Constructor
+     */
     public ConferenceServer() {
 
     }
 
+    /**
+     * Initialize the server, create sersocket, monitor port 8080
+     */
     public void initServer() {
         try {
             serverSocket = new ServerSocket(8080);
@@ -28,6 +40,9 @@ public class ConferenceServer {
         }
     }
 
+    /**
+     * Monitor port 8080 and receive the socket sent by the client and create a user thread for the client
+     */
     public void runServer() {
         try {
             while (true) {
@@ -38,22 +53,11 @@ public class ConferenceServer {
                 userThread.start();
                 listUserThread.add(userThread);
 
-//                if (listOrganizerThread.size() == 0) {
-//                    OrganizerThread organizerThread = new OrganizerThread(socket);
-//                    organizerThread.start();
-//                    listOrganizerThread.add(organizerThread);
-//                } else {
-//                    SpeakerThread speakerThread = new SpeakerThread(socket);
-//                    speakerThread.start();
-//                    listSpeakerThread.add(speakerThread);
-//                }
 
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
 }
