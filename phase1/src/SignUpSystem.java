@@ -13,28 +13,6 @@ import java.util.Scanner;
  * @version 1.0
  */
 public class SignUpSystem {
-    private UserManager userManager;
-
-    public SignUpSystem(UserManager usermanager){
-        this.userManager = usermanager;
-    }
-
-    public boolean signUpCheck(String name, String email, String password, String typeOfUser) throws
-            FileNotFoundException {
-        PrintWriter printWriter = new PrintWriter(new FileOutputStream("phase1/login.txt", true));
-        Scanner scanner = new Scanner(new FileInputStream("phase1/login.txt"));
-        String[] record;
-        while (scanner.hasNextLine()) {
-            record = scanner.nextLine().split(" ");
-            if (record[1].equals(email)) {
-                return false;
-            }
-        }
-        printWriter.println(name + " " + email + " " + password + " " + typeOfUser);
-        scanner.close();
-        printWriter.close();
-        return true;
-    }
 
     UserManager uM = new UserManager(); // New instance of UserManager
     EventManager eM = new EventManager(); // New instance of EventManager
