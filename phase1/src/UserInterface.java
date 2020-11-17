@@ -247,7 +247,7 @@ class UserInterface {
         }
 
 
-        public static void main (String[]args) throws FileNotFoundException {
+        public static void main (String[] args) throws FileNotFoundException {
 
             UserManager userManager = new UserManager();
             LoginSystem loginSystem = new LoginSystem(userManager);

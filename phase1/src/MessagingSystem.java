@@ -91,6 +91,8 @@ public class MessagingSystem {
                 }
             }
 
+        } else {
+            um.message(from, um.findUser(recipient.get(1)), message);
         }
 
     }
