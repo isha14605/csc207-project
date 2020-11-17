@@ -149,7 +149,7 @@ class UserInterface {
 
     public static void AttendeeInterface() {
         UserManager userManager = new UserManager();
-        SignUpSystem signUpSystem = new SignUpSystem(userManager);
+        SignUpSystem signUpSystem = new SignUpSystem();
         EventManager eventManager = new EventManager();
         Attendee attendee = new Attendee("test", "test", "test");
         boolean on_page = true;
@@ -210,28 +210,65 @@ class UserInterface {
         }
     }
 
-    public static void main(String[] args) throws FileNotFoundException {
-
+    public static void SpeakerInterface() {
         UserManager userManager = new UserManager();
-        LoginSystem loginSystem = new LoginSystem(userManager);
-        Scanner userInput = new Scanner(System.in);
-        boolean signed_in = false;
+        SignUpSystem signUpSystem = new SignUpSystem();
+        EventManager eventManager = new EventManager();
 
-        while (!signed_in) {
-            System.out.println("|===== Phase 1 login =====|");
-            System.out.println("Enter your Email");
-            String email = userInput.next();
-            System.out.println("Enter your Password");
-            String password = userInput.next();
-            signed_in = loginSystem.checkLogIn(email, password);
-            if (!signed_in) {
-                System.out.println("invalid login credentials");
+        // s = userManager.findUser(email);
+        Speaker s = new Speaker("test", "test", "test");
+        boolean on_page = true;
+
+        while (on_page) {
+            Scanner userInput = new Scanner(System.in);  // Create a Scanner object
+            System.out.println("==============Speaker Interface==================" +
+                    "\n -Browse My Talks- enter BMT" +
+                    "\n -Inbox- IB" +
+                    "\n -Exit-");
+            String option = userInput.next();  // Read user input
+
+            switch (option) {
+                case "BMT":
+                    System.out.println("These are the talks that you are speaking at:");
+                    if (s.getTalksSpeaking().size() == 0) {
+                        System.out.println("You are not scheduled to speak at any talks");
+                    } else {
+                        for (int i = 0; i < s.getTalksSpeaking().size(); i++) {
+                            System.out.println(s.getTalksSpeaking().get(i));
+                        }
+                    }
+                    break;
+                case "IB":
+                    System.out.println("Not Implemented Yet");
+                    break;
+                case "Exit":
+                    on_page = false;
             }
+        }
 
-            if (signed_in) {
-                System.out.println("Logged In....");
-                boolean homeScreen = true;
-                while (homeScreen) {
+
+        public static void main (String[]args) throws FileNotFoundException {
+
+            UserManager userManager = new UserManager();
+            LoginSystem loginSystem = new LoginSystem(userManager);
+            Scanner userInput = new Scanner(System.in);
+            boolean signed_in = false;
+
+            while (!signed_in) {
+                System.out.println("|===== Phase 1 login =====|");
+                System.out.println("Enter your Email");
+                String email = userInput.next();
+                System.out.println("Enter your Password");
+                String password = userInput.next();
+                signed_in = loginSystem.checkLogIn(email, password);
+                if (!signed_in) {
+                    System.out.println("invalid login credentials");
+                }
+
+                if (signed_in) {
+                    System.out.println("Logged In....");
+                    boolean homeScreen = true;
+                    while (homeScreen) {
                         System.out.println("=============== Phase 1 System ===============");
                         char usertype = userManager.findUser(email).userType();
                         System.out.println("-User Options- UO");
@@ -256,6 +293,7 @@ class UserInterface {
                         }
                     }
                 }
+            }
         }
     }
 }
