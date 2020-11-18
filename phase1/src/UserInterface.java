@@ -6,11 +6,12 @@ import java.util.Scanner;
 
 class UserInterface {
 
-    public static void OrganizerInterface() {
+    public static void OrganizerInterface(EventController eventController) throws IOException {
 
-        EventController eventController = new EventController();
         boolean on_page = true;
         while (on_page) {
+            EventManager em = eventController.em;
+            RoomManager rm = eventController.rm;
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
             System.out.println("==============Organizer Interface==================" +
                     "\n -Add Event- enter AE-" +
@@ -25,31 +26,30 @@ class UserInterface {
 
                 case "AE":
                     System.out.println("====Event Creator====");
-                    System.out.println("What is the name of the event?");
+                    System.out.println("What is the name of Event");
                     String name = userInput.nextLine();
-                    System.out.println("What is the description of the event?");
+                    System.out.println("What is the name of description");
                     String description = userInput.nextLine();
-                    System.out.println("When does the event start?");
+                    System.out.println("When does the event start");
                     String start = userInput.nextLine();
-                    System.out.println("When does the event end?");
+                    System.out.println("When does the event end");
                     String end = userInput.nextLine();
-                    System.out.println("What date is the event?");
+                    System.out.println("What date is the event");
                     String date = userInput.nextLine();
 
                     eventController.add_event(name, description, start, end, date);
-
                     break;
 
                 case "CR":
                     System.out.println("====Room Creator====");
 
-                    System.out.println("What is the name of the room?");
+                    System.out.println("What is the name of the room");
                     String room_name = userInput.nextLine();
-                    System.out.println("How many people can the room hold?");
+                    System.out.println("How many people can the room hold");
                     int capacity = userInput.nextInt();
-                    System.out.println("When does the room open?");
+                    System.out.println("When does the Room Open");
                     String open = userInput.next();
-                    System.out.println("When does the room close?");
+                    System.out.println("When does the Room Close");
                     String close = userInput.next();
 
                     eventController.add_room(room_name, capacity, open, close);
@@ -57,12 +57,11 @@ class UserInterface {
                     break;
 
                 case "VE":
-                    EventManager eventManager = new EventManager();
-                    for (Event event : eventController.get_events()) {
-                        System.out.println(eventManager.eventToString(event));
-                    }
+
+                    em.print_events();
+
                     if (eventController.get_events().size() == 0) {
-                        System.out.println("No events are scheduled.");
+                        System.out.println("No events are Scheduled");
                     }
                     break;
                 case "VR":
@@ -71,35 +70,33 @@ class UserInterface {
                         System.out.println(roomManager.roomToString(room));
                     }
                     if (eventController.get_rooms().size() == 0) {
-                        System.out.println("No rooms have been created.");
+                        System.out.println("No rooms are made");
                     }
                     break;
 
                 case "EO":
                     System.out.println("-Event Options-");
                     if (eventController.get_events().size() == 0) {
-                        System.out.println("No events scheduled to do such actions! \n");
+                        System.out.println("no events schedule to do actions! \n");
                     } else {
                         System.out.println("-Schedule Speaker- SS");
                         System.out.println("-Schedule Room- SR");
                         System.out.println("-Create Talk- enter CT");
+                        System.out.println("-Add Talk- AT");
                         String event_options = userInput.nextLine();
                         switch (event_options) {
                             case "CT":
-                                eventManager = new EventManager();
                                 System.out.println("====Talk Creator====");
-                                System.out.println("What event would you like to add this talk to?");
-                                for (Event event : eventController.get_events()) {
-                                    System.out.println(eventManager.eventToString(event));
-                                }
+                                System.out.println("What Event Would you like to add talk to");
+                                em.print_events();
                                 int event_id = userInput.nextInt();
-                                if (eventManager.find_event(event_id).getEventRoom() == null) {
+                                if (em.find_event(event_id).getEventRoom() == null) {
                                     System.out.println("Event needs to be scheduled a room before" +
-                                            "talks can be added.");
+                                            "talks can be added");
                                 } else {
-                                    System.out.println("When does the talk start?");
+                                    System.out.println("When does the talk start");
                                     start = userInput.next();
-                                    System.out.println("When does the talk end?");
+                                    System.out.println("When does the talk end");
                                     end = userInput.next();
                                     eventController.add_talk(start, end, event_id);
 
@@ -112,31 +109,48 @@ class UserInterface {
 
                             case "SR":
                                 if (eventController.get_rooms().size() == 0) {
-                                    System.out.println("No rooms to perform actions to! \n");
+                                    System.out.println("No rooms to preform actions to! \n");
                                 } else {
-                                    System.out.println("What event do you want to schedule room for?");
+                                    System.out.println("What event do you want to Schedule room for");
 
-                                    eventManager = new EventManager();
+                                    em.print_events();
 
-                                    for (Event event : eventController.get_events()) {
-                                        System.out.println(eventManager.eventToString(event));
-                                    }
                                     event_id = userInput.nextInt();
+                                    if(em.event_exist(event_id)){
+                                        System.out.println("What room what do you want ot schedule");
+                                        for (Room room : eventController.get_rooms()) {
+                                            System.out.println(rm.roomToString(room));
+                                        }
+                                        room_name = userInput.next();
 
-                                    System.out.println("What room do you want to schedule?");
-                                    roomManager = new RoomManager();
-                                    for (Room room : eventController.get_rooms()) {
-                                        System.out.println(roomManager.roomToString(room));
+                                        eventController.schedule_room(room_name, event_id);
+                                    }else{
+                                        System.out.println("Event does not exist.");
                                     }
-                                    room_name = userInput.next();
-
-                                    eventController.schedule_room(room_name, event_id);
-
-
                                 }
                                 break;
+
+                            case "AT":
+                                System.out.println("What event you adding talk to?");
+                                em.print_events();
+                                event_id = userInput.nextInt();
+                                System.out.println("When does the talk start");
+                                start = userInput.next();
+                                System.out.println("When does the talk end");
+                                end = userInput.next();
+                                if(eventController.add_talk(start,end,event_id)){
+                                    System.out.println("Talk was added to Event " + event_id);
+                                }else{
+                                    System.out.println("Talk was not added.");
+                                }
+                                break;
+
+
                         }
                     }
+                    break;
+                case "save":
+                    eventController.save();
                     break;
 
                 case "exit":
@@ -147,11 +161,10 @@ class UserInterface {
 
     }
 
-    public static void AttendeeInterface() {
-        UserManager userManager = new UserManager();
-        SignUpSystem signUpSystem = new SignUpSystem();
-        EventManager eventManager = new EventManager();
+
+    public static void AttendeeInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec) {
         Attendee attendee = new Attendee("test", "test", "test");
+
         boolean on_page = true;
         while (on_page) {
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
@@ -163,18 +176,18 @@ class UserInterface {
             String option = userInput.next();  // Read user input
             switch (option) {
                 case "BE":
-                    if (eventManager.getEvents().size() == 0) {
+                    if (ec.get_events().size() == 0) {
                         System.out.println("===== Event Browser =====" +
-                                "\nNo events have been scheduled. Cannot perform actions.");
+                                "\nNo events have been Scheduled. Cannot Preform actions");
                     } else {
                         System.out.println("===== Event Browser =====");
-                        System.out.println("What date would you like to see events from?");
+                        System.out.println("What date would you like to see event from");
                         String date = userInput.next();
                         LocalDate dateF = eventManager.date_formatting_date(date);
-                        System.out.println("After what start time would you like to see events for?");
+                        System.out.println("Events after what start time");
                         String start = userInput.next();
                         LocalTime startF = eventManager.date_formatting_time(start);
-                        System.out.println("Before what end time would you like to see events for?");
+                        System.out.println("Events and before what time");
                         String end = userInput.next();
                         System.out.println("And end time");
                         LocalTime endF = eventManager.date_formatting_time(end);
@@ -186,23 +199,29 @@ class UserInterface {
                     break;
 
                 case "SU":
-                    if (eventManager.getEvents().size() == 0) {
+                    if (ec.get_events().size() == 0) {
                         System.out.println("===== Event Browser =====" +
-                                "\nNo events have been scheduled. Cannot perform actions.");
+                                "\nNo events have been Scheduled. Cannot Preform actions");
                     } else {
                         System.out.println("===== Event Sign Up =====");
-                        ArrayList<Event> events = eventManager.getEvents();
-                        for (Event scheduled : events) {
+
+                        for (Event scheduled : ec.get_events()) {
                             eventManager.eventToString(scheduled);
                         }
-                        System.out.println("Enter the event id of the event you want to join.");
+                        System.out.println("Event the event id of the event you want to join");
                         int event_id = userInput.nextInt();
-                        Event event = eventManager.find_event(event_id);
+                        Event event = ec.em.find_event(event_id);
+                        if(event.getEventRoom() == null){
+                            System.out.println("Sorry event hasn't been assigned a room. Unable to join.\n");
+                            break;
+                        }
                         signUpSystem.signUp(attendee, event);
                     }
+
                 case "IB":
-                    System.out.println("not implemented yet");
+                    System.out.println("not Implemented yet");
                     break;
+
                 case "Exit":
                     on_page = false;
 
@@ -247,52 +266,73 @@ class UserInterface {
         }
     }
 
-        public static void main (String[] args) throws FileNotFoundException {
+    public static void LoginInterface() throws ClassNotFoundException, IOException {
 
-            UserManager userManager = new UserManager();
-            LoginSystem loginSystem = new LoginSystem(userManager);
-            Scanner userInput = new Scanner(System.in);
-            boolean signed_in = false;
+        UserManager userManager = new UserManager();
+        LoginController loginSystem = new LoginController();
+        EventController ec = new EventController();
+        SignUpSystem su = new SignUpSystem();
+        Scanner userInput = new Scanner(System.in);
+        EventManager em = new EventManager();
+        boolean signed_in = false;
 
-            while (!signed_in) {
-                System.out.println("|===== Phase 1 login =====|");
-                System.out.println("Enter your email.");
-                String email = userInput.next();
-                System.out.println("Enter your password.");
-                String password = userInput.next();
-                signed_in = loginSystem.checkLogIn(email, password);
-                if (!signed_in) {
-                    System.out.println("Invalid login credentials.");
-                }
+        while (!signed_in) {
+            System.out.println("|===== Phase 1 login =====|");
+            System.out.println("Enter your Email");
+            String email = userInput.next();
+            System.out.println("Enter your Password");
+            String password = userInput.next();
+            signed_in = loginSystem.checkLogIn(email, password);
+            if (!signed_in) {
+                System.out.println("invalid login credentials");
+            }
 
-                if (signed_in) {
-                    System.out.println("Logged In....");
-                    boolean homeScreen = true;
-                    while (homeScreen) {
-                        System.out.println("=============== Phase 1 System ===============");
-                        char usertype = userManager.findUser(email).userType();
-                        System.out.println("-User Options- UO");
-                        if (usertype == 'O') {
-                            System.out.println("-Organiser Options- OO");
-                        }
-                        System.out.println("-Log Out- LO");
-                        String option = userInput.next();
+            if (signed_in) {
+                System.out.println("Logged In....");
+                boolean homeScreen = true;
+                while (homeScreen) {
+                    System.out.println("=============== Phase 1 System ===============");
+                    char usertype = userManager.findUser(email).userType();
+                    System.out.println("-User Options- UO");
+                    if (usertype == 'O') {
+                        System.out.println("-Organiser Options- OO");
+                    }
+                    System.out.println("-Log Out- LO");
+                    String option = userInput.next();
 
-                        switch (option) {
-                            case "UO":
-                                AttendeeInterface();
-                                break;
+                    switch (option) {
+                        case "UO":
+                            AttendeeInterface(su,em,ec);
+                            break;
 
-                            case "OO":
-                                OrganizerInterface();
-                                break;
+                        case "OO":
+                            OrganizerInterface(ec);
+                            break;
 
-                            case "LO":
-                                signed_in = false;
-                                homeScreen = false;
-                        }
+                        case "LO":
+                            signed_in = true;
+                            homeScreen = false;
                     }
                 }
             }
         }
     }
+
+
+
+    public static class EventPlannerSystem {
+        public void run() throws IOException, ClassNotFoundException {
+            LoginInterface();
+        }
+
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+        EventPlannerSystem e = new EventPlannerSystem();
+        e.run();
+
+    }
+}
+
+
+

@@ -1,10 +1,11 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class RoomManager {
+public class RoomManager implements Serializable {
     private ArrayList<Room> rooms = new ArrayList<Room>();
 
     public RoomManager(){}
@@ -24,12 +25,6 @@ public class RoomManager {
  * @param event
  * @param room
  * */
-    protected void add_room(Room room, Event event){
-        if (rooms.contains(room)) {
-            return;
-        }
-        rooms.add(room);
-    }
 
     /**
      * @param room
@@ -53,23 +48,6 @@ public class RoomManager {
 
     /**
      * @param room
-     * @param talk
-     * */
-    protected boolean is_room_open(Talk talk, Room room){
-        if(talk.getStartTime().toLocalTime().isAfter(room.getOpenTime()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getCloseTime())){
-            return true;
-        }
-        else if(talk.getStartTime().toLocalTime().equals(room.getOpenTime()) &&
-                talk.getEndTime().toLocalTime().isBefore(room.getCloseTime())){
-            return true;
-        }
-        return talk.getStartTime().toLocalTime().isAfter(room.getOpenTime()) &&
-                talk.getEndTime().toLocalTime().equals(room.getCloseTime());
-    }
-
-    /**
-     * @param room
      * @param unbooked
      * */
     protected boolean is_room_booked(Room room, Event unbooked){
@@ -82,6 +60,13 @@ public class RoomManager {
         return false;
     }
 
+    protected boolean can_fit_event(Event event, Room room){
+        if(event.getStartTime().isBefore(room.getOpenTime())){
+            return false;
+        }
+        else return !event.getEndTime().isAfter(room.getCloseTime());
+    }
+
     protected ArrayList<Room> getRooms(){
         return rooms;
     }
@@ -91,7 +76,7 @@ public class RoomManager {
      * */
     protected String roomToString(Room room){
         return new String("Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
-                + room.getCloseTime());
+                + room.getCloseTime() + "\n");
     }
 
     /**
@@ -100,7 +85,7 @@ public class RoomManager {
      * */
     protected boolean time_conflict(Talk scheduling, Event event){
         for(Talk scheduled: event.getTalks()){
-            if(scheduling.getStartTime().isEqual(scheduled.getStartTime())){
+            if(scheduling.getStartTime().equals(scheduled.getStartTime())){
                 return true;
             }
             else if(scheduling.getStartTime().isAfter(scheduled.getStartTime()) &&
@@ -116,6 +101,7 @@ public class RoomManager {
     }
     protected boolean time_conflict(Event event1, Event event2) {
         if (event1.getStartTime().equals((event2.getStartTime()))) {
+            System.out.println("time conflict");
             return true;
         } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
                 event1.getStartTime().isBefore(event2.getEndTime())) {
@@ -151,5 +137,30 @@ public class RoomManager {
             return LocalTime.parse(date, formatter);
         }
         return null;
+    }
+
+    public void writeToFile(String fileName) throws IOException {
+        OutputStream file = new FileOutputStream(fileName);
+        OutputStream buffer = new BufferedOutputStream(file);
+        ObjectOutput output = new ObjectOutputStream(buffer);
+
+        output.writeObject(this);
+        output.close();
+
+    }
+
+    public RoomManager readFile(String fileName) throws IOException, ClassNotFoundException {
+        try {
+            InputStream file = new FileInputStream(fileName);
+            InputStream buffer = new BufferedInputStream(file);
+            ObjectInput input = new ObjectInputStream(buffer);
+
+            RoomManager rm = (RoomManager) input.readObject();
+            input.close();
+            return rm;
+        } catch (IOException | ClassNotFoundException ignored) {
+            System.out.println("couldn't read room file.");
+        }
+        return new RoomManager();
     }
 }

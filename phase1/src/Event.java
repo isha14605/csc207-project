@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 
-public class Event {
+public class Event implements Serializable {
     private static int numOfEvents;
     private int eventId;
     private String name;
@@ -62,6 +63,12 @@ public class Event {
      * @return an int that is the id of this event.
      */
     public int getEventId() {return eventId;}
+
+    /**
+     * Returns an int that is the id of this event.
+     * @return an int that is the id of this event.
+     */
+    public void setEventId(int eventId) {this.eventId = eventId;}
 
     /**
      * Returns a LocalTime that is the start time of this event.

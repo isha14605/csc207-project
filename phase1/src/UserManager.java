@@ -15,9 +15,11 @@ public class UserManager{
         users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
         users.add(new User("Test1", "12345", "Test1@gmail.com"));
         users.add(new User("Test2", "12345", "Test2@gmail.com"));
+        users.add(new Organizer("Chevoy","1","t"));
         email.add("liuhao@gmail.com");
         email.add("Test1@gmail.com");
         email.add("Test2@gmail.com");
+        email.add("t");
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.

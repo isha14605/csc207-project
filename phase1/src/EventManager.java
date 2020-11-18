@@ -4,15 +4,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class EventManager implements Serializable {
     private static final Logger logger = Logger.getLogger(EventManager.class.getName());
 
-    protected final ArrayList<Event> events = new ArrayList<>();
+    public ArrayList<Event> events;
 
     /** creates a empty Event Manager **/
-    public EventManager() { }
+    public EventManager(){
+        events = new ArrayList<>();
+    }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
      * @param name the name of the user.
@@ -21,10 +24,14 @@ public class EventManager implements Serializable {
      * @param end end of the event in localtime.
      * @param date date of the event of event in local time.
      */
-    protected void create_event(String name, String desc, LocalTime start, LocalTime end, LocalDate date) {
+    protected void create_event(String name, String desc, LocalTime start, LocalTime end, LocalDate date) throws IOException {
         Event event = new Event(name, desc, start, end, date);
+        if(event.getEventId() <= events.size()){
+            event.setEventId(events.size()+1);
+        }
         events.add(event);
     }
+
 
     /** Finds the event with the event id .
      * @param event_id a integer that is connected to a event.
@@ -69,6 +76,15 @@ public class EventManager implements Serializable {
             }
         }
         return on_same_day;
+    }
+
+    protected boolean event_exist(int event_id){ return event_id > 0 && event_id <= events.size();
+    }
+
+    protected void print_events(){
+        for (Event event : events) {
+            System.out.println(this.eventToString(event));
+        }
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -138,8 +154,9 @@ public class EventManager implements Serializable {
         else{
             room = event.getEventRoom().getName();
         }
-        return new String("Event id:" + event.getEventId() + " " + event.getName() +
-                " Room: " + room);
+        return new String("Event id: " + event.getEventId() + " | Event name: " + event.getName() +
+                " | Room: " + room + "\nEvent Starts from " + event.getStartTime() + " to " +
+                event.getEndTime() + " on " + event.getEventDate() + " Talks " + event.getTalks() + "\n");
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -172,7 +189,7 @@ public class EventManager implements Serializable {
      @return  return true if there is a time conflict */
     protected boolean time_conflict(Talk scheduling, Event event){
         for(Talk scheduled: event.getTalks()){
-            if(scheduling.getStartTime().isEqual(scheduled.getStartTime())){
+            if(scheduling.getStartTime().equals(scheduled.getStartTime())){
                 return true;
             }
             else if(scheduling.getStartTime().isAfter(scheduled.getStartTime()) &&
@@ -199,6 +216,14 @@ public class EventManager implements Serializable {
             return true;
         } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
                 event1.getEndTime().isBefore(event2.getEndTime());
+    }
+
+    protected boolean within_event(Talk talk, Event event){
+            if(talk.getStartTime().isBefore(event.getStartTime())){
+                return false;
+            }
+            else return !talk.getEndTime().isAfter(talk.getEndTime());
+
     }
 
     /** Checks if a value was in valid format
@@ -259,6 +284,31 @@ public class EventManager implements Serializable {
                     "the 24 hour format between 00-23 with format of hour:min");
         }
         return null;
+    }
+
+    public void writeToFile(String fileName) throws IOException {
+        OutputStream file = new FileOutputStream(fileName);
+        OutputStream buffer = new BufferedOutputStream(file);
+        ObjectOutput output = new ObjectOutputStream(buffer);
+
+        output.writeObject(events);
+        output.close();
+
+    }
+
+    public ArrayList<Event> readFile(String fileName) throws IOException, ClassNotFoundException {
+        try {
+            InputStream file = new FileInputStream(fileName);
+            InputStream buffer = new BufferedInputStream(file);
+            ObjectInput input = new ObjectInputStream(buffer);
+
+            ArrayList<Event> events1 = (ArrayList<Event>) input.readObject();
+            input.close();
+            return events1;
+        } catch (IOException | ClassNotFoundException ignored) {
+            System.out.println("couldn't read file.");
+        }
+        return events;
     }
 
 

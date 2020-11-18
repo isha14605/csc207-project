@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.HashMap;
  * @version 1.0
  */
 
-public class Room {
+public class Room implements Serializable {
     private String name;
     private int roomCapacity;
     private LocalTime openTime;

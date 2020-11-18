@@ -1,27 +1,21 @@
+import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Objects;
 
-public class TalkManager {
+public class TalkManager implements Serializable{
     private final ArrayList<Talk> talks = new ArrayList<Talk>();
 
     public TalkManager(){}
 
     /** code use case classes that directly add/ create new entities **/
-    protected Talk create_talk(LocalDateTime startTime, LocalDateTime endTime, Event event){
-        try {
-            Talk talk = new Talk(startTime, endTime, event);
-            talks.add(talk);
-            return talk;
-        }
-        catch(Exception e){
-            System.out.println("invalid input");
-        }
-
-        return null;
+    protected Talk create_talk(LocalTime startTime, LocalTime endTime, Event event){
+        Talk talk = new Talk(startTime, endTime, event);
+        talk.setId(talks.size()+1);
+        talks.add(talk);
+        return talk;
     }
     protected void add_talk(Talk talk, Event event) {
         for (Talk scheduled : event.getTalks()) {
@@ -86,5 +80,28 @@ public class TalkManager {
         throw new IllegalArgumentException("Input is not a valid format");
     }
 
+    public void writeToFile(String fileName) throws IOException {
+        OutputStream file = new FileOutputStream(fileName);
+        OutputStream buffer = new BufferedOutputStream(file);
+        ObjectOutput output = new ObjectOutputStream(buffer);
 
+        output.writeObject(this);
+        output.close();
+
+    }
+
+    public TalkManager readFile(String fileName) throws IOException, ClassNotFoundException {
+        try {
+            InputStream file = new FileInputStream(fileName);
+            InputStream buffer = new BufferedInputStream(file);
+            ObjectInput input = new ObjectInputStream(buffer);
+
+            TalkManager tm = (TalkManager) input.readObject();
+            input.close();
+            return tm;
+        } catch (IOException | ClassNotFoundException ignored) {
+            System.out.println("couldn't read room file.");
+        }
+        return new TalkManager();
+    }
 }
