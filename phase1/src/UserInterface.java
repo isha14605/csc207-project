@@ -1,4 +1,4 @@
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -250,7 +250,7 @@ class UserInterface {
                 case "BMT":
                     System.out.println("These are the talks that you are speaking at:");
                     if (s.getTalksSpeaking().size() == 0) {
-                        System.out.println("You are not scheduled to speak at any talks.");
+                        System.out.println("You are not scheduled to speak at any talks");
                     } else {
                         for (int i = 0; i < s.getTalksSpeaking().size(); i++) {
                             System.out.println(s.getTalksSpeaking().get(i));
