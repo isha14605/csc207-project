@@ -11,6 +11,7 @@ public class MessagingSystem {
 
     UserManager um = new UserManager();
     EventManager em = new EventManager();
+    TalkManager tm = new TalkManager();
 
     public MessagingSystem() {
     }
@@ -60,17 +61,16 @@ public class MessagingSystem {
     public void sendmessage_speaker(Speaker from, String message) {
         message = readMessage().toString();
         ArrayList<String> recipient = readRecipient();
-        ArrayList<Talk> talks;
-        if (recipient.get(0).equals("All") && from.userType() == 'S') {
-            talks = from.getTalksSpeaking();
-            for (Talk t : talks) {
-                for (User u : t.getEvent().getAttendees()) {
-                    um.message(from, u, message);
-                }
+        ArrayList<Event> events = new ArrayList<Event>();
+        for (String s: recipient){
+            if (!(events.contains(tm.findTalk(s)))){
+                events.add(tm.findTalk(s));
             }
-
-        } else {
-            sendOnemessage(from, message);
+        }
+        for (Event e: events){
+            for(User u: e.getAttendees()){
+                um.message(from, u, message);
+            }
         }
     }
 

@@ -234,7 +234,7 @@ class UserInterface {
         SignUpSystem signUpSystem = new SignUpSystem();
         EventManager eventManager = new EventManager();
 
-        // s = userManager.findUser(email);
+        //s = userManager.findUser(email);
         Speaker s = new Speaker("test", "test", "test");
         boolean on_page = true;
 
