@@ -56,4 +56,5 @@ public class Talk {
     public void setSpeaker(Speaker speaker) {
         this.speaker = speaker;
     }
+
 }

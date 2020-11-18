@@ -86,5 +86,16 @@ public class TalkManager {
         throw new IllegalArgumentException("Input is not a valid format");
     }
 
+    public Event findTalk(String talk){
+        for(Talk t: talks){
+            if (t.getEvent().equals(talk)){
+                return t.getEvent();
+
+            }
+        }
+        return null;
+
+    }
+
 
 }
