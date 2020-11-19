@@ -354,8 +354,7 @@ class UserInterface {
                 case "IB":
                     System.out.println("============== Inbox ==================" +
                             "\n - Send a Message to Attendees - enter SM" +
-                            "\n - View Messaging History - enter VMH" +
-                            "\n - Respond to an Attendee - enter RA" +
+                            "\n - View Messaging History and Respond to Individual Attendee- enter VMH" +
                             "\n - Exit - enter E");
                     String inboxOption = userInput.next();
                     switch(inboxOption){
@@ -399,10 +398,47 @@ class UserInterface {
                             }
                             break;
                         case "VMH":
+                            boolean hasMessagesFromContact = false;
+                            System.out.println("Enter an email to view your message history with them.");
+                            String emailOfContact = userInput.next();
 
-                            break;
-                        case "RA":
-                            System.out.println("");
+                            // Check if this user exists in the system
+                            if (userManager.checkUserExists(email)){
+                                ArrayList<String> messages_received = speaker.getMessagesReceived().get(um.findUser(emailOfContact));
+
+                                System.out.println("Enter the number of messages you would like to see.");
+                                String numMessages = userInput.next();
+
+                                if (!(messages_received.size() == 0)) {
+                                    while (Integer.parseInt(numMessages) > messages_received.size()) {
+                                        System.out.println("Enter the number of messages you would like to see.");
+                                        numMessages = userInput.next();
+                                    }
+                                    for (int i = messages_received.size() - Integer.parseInt(numMessages); i < messages_received.size(); i++) {
+                                        System.out.println(messages_received.get(i));
+                                        hasMessagesFromContact = true;
+                                    }
+                                } else {
+                                    System.out.println("You have no messages from this person.");
+                                }
+                            } else {
+                                System.out.println("Error. This person does not exist in our records.");
+                            }
+
+                            if (hasMessagesFromContact){
+                                System.out.println("Would you like to respond to this Attendee? Yes or No.");
+                                String respondDecision = userInput.next();
+                                switch (respondDecision){
+                                    case "Yes":
+                                        System.out.println("Please enter your response.");
+                                        String messageResponse = userInput.next();
+                                        ms.sendAttendeeMessage(speaker, um.findUser(email), messageResponse);
+                                        break;
+                                    case "No":
+                                        on_page = false;
+                                }
+                            }
+
                             break;
                         case "E":
                             on_page = false;
