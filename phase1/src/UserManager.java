@@ -162,5 +162,7 @@ public class UserManager{
         return UserManager.users.get(i);
     }
 
-
+    protected boolean checkUserExists(String email) {
+        return UserManager.email.contains(email);
+    }
 }

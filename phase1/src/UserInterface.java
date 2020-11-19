@@ -162,7 +162,8 @@ class UserInterface {
     }
 
 
-    public static void AttendeeInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec) {
+    public static void AttendeeInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec,
+                                         UserManager um) {
         Attendee attendee = new Attendee("test", "test", "test");
 
         boolean on_page = true;
@@ -219,10 +220,28 @@ class UserInterface {
                     }
 
                 case "IB":
-                    System.out.println("not Implemented yet");
-                    // Four options for User
-                    // Send a message - SM
-                        // "Who would you like to message?"
+                    // Four options for Attendee
+                    System.out.println("============== Inbox ==================" +
+                            "\n - Send a message - SM" +
+                            "\n - Add a contact - type AD" +
+                            "\n - View messaging history - type MH" +
+                            "\n - View contacts - type CO");
+                    switch (option) {
+                        // Send a message - SM
+                        case "SM":
+                            if (attendee.contacts.size() == 0) {
+                                System.out.println("You do not have any contacts to message. You must add them first.");
+                            } else {
+                                System.out.println("Enter the email of the person you would like to message.");
+                                String receiver_email = userInput.next();
+                                // Check to see if the person exists, they can message this type of person (either an
+                                // Attendee or a Speaker), and if the person they want to message is already in their
+                                // contacts list
+                                if (um.checkUserExists(receiver_email) && ) {
+                                    
+                                }
+                            }
+                    }
                             // Check to see if the person exists, they can message this type of person (either an
                             // Attendee or a Speaker), and if the person they want to message is already in their
                             // contacts list
