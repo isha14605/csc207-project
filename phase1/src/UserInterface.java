@@ -226,19 +226,27 @@ class UserInterface {
                             "\n - Add a contact - type AD" +
                             "\n - View messaging history - type MH" +
                             "\n - View contacts - type CO");
-                    switch (option) {
-                        // Send a message - SM
+                    String options = userInput.next();
+                    switch (options) {
+                        //Send a message - SM
                         case "SM":
                             if (attendee.contacts.size() == 0) {
                                 System.out.println("You do not have any contacts to message. You must add them first.");
                             } else {
                                 System.out.println("Enter the email of the person you would like to message.");
                                 String receiver_email = userInput.next();
+                                String message = userInput.next();
                                 // Check to see if the person exists, they can message this type of person (either an
                                 // Attendee or a Speaker), and if the person they want to message is already in their
                                 // contacts list
-                                if (um.checkUserExists(receiver_email) && ) {
-                                    
+                                if (um.checkUserExists(receiver_email)) {
+                                    boolean flag = um.message(attendee, um.findUser(receiver_email),message);
+                                    if (flag){
+                                        System.out.println("Message Sent!");
+                                    } else {
+                                        System.out.println("Error!");
+                                    }
+
                                 }
                             }
                     }
@@ -353,7 +361,7 @@ class UserInterface {
 
                     switch (option) {
                         case "UO":
-                            AttendeeInterface(su,em,ec);
+                            AttendeeInterface(su,em,ec, userManager);
                             break;
 
                         case "OO":
