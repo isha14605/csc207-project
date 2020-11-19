@@ -1,5 +1,4 @@
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -169,8 +168,9 @@ class UserInterface {
         while (on_page) {
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
             System.out.println("==============Attendee Interface==================" +
-                    "\n - Browse events - type BE" +
+                    "\n - Browse all events - type BE" +
                     "\n - Signup for events - type SU" +
+                    "\n - View all events you're attending/cancel attendance at an event - type VC" +
                     "\n - Inbox for messages - type IB" +
                     "\n - Exit - type Exit");
             String option = userInput.next();  // Read user input
@@ -220,7 +220,22 @@ class UserInterface {
                         }
                     }
                     break;
-
+                case "VC":
+                    if (attendee.getEventsAttending().size() == 0) {
+                        System.out.println("You are not signed up for any events.");
+                    } else {
+                        System.out.println("Here is a list of events you are signed up for:");
+                        for (Event attending: attendee.getEventsAttending()) {
+                            System.out.println(attending.getName());
+                        }
+                        System.out.println("Would you like to cancel attendance at an event? Type Yes or No.");
+                        String toCancel = userInput.next();
+                        if (toCancel.equals("Yes")) {
+                            System.out.println("What event would you like to cancel attendance for?");
+                            String cancelEvent = userInput.next();
+                            
+                        }
+                    }
                 case "IB":
                     // Five options for Attendee
                     System.out.println("============== Inbox ==================" +
