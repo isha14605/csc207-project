@@ -56,14 +56,8 @@ public class MessagingSystem {
     }
 
 
-    public void sendMessageSpeaker(Speaker from, ArrayList<String> talks, String message) {
-        ArrayList<Event> events = new ArrayList<Event>();
-        for (String s: talks){
-            if (!(events.contains(tm.findTalk(s)))){
-                events.add(tm.findTalk(s));
-            }
-        }
-        for (Event e: events){
+    public void sendMessageSpeaker(Speaker from, ArrayList<Event> event_name, String message) {
+        for (Event e: event_name){
             for(User u: e.getAttendees()){
                 um.message(from, u, message);
             }

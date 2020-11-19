@@ -370,25 +370,32 @@ class UserInterface {
                             }
 
                             // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
-                            System.out.println("On a new line for each talk, please enter all the talks that you " +
+                            System.out.println("On a new line for each event, please enter ids of all the events that you " +
                                     "want to send messages to the attendees of.");
                             ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
-                            for (int i = 0; i < toSendMessagesTo.size(); i++){
+                            for (int i = 0; i < numberOfTalks; i++){
                                 String a = userInput.nextLine(); // stores the input to be added
                                 toSendMessagesTo.add(a); // adds the talk to the list
                             }
+                            ArrayList<Event> events_at = new ArrayList<Event>();
 
-                            // This loop ensures that the speaker is only sending messages to attendees of talks that they are speaking at.
-                            for(int i = 0; i <toSendMessagesTo.size(); i++){
-                                if (!speaker.getTalksSpeaking().contains(toSendMessagesTo.get(i))){
-                                        toSendMessagesTo.remove(i); // removes any talks from the list that the speaker is not speaking at
+                            for (Talk t: speaker.getTalksSpeaking()){
+                                if (!(events_at.contains(t.getEvent()))){
+                                    events_at.add(t.getEvent());
+                                }
+                            }
+                            ArrayList<Event> final_events = new ArrayList<Event>();
+
+                            for (String s : toSendMessagesTo) {
+                                if (events_at.contains(eventManager.find_event(Integer.parseInt(s)))){
+                                    final_events.add((eventManager.find_event(Integer.parseInt(s))));
                                 }
                             }
 
                             System.out.println("Please enter the message you would like to send to all the attendees" +
                                     " of these selected talks.");
                             String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
-                            ms.sendMessageSpeaker(speaker, toSendMessagesTo, messageToSend); // calls the method from UserManager to send the messages
+                            ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
                             }
                             break;
                         case "VMH":
