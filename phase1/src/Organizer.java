@@ -19,7 +19,7 @@ public class Organizer extends Attendee {
      * @param email the email of the Organizer
      * @param password the password of the Organizer
      */
-    Organizer(String name, String email, String password) {
+    Organizer(String name, String password, String email) {
         super(name, password, email);
         this.eventsOrganizing = new ArrayList<Event>();
     }

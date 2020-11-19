@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -52,14 +54,14 @@ public class MessagingSystem {
     }
 
     public void sendOnemessage(User from, String message) {
-        message = readMessage().toString();
+        message = readMessage().toString() + "{" + LocalDate.now() + "}" + LocalTime.now();
         ArrayList<String> recipient = readRecipient();
         um.message(from, um.findUser(recipient.get(0)), message);
     }
 
 
     public void sendmessage_speaker(Speaker from, String message) {
-        message = readMessage().toString();
+        message = readMessage().toString() + "{" + LocalDate.now() + "}" + LocalTime.now();
         ArrayList<String> recipient = readRecipient();
         ArrayList<Event> events = new ArrayList<Event>();
         for (String s: recipient){
@@ -76,7 +78,7 @@ public class MessagingSystem {
 
 
     public void sendmessage_organizer(Organizer from, String message) {
-        message = readMessage().toString();
+        message = readMessage().toString() + "{" + LocalDate.now() + "}" + LocalTime.now();
         ArrayList<String> recipient = readRecipient();
         if (recipient.get(2) == "All") {
             Event event = em.find_event(Integer.parseInt(recipient.get(1)));

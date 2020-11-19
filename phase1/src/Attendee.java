@@ -17,7 +17,7 @@ public class Attendee extends User{
      * @param email the email of the specified Attendee
      * @param password the password of the specified Attendee
      */
-    Attendee(String name, String email, String password) {
+    Attendee(String name, String password, String email) {
         super(name, password, email);
         this.eventsAttending = new ArrayList<Event>();
     }

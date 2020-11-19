@@ -12,16 +12,16 @@ public class UserManager{
 
 
     protected UserManager(){
-        users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
-        users.add(new User("Test1", "12345", "Test1@gmail.com"));
-        users.add(new User("Test2", "12345", "Test2@gmail.com"));
-        users.add(new Organizer("Chevoy","1","t"));
+//        users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
+//        users.add(new User("Test1", "12345", "Test1@gmail.com"));
+//        users.add(new User("Test2", "12345", "Test2@gmail.com"));
+//        users.add(new Organizer("Chevoy","1","t"));
         this.addUser("Tanya", "123@gmail.com", "123", "attendee");
-        this.addUser("Isha", "456@gmail.com", "456", "attendee");
-        email.add("liuhao@gmail.com");
-        email.add("Test1@gmail.com");
-        email.add("Test2@gmail.com");
-        email.add("t");
+        this.addUser("Isha", "456@gmail.com", "456", "organizer");
+//        email.add("liuhao@gmail.com");
+//        email.add("Test1@gmail.com");
+//        email.add("Test2@gmail.com");
+//        email.add("t");
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -35,13 +35,11 @@ public class UserManager{
         if (!UserManager.email.contains(email)) {
             UserManager.email.add(email);
             if (typeOfUser.equals("organizer")) {
-                users.add(new Organizer(name, email, password));
+                users.add(new Organizer(name, password, email));
             } else if (typeOfUser.equals("speaker")) {
-                users.add(new Speaker(name, email, password));
+                users.add(new Speaker(name, password, email));
             } else if (typeOfUser.equals("attendee")) {
-                users.add(new Attendee(name, email, password));
-            } else {
-                users.add(new User(name, email, password));
+                users.add(new Attendee(name, password, email));
             }
         }
     }
@@ -161,6 +159,7 @@ public class UserManager{
     protected User findUser(String email){
         int i;
         i = UserManager.email.indexOf(email);
+        //System.out.println(i);
         return UserManager.users.get(i);
     }
 
