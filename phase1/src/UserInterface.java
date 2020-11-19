@@ -144,8 +144,6 @@ class UserInterface {
                                     System.out.println("Talk was not added.");
                                 }
                                 break;
-
-
                         }
                     }
                     break;
@@ -220,12 +218,13 @@ class UserInterface {
                     }
 
                 case "IB":
-                    // Four options for Attendee
+                    // Five options for Attendee
                     System.out.println("============== Inbox ==================" +
                             "\n - Send a message - SM" +
                             "\n - Add a contact - type AD" +
                             "\n - View messaging history - type MH" +
-                            "\n - View contacts - type CO");
+                            "\n - View contacts - type CO" +
+                            "\n - Exit - type Exit"); // ask about Exit
                     String options = userInput.next();
                     switch (options) {
                         // Send a message - SM
@@ -255,6 +254,7 @@ class UserInterface {
                                     System.out.println("Error. This person does not exist in our records.");
                                 }
                             }
+                            break;
                         // Add a contact - AD
                         case "AD":
                             System.out.println("Enter the email of the person you would like to add as a contact.");
@@ -270,26 +270,30 @@ class UserInterface {
                                     System.out.println("Added contact successfully.");
                                 } else {
                                     System.out.println("Error. You do not have permission to add this person or " +
-                                            "this person is already in your contacts");
+                                            "this person is already in your contacts.");
                                 }
                             } else { // Executed when the person that the Attendee wants to add does not exist
                                 System.out.println("Error. This person does not exist in our records.");
                             }
+                            break;
                         // View messaging history - MH
                         case "MH":
-                            // "Enter the name of a contact to view your message history with them."
+                            System.out.println("Enter the name of a contact to view your message history with them.");
                             // Check conditions similar to above two methods and print appropriate messages if errors
                             // "Enter the timeframe between which you would like to view messages with this person"
                             // Check if messages are sent between the two people during this timeframe
                             // If yes, print "Message history with <the person's name>" and print as you loop
                             // through messages sent (<name>:) and received (<name>:) in an alternating format
                             // If no, print "No messages were exchanged between this timeframe with this person."
+                            break;
+                        // View contacts - CO    
+                        case "CO":
+                            // Loop through their contacts list and print out the names of each of their contacts
+                            for (User contact: attendee.contacts) {
+                                System.out.println(contact.name);
+                            }
+                            break;
                     }
-
-
-
-                    // View contacts - CO
-                        // Loop through their contacts list and print out the names of each of their contacts
                     break;
 
                 case "Exit":
