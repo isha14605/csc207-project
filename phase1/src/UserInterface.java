@@ -221,21 +221,35 @@ class UserInterface {
                     }
                     break;
                 case "VC":
-                    if (attendee.getEventsAttending().size() == 0) {
+                    if (attendee.getEventsAttending().size() == 0) { //need to fix this case
                         System.out.println("You are not signed up for any events.");
                     } else {
                         System.out.println("Here is a list of events you are signed up for:");
                         for (Event attending: attendee.getEventsAttending()) {
-                            System.out.println(attending.getName());
+                            System.out.println("Event Name: " + attending.getName() + " Event ID: " + attending.getEventId());
                         }
                         System.out.println("Would you like to cancel attendance at an event? Type Yes or No.");
                         String toCancel = userInput.next();
+                        boolean cancelled = false;
                         if (toCancel.equals("Yes")) {
-                            System.out.println("What event would you like to cancel attendance for?");
-                            String cancelEvent = userInput.next();
-                            
+                            System.out.println("What event would you like to cancel attendance for? Type the ID.");
+                            String eventID = userInput.next();
+                            for (Event attending: attendee.getEventsAttending()){
+                                if (attending.getEventId() == Integer.parseInt(eventID)) {
+                                    um.cancelRegistration(attendee, attending);
+                                    cancelled = true;
+                                } else {
+                                    cancelled = false;
+                                }
+                            }
+                            if (cancelled) {
+                                System.out.println("Attendance cancelled for this event.");
+                            } else {
+                                System.out.println("You were never signed up for this event.");
+                            }
                         }
                     }
+                    break;
                 case "IB":
                     // Five options for Attendee
                     System.out.println("============== Inbox ==================" +
