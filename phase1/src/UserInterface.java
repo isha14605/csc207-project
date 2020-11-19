@@ -278,21 +278,35 @@ class UserInterface {
                             break;
                         // View messaging history - MH
                         case "MH":
-                            System.out.println("Enter the name of a contact to view your message history with them.");
+                            System.out.println("Enter the email of the contact to view your message history with them.");
+                            String contact = userInput.next();
                             // Check conditions similar to above two methods and print appropriate messages if errors
-                            // "Enter the timeframe between which you would like to view messages with this person"
-                            // Check if messages are sent between the two people during this timeframe
-                            // If yes, print "Message history with <the person's name>" and print as you loop
-                            // through messages sent (<name>:) and received (<name>:) in an alternating format
-                            // If no, print "No messages were exchanged between this timeframe with this person."
+                            if (um.checkUserExists(contact) && attendee.getContacts().contains(um.findUser(contact))) {
+                                ArrayList<String> messages_received = attendee.getMessagesReceived().get(um.findUser(contact));
+                                System.out.println("Enter the number of messages you would like to see.");
+                                String num = userInput.next();
+                                if (!(messages_received.size() == 0)) {
+                                    while (Integer.parseInt(num) > messages_received.size()) {
+                                        System.out.println("Enter the number of messages you would like to see.");
+                                        num = userInput.next();
+                                    }
+                                    for (int i = messages_received.size() - Integer.parseInt(num); i < messages_received.size(); i++) {
+                                        System.out.println(messages_received.get(i));
+                                    }
+                                } else {
+                                    System.out.println("You have no messages from this person.");
+                                }
+                            } else { // Executed when the person that the Attendee wants to add does not exist
+                                System.out.println("Error. This person does not exist in our records or they are not in your contact list.");
+                            }
                             break;
                         // View contacts - CO    
                         case "CO":
                             if (!(attendee.contacts.size() == 0)) {
                                 System.out.println("============== Your Contacts ==================");
                                 // Loop through their contacts list and print out the names of each of their contacts
-                                for (User contact: attendee.contacts) {
-                                    System.out.println(contact.name);
+                                for (User c: attendee.contacts) {
+                                    System.out.println(c.name);
                                 }
                             } else {
                                 System.out.println("You do not have any contacts.");
