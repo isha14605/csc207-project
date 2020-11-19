@@ -66,6 +66,10 @@ public class User {
      */
     public ArrayList<User> getContacts(){return this.contacts;}
 
+    public Map<User, ArrayList<String>> getMessagesSent(){return this.messagesSent;};
+
+    public Map<User, ArrayList<String>> getMessagesReceived(){return this.messagesReceived;};
+
 
     /**
      * Adds a contact to the users contact list.
