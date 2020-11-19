@@ -168,28 +168,28 @@ class UserInterface {
         boolean on_page = true;
         while (on_page) {
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
-            System.out.println("==============Attendant Interface==================" +
-                    "\n -Browse Events- BE" +
-                    "\n -Event SignUp- enter SU" +
-                    "\n -Inbox- IB" +
-                    "\n -Exit-");
+            System.out.println("==============Attendee Interface==================" +
+                    "\n - Browse events - type BE" +
+                    "\n - Signup for events - type SU" +
+                    "\n - Inbox for messages - type IB" +
+                    "\n - Exit - type Exit");
             String option = userInput.next();  // Read user input
             switch (option) {
                 case "BE":
                     if (ec.get_events().size() == 0) {
                         System.out.println("===== Event Browser =====" +
-                                "\nNo events have been Scheduled. Cannot Preform actions");
+                                "\nNo events have been scheduled. Cannot perform this action.");
                     } else {
                         System.out.println("===== Event Browser =====");
-                        System.out.println("What date would you like to see event from");
+                        System.out.println("Which date would you like to see events for?");
                         String date = userInput.next();
                         LocalDate dateF = eventManager.date_formatting_date(date);
-                        System.out.println("Events after what start time");
+                        System.out.println("What start time would you like to see events for?");
                         String start = userInput.next();
                         LocalTime startF = eventManager.date_formatting_time(start);
-                        System.out.println("Events and before what time");
+                        System.out.println("What end time would you like to see events for?");
                         String end = userInput.next();
-                        System.out.println("And end time");
+//                      System.out.println("And end time");
                         LocalTime endF = eventManager.date_formatting_time(end);
                         ArrayList<Event> browsed = signUpSystem.browseEvents(dateF, startF, endF);
                         for (Event event : browsed) {
@@ -201,18 +201,18 @@ class UserInterface {
                 case "SU":
                     if (ec.get_events().size() == 0) {
                         System.out.println("===== Event Browser =====" +
-                                "\nNo events have been Scheduled. Cannot Preform actions");
+                                "\nNo events have been scheduled. Cannot perform this action.");
                     } else {
                         System.out.println("===== Event Sign Up =====");
 
                         for (Event scheduled : ec.get_events()) {
                             eventManager.eventToString(scheduled);
                         }
-                        System.out.println("Event the event id of the event you want to join");
+                        System.out.println("Enter the event id of the event you want to join.");
                         int event_id = userInput.nextInt();
                         Event event = ec.em.find_event(event_id);
                         if(event.getEventRoom() == null){
-                            System.out.println("Sorry event hasn't been assigned a room. Unable to join.\n");
+                            System.out.println("Sorry, the event hasn't been assigned a room. Unable to join.\n");
                             break;
                         }
                         signUpSystem.signUp(attendee, event);
@@ -220,6 +220,38 @@ class UserInterface {
 
                 case "IB":
                     System.out.println("not Implemented yet");
+                    // Four options for User
+                    // Send a message - SM
+                        // "Who would you like to message?"
+                            // Check to see if the person exists, they can message this type of person (either an
+                            // Attendee or a Speaker), and if the person they want to message is already in their
+                            // contacts list
+                            // If they are able to message the person, then we ask "What is your message?"
+                                // Append their message to their sent messages list and to the received messages list
+                                // of the person they want to message
+                                // Print "Message sent."
+                            // If they cannot message the person, print a message accordingly, eg.
+                            // "This person does not exist in our records" or "You do not have permission to message
+                            // this person" or "You must first add this person to your list of contacts - type AD"
+                    // Add a contact - AD
+                        // "Who would you like to add?"
+                            // Check to see if the person exists, they can add the person (either an Attendee or a
+                            // Speaker), and if the person they want to add is not already in their contacts list
+                                // If they can add the person, append the person to their list of contacts and print
+                                // "Added contact."
+                                // If they can't add the person, print a message accordingly, eg.
+                                // "This person does not exist in our records" or "You do not have permission to add
+                                // this person" or "This person is already in your contacts"
+                    // View messaging history - MH
+                        // "Enter the name of a contact to view your message history with them."
+                            // Check conditions similar to above two methods and print appropriate messages if errors
+                        // "Enter the timeframe between which you would like to view messages with this person"
+                            // Check if messages are sent between the two people during this timeframe
+                                // If yes, print "Message history with <the person's name>" and print as you loop
+                                // through messages sent (<name>:) and received (<name>:) in an alternating format
+                                // If no, print "No messages were exchanged between this timeframe with this person."
+                    // View contacts - CO
+                        // Loop through their contacts list and print out the names of each of their contacts
                     break;
 
                 case "Exit":

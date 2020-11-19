@@ -27,8 +27,6 @@ public class LoginController {
      * @see UserManager#verifyLogin(String email, String password)
      */
     public boolean checkLogIn(String email, String password) {
-        if (userManager.verifyLogin(email, password))
-            return true;
-        return false;
+        return userManager.verifyLogin(email, password);
     }
 }
