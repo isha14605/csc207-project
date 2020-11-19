@@ -288,9 +288,14 @@ class UserInterface {
                             break;
                         // View contacts - CO    
                         case "CO":
-                            // Loop through their contacts list and print out the names of each of their contacts
-                            for (User contact: attendee.contacts) {
-                                System.out.println(contact.name);
+                            if (!(attendee.contacts.size() == 0)) {
+                                System.out.println("============== Your Contacts ==================");
+                                // Loop through their contacts list and print out the names of each of their contacts
+                                for (User contact: attendee.contacts) {
+                                    System.out.println(contact.name);
+                                }
+                            } else {
+                                System.out.println("You do not have any contacts.");
                             }
                             break;
                     }
