@@ -228,55 +228,66 @@ class UserInterface {
                             "\n - View contacts - type CO");
                     String options = userInput.next();
                     switch (options) {
-                        //Send a message - SM
+                        // Send a message - SM
                         case "SM":
                             if (attendee.contacts.size() == 0) {
                                 System.out.println("You do not have any contacts to message. You must add them first.");
                             } else {
                                 System.out.println("Enter the email of the person you would like to message.");
                                 String receiver_email = userInput.next();
+                                System.out.println("Enter the message you would like to send.");
                                 String message = userInput.next();
-                                // Check to see if the person exists, they can message this type of person (either an
-                                // Attendee or a Speaker), and if the person they want to message is already in their
-                                // contacts list
+                                // Check to see if the person they want to message exists in the system
                                 if (um.checkUserExists(receiver_email)) {
-                                    boolean flag = um.message(attendee, um.findUser(receiver_email),message);
+                                    // Check to see if they are allowed to message the person based on the type of User,
+                                    // by using the message method from UserManager
+                                    // If the person they want to message is not in their contacts, they are added via
+                                    // the attendeeMessage method inside the message method in UserManager
+                                    // The attendeeMessage method also handles appending the sent message to the
+                                    // appropriate lists of the sender and receiver
+                                    boolean flag = um.message(attendee, um.findUser(receiver_email), message);
                                     if (flag){
-                                        System.out.println("Message Sent!");
+                                        System.out.println("Message sent!");
                                     } else {
-                                        System.out.println("Error!");
+                                        System.out.println("Error. You do not have permission to message this person.");
                                     }
-
+                                } else { // Executed when the person that the Attendee wants to message does not exist
+                                    System.out.println("Error. This person does not exist in our records.");
                                 }
                             }
-                    }
-                            // Check to see if the person exists, they can message this type of person (either an
-                            // Attendee or a Speaker), and if the person they want to message is already in their
-                            // contacts list
-                            // If they are able to message the person, then we ask "What is your message?"
-                                // Append their message to their sent messages list and to the received messages list
-                                // of the person they want to message
-                                // Print "Message sent."
-                            // If they cannot message the person, print a message accordingly, eg.
-                            // "This person does not exist in our records" or "You do not have permission to message
-                            // this person" or "You must first add this person to your list of contacts - type AD"
-                    // Add a contact - AD
-                        // "Who would you like to add?"
-                            // Check to see if the person exists, they can add the person (either an Attendee or a
-                            // Speaker), and if the person they want to add is not already in their contacts list
-                                // If they can add the person, append the person to their list of contacts and print
-                                // "Added contact."
-                                // If they can't add the person, print a message accordingly, eg.
-                                // "This person does not exist in our records" or "You do not have permission to add
-                                // this person" or "This person is already in your contacts"
-                    // View messaging history - MH
-                        // "Enter the name of a contact to view your message history with them."
+                        // Add a contact - AD
+                        case "AD":
+                            System.out.println("Enter the email of the person you would like to add as a contact.");
+                            String newContact = userInput.next();
+                            // Check to see if the person exists
+                            if (um.checkUserExists(newContact)) {
+                                // Checks to see that they can add this type of person and that person they want to add
+                                // is not already in their contacts list
+                                boolean is_Attendee = (um.findUser(newContact).userType() == 'A');
+                                boolean is_Speaker = (um.findUser(newContact).userType() == 'S');
+                                if ((is_Attendee || is_Speaker) && !attendee.contacts.contains(um.findUser(newContact))) {
+                                    attendee.addContact(um.findUser(newContact)); //adds the contact to their list
+                                    System.out.println("Added contact successfully.");
+                                } else {
+                                    System.out.println("Error. You do not have permission to add this person or " +
+                                            "this person is already in your contacts");
+                                }
+                            } else { // Executed when the person that the Attendee wants to add does not exist
+                                System.out.println("Error. This person does not exist in our records.");
+                            }
+                        // View messaging history - MH
+                        case "MH":
+                            // "Enter the name of a contact to view your message history with them."
                             // Check conditions similar to above two methods and print appropriate messages if errors
-                        // "Enter the timeframe between which you would like to view messages with this person"
+                            // "Enter the timeframe between which you would like to view messages with this person"
                             // Check if messages are sent between the two people during this timeframe
-                                // If yes, print "Message history with <the person's name>" and print as you loop
-                                // through messages sent (<name>:) and received (<name>:) in an alternating format
-                                // If no, print "No messages were exchanged between this timeframe with this person."
+                            // If yes, print "Message history with <the person's name>" and print as you loop
+                            // through messages sent (<name>:) and received (<name>:) in an alternating format
+                            // If no, print "No messages were exchanged between this timeframe with this person."
+                    }
+
+
+
                     // View contacts - CO
                         // Loop through their contacts list and print out the names of each of their contacts
                     break;

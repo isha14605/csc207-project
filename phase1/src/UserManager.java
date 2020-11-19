@@ -159,7 +159,7 @@ public class UserManager{
     }
 
     protected User findUser(String email){
-        int i = -1;
+        int i;
         i = UserManager.email.indexOf(email);
         return UserManager.users.get(i);
     }
