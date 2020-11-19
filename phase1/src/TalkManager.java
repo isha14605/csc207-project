@@ -104,4 +104,14 @@ public class TalkManager implements Serializable{
         }
         return new TalkManager();
     }
+
+    public Event findTalk(String talk){
+        for(Talk t: talks){
+            if (t.getEvent().equals(talk)){
+                return t.getEvent();
+            }
+        }
+        return null;
+    }
+
 }
