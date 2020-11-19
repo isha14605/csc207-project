@@ -51,14 +51,12 @@ public class MessagingSystem {
         return inputs;
     }
 
-    public void sendOnemessage(User from, String message) {
-        message = readMessage().toString();
-        ArrayList<String> recipient = readRecipient();
-        um.message(from, um.findUser(recipient.get(0)), message);
+    public boolean sendAttendeeMessage(User from, User to, String message) {
+        return um.message(from, to, message);
     }
 
 
-    public void sendmessage_speaker(Speaker from, String message) {
+    public void sendMessageSpeaker(Speaker from, String message) {
         message = readMessage().toString();
         ArrayList<String> recipient = readRecipient();
         ArrayList<Event> events = new ArrayList<Event>();
@@ -75,7 +73,7 @@ public class MessagingSystem {
     }
 
 
-    public void sendmessage_organizer(Organizer from, String message) {
+    public void sendMessageOrganizer(Organizer from, String message) {
         message = readMessage().toString();
         ArrayList<String> recipient = readRecipient();
         if (recipient.get(2) == "All") {

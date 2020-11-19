@@ -161,8 +161,8 @@ class UserInterface {
 
 
     public static void AttendeeInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec,
-                                         UserManager um) {
-        Attendee attendee = new Attendee("test", "test", "test");
+                                         UserManager um, MessagingSystem ms, String email) {
+        Attendee attendee = (Attendee) um.findUser(email);
 
         boolean on_page = true;
         while (on_page) {
@@ -213,9 +213,12 @@ class UserInterface {
                         if(event.getEventRoom() == null){
                             System.out.println("Sorry, the event hasn't been assigned a room. Unable to join.\n");
                             break;
+                        } else {
+                            signUpSystem.signUp(attendee, event);
+                            System.out.println("You've been registered!");
                         }
-                        signUpSystem.signUp(attendee, event);
                     }
+                    break;
 
                 case "IB":
                     // Five options for Attendee
@@ -244,7 +247,7 @@ class UserInterface {
                                     // the attendeeMessage method inside the message method in UserManager
                                     // The attendeeMessage method also handles appending the sent message to the
                                     // appropriate lists of the sender and receiver
-                                    boolean flag = um.message(attendee, um.findUser(receiver_email), message);
+                                    boolean flag = ms.sendAttendeeMessage(attendee, um.findUser(receiver_email), message);
                                     if (flag){
                                         System.out.println("Message sent!");
                                     } else {
@@ -365,6 +368,7 @@ class UserInterface {
         LoginController loginSystem = new LoginController();
         EventController ec = new EventController();
         SignUpSystem su = new SignUpSystem();
+        MessagingSystem ms = new MessagingSystem();
         Scanner userInput = new Scanner(System.in);
         EventManager em = new EventManager();
         boolean signed_in = false;
@@ -395,7 +399,7 @@ class UserInterface {
 
                     switch (option) {
                         case "UO":
-                            AttendeeInterface(su,em,ec, userManager);
+                            AttendeeInterface(su,em,ec, userManager, ms, email);
                             break;
 
                         case "OO":
@@ -407,6 +411,7 @@ class UserInterface {
                             homeScreen = false;
                     }
                 }
+                signed_in = false;
             }
         }
     }

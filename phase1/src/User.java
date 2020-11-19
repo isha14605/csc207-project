@@ -12,9 +12,9 @@ public class User {
     protected String name;
     protected String password;
     protected String email;
-    protected Map<User, ArrayList<String>> messagesSent;
+    protected HashMap<User, ArrayList<String>> messagesSent;
     /*For messages_sent, The key is the user they are sending a message to, value is the message*/
-    protected Map<User, ArrayList<String>> messagesReceived;
+    protected HashMap<User, ArrayList<String>> messagesReceived;
     /*For messages_received, The key is the user who sent them a message, value is the message*/
     protected ArrayList<User> contacts;
 
@@ -79,11 +79,18 @@ public class User {
         this.contacts.add(user);
         this.messagesSent.put(user, new ArrayList<String>());
         this.messagesReceived.put(user, new ArrayList<String>());
+        user.add_opp_contact(this);
+    }
+
+    private void add_opp_contact(User user){
+        this.contacts.add(user);
+        this.messagesSent.put(user, new ArrayList<String>());
+        this.messagesReceived.put(user, new ArrayList<String>());
     }
 
     /* To send a message to another user*/
     /**
-     * Sends a message to their conact.
+     * Sends a message to their contact.
      * @param who the recipient of the message the user wants to send.
      * @param  message is the content of the message they want to send.
      */
@@ -101,8 +108,9 @@ public class User {
      */
     protected void receiveMessage(User who, String message){
         ArrayList<String> x = this.messagesReceived.get(who);
-        x.add(message);
-        this.messagesReceived.replace(who, x);
+        ArrayList<String> y = new ArrayList<String>(x);
+        y.add(message);
+        this.messagesReceived.replace(who, y);
     }
 
     /**

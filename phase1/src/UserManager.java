@@ -16,8 +16,8 @@ public class UserManager{
 //        users.add(new User("Test1", "12345", "Test1@gmail.com"));
 //        users.add(new User("Test2", "12345", "Test2@gmail.com"));
 //        users.add(new Organizer("Chevoy","1","t"));
-        this.addUser("Tanya", "123@gmail.com", "123", "attendee");
-        this.addUser("Isha", "456@gmail.com", "456", "attendee");
+        this.addUser("Tanya", "1", "1", "attendee");
+        this.addUser("Isha", "4", "4", "organizer");
 //        email.add("liuhao@gmail.com");
 //        email.add("Test1@gmail.com");
 //        email.add("Test2@gmail.com");
