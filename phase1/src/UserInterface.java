@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -325,37 +326,79 @@ class UserInterface {
         }
     }
 
-    public static void SpeakerInterface() {
+    public static void SpeakerInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec,
+                                        UserManager um, MessagingSystem ms, String email) {
         UserManager userManager = new UserManager();
-        SignUpSystem signUpSystem = new SignUpSystem();
-        EventManager eventManager = new EventManager();
 
-        //s = userManager.findUser(email);
-        Speaker s = new Speaker("test", "test", "test");
+        Speaker speaker = (Speaker) um.findUser(email);
         boolean on_page = true;
 
         while (on_page) {
-            Scanner userInput = new Scanner(System.in);  // Create a Scanner object
+            Scanner userInput = new Scanner(System.in);  // Scanner
             System.out.println("==============Speaker Interface==================" +
-                    "\n -Browse My Talks- enter BMT" +
-                    "\n -Inbox- IB" +
-                    "\n -Exit-");
-            String option = userInput.next();  // Read user input
-
+                    "\n -Browse My Talks- type BMT" +
+                    "\n -Inbox- type IB" +
+                    "\n -Exit- type Exit");
+            String option = userInput.next();
             switch (option) {
                 case "BMT":
                     System.out.println("These are the talks that you are speaking at:");
-                    if (s.getTalksSpeaking().size() == 0) {
-                        System.out.println("You are not scheduled to speak at any talks");
+                    if (speaker.getTalksSpeaking().size() == 0) {
+                        System.out.println("You are currently not scheduled to speak at any talks.");
                     } else {
-                        for (int i = 0; i < s.getTalksSpeaking().size(); i++) {
-                            System.out.println(s.getTalksSpeaking().get(i));
+                        for (int i = 0; i < speaker.getTalksSpeaking().size(); i++) {
+                            System.out.println(speaker.getTalksSpeaking().get(i));
                         }
                     }
                     break;
                 case "IB":
-                    System.out.println("Not Implemented Yet");
-                    break;
+                    System.out.println("============== Inbox ==================" +
+                            "\n - Send a Message to Attendees - enter SM" +
+                            "\n - View Messaging History - enter VMH" +
+                            "\n - Respond to an Attendee - enter RA" +
+                            "\n - Exit - enter E");
+                    String inboxOption = userInput.next();
+                    switch(inboxOption){
+                        case "SM":
+                            System.out.println("You are currently scheduled to talk at " + speaker.getTalksSpeaking().size() + "talks.");
+                            System.out.println("How many of these talks' attendees would you like to message?");
+                            int numberOfTalks = userInput.nextInt();
+
+                            while(numberOfTalks > speaker.getTalksSpeaking().size()){
+                                System.out.println("You are not speaking at this many talks. Please re-enter.");
+                                numberOfTalks = userInput.nextInt();
+                            }
+
+                            // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
+                            System.out.println("On a new line for each talk, please enter all the talks that you " +
+                                    "want to send messages to the attendees of.");
+                            ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
+                            for (int i = 0; i < toSendMessagesTo.size(); i++){
+                                String a = userInput.nextLine(); // stores the input to be added
+                                toSendMessagesTo.add(a); // adds the talk to the list
+                            }
+
+                            // This loop ensures that the speaker is only sending messages to attendees of talks that they are speaking at.
+                            for(int i = 0; i <toSendMessagesTo.size(); i++){
+                                if (!speaker.getTalksSpeaking().contains(toSendMessagesTo.get(i))){
+                                        toSendMessagesTo.remove(i); // removes any talks from the list that the speaker is not speaking at
+                                }
+                            }
+
+                            System.out.println("Please enter the message you would like to send to all the attendees" +
+                                    " of these selected talks.");
+                            String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
+                            ms.sendMessageSpeaker(speaker, toSendMessagesTo, messageToSend); // calls the method from UserManager to send the messages
+                            }
+                            break;
+                        case "VMH":
+
+                            break;
+                        case "RA":
+                            System.out.println("");
+                            break;
+                        case "E":
+                            on_page = false;
                 case "Exit":
                     on_page = false;
             }
@@ -381,7 +424,7 @@ class UserInterface {
             String password = userInput.next();
             signed_in = loginSystem.checkLogIn(email, password);
             if (!signed_in) {
-                System.out.println("invalid login credentials");
+                System.out.println("Invalid Login Credentials");
             }
 
             if (signed_in) {
@@ -390,6 +433,7 @@ class UserInterface {
                 while (homeScreen) {
                     System.out.println("=============== Phase 1 System ===============");
                     char usertype = userManager.findUser(email).userType();
+                    // Ne
                     System.out.println("-User Options- UO");
                     if (usertype == 'O') {
                         System.out.println("-Organiser Options- OO");
@@ -404,6 +448,10 @@ class UserInterface {
 
                         case "OO":
                             OrganizerInterface(ec);
+                            break;
+
+                        case "SO":
+                            SpeakerInterface(su,em,ec, userManager, ms, email);
                             break;
 
                         case "LO":
