@@ -120,6 +120,10 @@ public class EventManager implements Serializable {
      @return  String of event */
     protected String eventToString(Event event){
         String room;
+        ArrayList<Integer> talks = new ArrayList<Integer>();
+        for(Talk t: event.getTalks()){
+            talks.add(t.getId());
+        }
         if(event.getEventRoom() == null){
             room = "None";
         }
@@ -128,7 +132,7 @@ public class EventManager implements Serializable {
         }
         return "Event id: " + event.getEventId() + " | Event name: " + event.getName() +
                 " | Room: " + room + "\nEvent Starts from " + event.getStartTime() + " to " +
-                event.getEndTime() + " on " + event.getEventDate() + " Talks " + event.getTalks() + "\n";
+                event.getEndTime() + " on " + event.getEventDate() + " Talks " + talks + "\n";
     }
 
 

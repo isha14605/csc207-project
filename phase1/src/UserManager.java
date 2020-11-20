@@ -33,17 +33,21 @@ public class UserManager{
      * @return true if the new user is created else false.
      */
 
-    public void addUser(String name, String email, String password, String typeOfUser) {
+    public boolean addUser(String name, String email, String password, String typeOfUser) {
         if (!UserManager.email.contains(email)) {
             UserManager.email.add(email);
             if (typeOfUser.equals("organizer")) {
                 users.add(new Organizer(name, password, email));
+                return true;
             } else if (typeOfUser.equals("speaker")) {
                 users.add(new Speaker(name, password, email));
+                return true;
             } else if (typeOfUser.equals("attendee")) {
                 users.add(new Attendee(name, password, email));
+                return true;
             }
         }
+        return false;
     }
 
     /**

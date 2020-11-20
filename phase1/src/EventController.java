@@ -11,7 +11,7 @@ public class EventController implements Serializable{
     public EventController() throws ClassNotFoundException, IOException {
         em.events = em.readFile("EventSave.ser");
         rm = rm.readFile("RoomSave.ser");
-        tm = tm.readFile("TalkSave.ser");
+        tm.talks = tm.readFile("TalkSave.ser");
     }
 
     public void save() throws IOException {
@@ -26,6 +26,7 @@ public class EventController implements Serializable{
         }else {
             em.create_event(name, description, em.date_formatting_time(start),
                     em.date_formatting_time(end), em.date_formatting_date(date));
+            em.writeToFile("EventSave.ser");
             System.out.println("Event was added.");
             System.out.println();
         }
