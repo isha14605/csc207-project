@@ -59,12 +59,14 @@ public class UserManager{
      * @see Event#addAttendee(Attendee) 
      * @see Room#getRoomCapacity() 
      */
-    protected void signUp(Attendee attendee, Event event){
-        if ((event.getEventRoom().getRoomCapacity() < event.getAttendees().size()) &&
+    protected boolean signUp(Attendee attendee, Event event){
+        if ((event.getEventRoom().getRoomCapacity() > event.getAttendees().size()) &&
                 !attendee.getEventsAttending().contains(event)) {
             attendee.attendEvent(event);
             event.addAttendee(attendee);
+            return true;
         }
+        return false;
     }
 
     /**

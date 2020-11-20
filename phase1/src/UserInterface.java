@@ -92,7 +92,7 @@ class UserInterface {
                                 if (organizer.getContacts().contains(um.findUser(contactEmail))) {
                                     System.out.println("Enter the message you would like to send");
                                     String message = userInput.nextLine();
-                                    ms.sendMessageOrganizer(organizer, um.findUser(contactEmail), message);
+                                    ms.sendAttendeeMessage(organizer, um.findUser(contactEmail), message);
                                 } else {
                                     System.out.println("Error: This user is not in your contacts list");
                                 }
@@ -102,17 +102,13 @@ class UserInterface {
 
                         case "GM":
                             System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
-                                    "\n Enter A for Attendees or S for Speakers");
+                                    "\n Enter Attendee for Attendees or Speaker for Speakers");
                             String choice = userInput.nextLine();
+                            System.out.println("Enter the event id relevant to this message");
+                            int event = userInput.nextInt();
                             System.out.println("Enter the message you would like to send");
                             String message = userInput.nextLine();
-                            switch(choice) {
-                                case "A":
-                                    ms.sendMessageOrganizer(organizer, message); // to all Attendees
-                                    // maybe we add check to see if message sent successfully?
-                                case "S":
-                                    ms.sendMessageOrganizer(organizer, message); // to all Speakers
-                            }
+                            ms.sendMessageOrganizer(organizer, choice, event,  message);
 
                         case "AD":
                             System.out.println("Enter the email of the contact you would like to add");
@@ -303,16 +299,18 @@ class UserInterface {
                         System.out.println("Which date would you like to see events for?");
                         String date = userInput.next();
                         LocalDate dateF = eventManager.date_formatting_date(date);
-                        System.out.println("What start time would you like to see events for?");
-                        String start = userInput.next();
-                        LocalTime startF = eventManager.date_formatting_time(start);
-                        System.out.println("What end time would you like to see events for?");
-                        String end = userInput.next();
+//                        System.out.println("What start time would you like to see events for?");
+//                        String start = userInput.next();
+//                        LocalTime startF = eventManager.date_formatting_time(start);
+//                        System.out.println("What end time would you like to see events for?");
+//                        String end = userInput.next();
 //                      System.out.println("And end time");
-                        LocalTime endF = eventManager.date_formatting_time(end);
-                        ArrayList<Event> browsed = signUpSystem.browseEvents(dateF, startF, endF);
+//                        LocalTime endF = eventManager.date_formatting_time(end);
+                        ArrayList<Event> browsed = signUpSystem.browseEvents(dateF);
+                        System.out.println(browsed.size());
                         for (Event event : browsed) {
-                            eventManager.eventToString(event);
+                            System.out.println("It sorta works");
+                            System.out.println(eventManager.eventToString(event));
                         }
                     }
                     break;
@@ -325,22 +323,31 @@ class UserInterface {
                         System.out.println("===== Event Sign Up =====");
 
                         for (Event scheduled : ec.get_events()) {
-                            eventManager.eventToString(scheduled);
+                            System.out.println(eventManager.eventToString(scheduled));
                         }
                         System.out.println("Enter the event id of the event you want to join.");
                         int event_id = userInput.nextInt();
+                        //Issue with getEvents() in EM, needs to be fixed
+//                        while (event_id > eventManager.getEvents().size() || event_id < 1){
+//                            System.out.println("Invalid id! Please try again.");
+//                            event_id = userInput.nextInt();
+//                        }
                         Event event = ec.em.find_event(event_id);
                         if(event.getEventRoom() == null){
                             System.out.println("Sorry, the event hasn't been assigned a room. Unable to join.\n");
                             break;
                         } else {
-                            signUpSystem.signUp(attendee, event);
-                            System.out.println("You've been registered!");
+                            boolean flag = signUpSystem.signUpEvent(attendee, event);
+                            if (flag){
+                                System.out.println("You've been registered!");
+                            } else {
+                                System.out.println("This event no longer has any space");
+                            }
                         }
                     }
                     break;
                 case "VC":
-                    if (attendee.getEventsAttending().size() == 0) { //need to fix this case
+                    if (attendee.getEventsAttending().size() == 0) {
                         System.out.println("You are not signed up for any events.");
                     } else {
                         System.out.println("Here is a list of events you are signed up for:");
@@ -353,7 +360,8 @@ class UserInterface {
                         if (toCancel.equals("Yes")) {
                             System.out.println("What event would you like to cancel attendance for? Type the ID.");
                             String eventID = userInput.next();
-                            for (Event attending: attendee.getEventsAttending()){
+                            ArrayList<Event> attending_copy = new ArrayList<Event>(attendee.getEventsAttending());
+                            for (Event attending: attending_copy){
                                 if (attending.getEventId() == Integer.parseInt(eventID)) {
                                     um.cancelRegistration(attendee, attending);
                                     cancelled = true;

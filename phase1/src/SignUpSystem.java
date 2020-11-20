@@ -26,12 +26,14 @@ public class SignUpSystem {
      * @return a list containing potential events that the Attendee is interested in attending for further perusal
      */
     // Allows the Attendee to browse the events and decide which ones they want to see based on date and time
-    public ArrayList<Event> browseEvents(LocalDate date, LocalTime startTime, LocalTime endTime){
+    public ArrayList<Event> browseEvents(LocalDate date){
         ArrayList<Event> interestList = new ArrayList<Event>();
         ArrayList<Event> allEventsList = eM.getEvents();
         for (Event event: allEventsList) {
-            if (event.getEventDate().equals(date) && event.getStartTime().equals(startTime)
-                    && (event.getEndTime().isBefore(endTime) || event.getEndTime().equals(endTime))) {
+            if (event.getEventDate().equals(date)){
+
+//                    && event.getStartTime().equals(startTime)
+//                    && (endTime.isBefore(event.getEndTime()) || event.getEndTime().equals(endTime)))
                 interestList.add(event);
             }
         }
@@ -45,9 +47,9 @@ public class SignUpSystem {
      * @see UserManager#signUp(Attendee, Event)
      */
     // Method to sign up an Attendee for an Event
-    public void signUp(Attendee a, Event e){
+    public boolean signUpEvent(Attendee a, Event e){
         // Sign the Attendee up for the Event
-        uM.signUp(a,e);
+        return uM.signUp(a,e);
     }
 
 }

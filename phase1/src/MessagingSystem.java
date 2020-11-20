@@ -65,24 +65,26 @@ public class MessagingSystem {
     }
 
 
-    public void sendMessageOrganizer(Organizer from, String message) {
-        message = readMessage().toString();
-        ArrayList<String> recipient = readRecipient();
-        if (recipient.get(2) == "All") {
-            Event event = em.find_event(Integer.parseInt(recipient.get(1)));
-            if (recipient.get(0) == "Speakers") {
-                for (Talk t : event.getTalks()) {
-                    um.message(from, t.getSpeaker(), message);
-
-                }
-            } else {
-                for (Attendee a : event.getAttendees()) {
-                    um.message(from, a, message);
-                }
+    public void sendMessageOrganizer(Organizer from, String to, int event_id, String message) {
+        if (to.equals("Attendee")){
+            Event event = em.find_event(event_id);
+            for(Attendee a: event.getAttendees()){
+                um.message(from, a, message);
             }
 
-        } else {
-            um.message(from, um.findUser(recipient.get(1)), message);
+        } else if (to.equals("Speaker")) {
+            Event event = em.find_event(event_id);
+            ArrayList<Talk> talks = new ArrayList<Talk>();
+            for (Talk t: event.getTalks()){
+                talks.add(t);
+            }
+            ArrayList<Speaker> speakers = new ArrayList<Speaker>();
+            for (Talk s: talks){
+                speakers.add(s.getSpeaker());
+            }
+            for (Speaker s: speakers){
+                um.message(from, s ,message);
+            }
         }
 
     }
