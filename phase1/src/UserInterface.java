@@ -531,44 +531,47 @@ class UserInterface {
                             "\n - View Messaging History and Respond to Individual Attendee- enter VMH" +
                             "\n - Exit - enter E");
                     String inboxOption = userInput.next();
-                    if ("SM".equals(inboxOption)) {
-                        System.out.println("You are currently scheduled to talk at " + speaker.getTalksSpeaking().size() + "talks.");
-                        System.out.println("How many of these talks' attendees would you like to message?");
-                        int numberOfTalks = userInput.nextInt();
+                    switch (inboxOption) {
+                        case "SM":
+                            System.out.println("You are currently scheduled to talk at " + speaker.getTalksSpeaking().size() + " talks.");
+                            System.out.println("How many of these talks' attendees would you like to message?");
+                            int numberOfTalks = userInput.nextInt();
 
-                        while (numberOfTalks > speaker.getTalksSpeaking().size()) {
-                            System.out.println("You are not speaking at this many talks. Please re-enter.");
-                            numberOfTalks = userInput.nextInt();
-                        }
-
-                        // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
-                        System.out.println("On a new line for each event, please enter ids of all the events that you " +
-                                "want to send messages to the attendees of.");
-                        ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
-                        for (int i = 0; i < numberOfTalks; i++) {
-                            String a = userInput.nextLine(); // stores the input to be added
-                            toSendMessagesTo.add(a); // adds the talk to the list
-                        }
-                        ArrayList<Event> events_at = new ArrayList<Event>();
-
-                        for (Talk t : speaker.getTalksSpeaking()) {
-                            if (!(events_at.contains(t.getEvent()))) {
-                                events_at.add(t.getEvent());
+                            while (numberOfTalks > speaker.getTalksSpeaking().size()) {
+                                System.out.println("You are not speaking at this many talks. Please re-enter.");
+                                numberOfTalks = userInput.nextInt();
                             }
-                        }
-                        ArrayList<Event> final_events = new ArrayList<Event>();
 
-                        for (String s : toSendMessagesTo) {
-                            if (events_at.contains(eventManager.find_event(Integer.parseInt(s)))) {
-                                final_events.add((eventManager.find_event(Integer.parseInt(s))));
+                            if (numberOfTalks > 0) {
+                                // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
+                                System.out.println("On a new line for each event, please enter ids of all the events that you " +
+                                        "want to send messages to the attendees of.");
+                                ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
+                                for (int i = 0; i < numberOfTalks; i++) {
+                                    String a = userInput.nextLine(); // stores the input to be added
+                                    toSendMessagesTo.add(a); // adds the talk to the list
+                                }
+                                ArrayList<Event> events_at = new ArrayList<Event>();
+
+                                for (Talk t : speaker.getTalksSpeaking()) {
+                                    if (!(events_at.contains(t.getEvent()))) {
+                                        events_at.add(t.getEvent());
+                                    }
+                                }
+                                ArrayList<Event> final_events = new ArrayList<Event>();
+
+                                for (String s : toSendMessagesTo) {
+                                    if (events_at.contains(eventManager.find_event(Integer.parseInt(s)))) {
+                                        final_events.add((eventManager.find_event(Integer.parseInt(s))));
+                                    }
+                                }
+                                System.out.println("Please enter the message you would like to send to all the attendees" +
+                                        " of these selected talks.");
+                                String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
+                                ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
+                            } else {
+                                on_page = false; // exit SM
                             }
-                        }
-
-                        System.out.println("Please enter the message you would like to send to all the attendees" +
-                                " of these selected talks.");
-                        String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
-                        ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
-                    }
                             break;
                         case "VMH":
                             boolean hasMessagesFromContact = false;
@@ -576,13 +579,14 @@ class UserInterface {
                             String emailOfContact = userInput.next();
 
                             // Check if this user exists in the system
-                            if (userManager.checkUserExists(email)){
+                            if (userManager.checkUserExists(email)) {
                                 ArrayList<String> messages_received = speaker.getMessagesReceived().get(um.findUser(emailOfContact));
 
                                 System.out.println("Enter the number of messages you would like to see.");
                                 String numMessages = userInput.next();
 
                                 if (!(messages_received.size() == 0)) {
+                                    // Code runs when there are more than 0 messages between speaker and the attendee
                                     while (Integer.parseInt(numMessages) > messages_received.size()) {
                                         System.out.println("Enter the number of messages you would like to see.");
                                         numMessages = userInput.next();
@@ -591,17 +595,20 @@ class UserInterface {
                                         System.out.println(messages_received.get(i));
                                         hasMessagesFromContact = true;
                                     }
-                                } else {
+                                } else if (messages_received.size() == 0){
+                                    // Code runs when there are zero messages between the two
                                     System.out.println("You have no messages from this person.");
                                 }
                             } else {
+                                // runs if the user does not exist
                                 System.out.println("Error. This person does not exist in our records.");
                             }
 
-                            if (hasMessagesFromContact){
+                            // Interface to respond to a message after having checked the thread of prior messages
+                            if (hasMessagesFromContact) {
                                 System.out.println("Would you like to respond to this Attendee? Yes or No.");
                                 String respondDecision = userInput.next();
-                                switch (respondDecision){
+                                switch (respondDecision) {
                                     case "Yes":
                                         System.out.println("Please enter your response.");
                                         String messageResponse = userInput.next();
@@ -611,12 +618,12 @@ class UserInterface {
                                         on_page = false;
                                 }
                             }
-
                             break;
                         case "E":
                             on_page = false;
-                case "Exit":
-                    on_page = false;
+                        case "Exit":
+                            on_page = false;
+                    }
             }
         }
     }
