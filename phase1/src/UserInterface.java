@@ -29,15 +29,15 @@ class UserInterface {
 
                 case "AE":
                     System.out.println("====Event Creator====");
-                    System.out.println("What is the name of Event");
+                    System.out.println("What is the name of the event?");
                     String name = userInput.nextLine();
-                    System.out.println("What is the name of description");
+                    System.out.println("What is the description?");
                     String description = userInput.nextLine();
-                    System.out.println("When does the event start");
+                    System.out.println("When does the event start?");
                     String start = userInput.nextLine();
-                    System.out.println("When does the event end");
+                    System.out.println("When does the event end?");
                     String end = userInput.nextLine();
-                    System.out.println("What date is the event");
+                    System.out.println("What date is the event?");
                     String date = userInput.nextLine();
 
                     eventController.add_event(name, description, start, end, date);
@@ -218,7 +218,23 @@ class UserInterface {
                                 break;
 
                             case "SS":
-                                System.out.println("need implementation"); //TODO
+                                System.out.println("What event would you like to schedule speaker for?");
+                                em.print_events();
+                                int ID = userInput.nextInt();
+                                System.out.println("What talk in this event would you like to schedule speaker for?");
+                                String talk = userInput.next();
+                                System.out.println("Which speaker would you like to schedule for this talk?");
+                                String speaker = userInput.next();
+                                // Need to check that event has talk
+                                // if so, then:
+                                boolean check = eventController.schedule_speaker(speaker, talk, ID);
+                                if (check) {
+                                    System.out.println("Speaker has been scheduled.");
+                                } else {
+                                    System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                }
+                                // else:
+                                System.out.println("This talk does not exist in this event, so cannot schedule speaker.");
                                 break;
 
                             case "SR":
@@ -229,15 +245,15 @@ class UserInterface {
 
                                     em.print_events();
 
-                                    event_id = userInput.nextInt();
-                                    if(em.event_exist(event_id)){
+                                    int id = userInput.nextInt();
+                                    if(em.event_exist(id)){
                                         System.out.println("What room what do you want ot schedule");
                                         for (Room room : eventController.get_rooms()) {
                                             System.out.println(rm.roomToString(room));
                                         }
                                         room_name = userInput.next();
 
-                                        eventController.schedule_room(room_name, event_id);
+                                        eventController.schedule_room(room_name, id);
                                     }else{
                                         System.out.println("Event does not exist.");
                                     }
@@ -247,13 +263,13 @@ class UserInterface {
                             case "AT":
                                 System.out.println("What event you adding talk to?");
                                 em.print_events();
-                                event_id = userInput.nextInt();
+                                int eventID = userInput.nextInt();
                                 System.out.println("When does the talk start");
                                 start = userInput.next();
                                 System.out.println("When does the talk end");
                                 end = userInput.next();
-                                if(eventController.add_talk(start,end,event_id)){
-                                    System.out.println("Talk was added to Event " + event_id);
+                                if(eventController.add_talk(start,end,eventID)){
+                                    System.out.println("Talk was added to Event " + eventID);
                                 }else{
                                     System.out.println("Talk was not added.");
                                 }
