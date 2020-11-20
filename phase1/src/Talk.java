@@ -51,6 +51,10 @@ public class Talk implements Serializable {
      */
     public Event getEvent() {return this.event;}
 
+    public int getId() {
+        return id;
+    }
+
     /**
      * sets the speaker of this talk.
      * @param speaker the speaker of this talk

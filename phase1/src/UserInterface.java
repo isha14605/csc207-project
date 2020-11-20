@@ -46,13 +46,13 @@ class UserInterface {
                 case "CR":
                     System.out.println("====Room Creator====");
 
-                    System.out.println("What is the name of the room");
+                    System.out.println("What is the name of the room?");
                     String room_name = userInput.nextLine();
-                    System.out.println("How many people can the room hold");
+                    System.out.println("How many people can the room hold?");
                     int capacity = userInput.nextInt();
-                    System.out.println("When does the Room Open");
+                    System.out.println("When does the room open?");
                     String open = userInput.next();
-                    System.out.println("When does the Room Close");
+                    System.out.println("When does the room close?");
                     String close = userInput.next();
 
                     eventController.add_room(room_name, capacity, open, close);
@@ -62,11 +62,11 @@ class UserInterface {
                 case "CS":
                     System.out.println("====Speaker Creator====");
 
-                    System.out.println("Enter the Speaker's name");
+                    System.out.println("Enter the speaker's name.");
                     String speakerName = userInput.nextLine();
-                    System.out.println("Enter the Speaker's email");
+                    System.out.println("Enter the speaker's email.");
                     String speakerEmail = userInput.nextLine();
-                    System.out.println("Enter the Speaker's password");
+                    System.out.println("Enter the speaker's password.");
                     String speakerPassword = userInput.nextLine();
 
                     um.addUser(speakerName, speakerEmail, speakerPassword, "speaker");
@@ -85,50 +85,50 @@ class UserInterface {
                     String userOption = userInput.next();
                     switch(userOption) {
                         case "IM":
-                            System.out.println("Enter the email of the contact you would like to message");
+                            System.out.println("Enter the email of the contact you would like to message.");
                             String contactEmail = userInput.nextLine();
                             if (um.checkUserExists(contactEmail)) {
                                 if (organizer.getContacts().contains(um.findUser(contactEmail))) {
-                                    System.out.println("Enter the message you would like to send");
+                                    System.out.println("Enter the message you would like to send.");
                                     String message = userInput.nextLine();
                                     ms.sendAttendeeMessage(organizer, um.findUser(contactEmail), message);
                                 } else {
-                                    System.out.println("Error: This user is not in your contacts list");
+                                    System.out.println("Error: This user is not in your contacts list.");
                                 }
                             } else {
-                                System.out.println("Error: This user does not exist");
+                                System.out.println("Error: This user does not exist.");
                             }
 
                         case "GM":
                             System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
                                     "\n Enter Attendee for Attendees or Speaker for Speakers");
                             String choice = userInput.nextLine();
-                            System.out.println("Enter the event id relevant to this message");
+                            System.out.println("Enter the event id relevant to this message.");
                             int event = userInput.nextInt();
-                            System.out.println("Enter the message you would like to send");
+                            System.out.println("Enter the message you would like to send.");
                             String message = userInput.nextLine();
                             ms.sendMessageOrganizer(organizer, choice, event,  message);
 
                         case "AD":
-                            System.out.println("Enter the email of the contact you would like to add");
+                            System.out.println("Enter the email of the contact you would like to add.");
                             String newContact = userInput.nextLine();
 
                             if (um.checkUserExists(newContact)) {
                                 if (!organizer.getContacts().contains(um.findUser(newContact))) {
                                     organizer.addContact(um.findUser(email));
-                                    System.out.println("Contact added successfully");
+                                    System.out.println("Contact added successfully!");
                                 } else {
-                                    System.out.println("Error: This contact is already in your list of contacts");
+                                    System.out.println("Error: This contact is already in your list of contacts.");
                                 }
                             } else {
-                                System.out.println("Error: This user does not exist");
+                                System.out.println("Error: This user does not exist.");
                             }
 
                             break;
 
                         case "MH":
                             System.out.println("Enter the email of the contact you would like to review your " +
-                                    "message history with");
+                                    "message history with.");
                             String contact = userInput.nextLine();
 
                             if (um.checkUserExists(contact) &&
@@ -136,10 +136,10 @@ class UserInterface {
                                 ArrayList<String> messagesReceived =
                                         organizer.getMessagesReceived().get(um.findUser(contact));
                                 if (!(messagesReceived.size() == 0)) {
-                                    System.out.println("Enter the number of messages you would like to see");
+                                    System.out.println("Enter the number of messages you would like to see.");
                                     String num = userInput.next();
                                     while (Integer.parseInt(num) > messagesReceived.size()) {
-                                        System.out.println("Enter the number of messages you would like to see");
+                                        System.out.println("Enter the number of messages you would like to see.");
                                         num = userInput.next();
                                     }
                                     for (int i = messagesReceived.size() - Integer.parseInt(num);
@@ -150,7 +150,7 @@ class UserInterface {
                                     System.out.println("You have no messages from this person.");
                                 }
                             } else {
-                                System.out.println("Error: This user does not exist or is not in your contacts list");
+                                System.out.println("Error: This user does not exist or is not in your contacts list.");
                             }
 
                             break;
@@ -175,7 +175,7 @@ class UserInterface {
                     em.print_events();
 
                     if (eventController.get_events().size() == 0) {
-                        System.out.println("No events are Scheduled");
+                        System.out.println("No events are scheduled.");
                     }
                     break;
                 case "VR":
@@ -184,12 +184,12 @@ class UserInterface {
                         System.out.println(roomManager.roomToString(room));
                     }
                     if (eventController.get_rooms().size() == 0) {
-                        System.out.println("No rooms are made");
+                        System.out.println("No rooms have been created.");
                     }
                     break;
 
                 case "EO":
-                    System.out.println("-Event Options-");
+                    System.out.println("====Event Options====");
                     if (eventController.get_events().size() == 0) {
                         System.out.println("no events schedule to do actions! \n");
                     } else {
@@ -220,34 +220,37 @@ class UserInterface {
                             case "SS":
                                 System.out.println("What event would you like to schedule speaker for?");
                                 em.print_events();
-                                int ID = userInput.nextInt();
+                                int eventID = userInput.nextInt();
                                 System.out.println("What talk in this event would you like to schedule speaker for?");
-                                String talk = userInput.next();
-                                System.out.println("Which speaker would you like to schedule for this talk?");
+                                int talkID = userInput.nextInt();
+                                System.out.println("Enter the email of the speaker you want to schedule.");
                                 String speaker = userInput.next();
-                                // Need to check that event has talk
-                                // if so, then:
-                                boolean check = eventController.schedule_speaker(speaker, talk, ID);
-                                if (check) {
-                                    System.out.println("Speaker has been scheduled.");
-                                } else {
-                                    System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
+                                    if (talk.getId() == talkID && um.checkUserExists(speaker)) {
+                                        // Check that speaker can be scheduled
+                                        boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
+                                        if (check) {
+                                            System.out.println("Speaker has been scheduled!");
+                                        } else {
+                                            System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                        }
+                                    } else {
+                                        System.out.println("Error. This talk does not exist or speaker does not exist.");
+                                    }
                                 }
-                                // else:
-                                System.out.println("This talk does not exist in this event, so cannot schedule speaker.");
                                 break;
 
                             case "SR":
                                 if (eventController.get_rooms().size() == 0) {
-                                    System.out.println("No rooms to preform actions to! \n");
+                                    System.out.println("No rooms to perform actions to! \n");
                                 } else {
-                                    System.out.println("What event do you want to Schedule room for");
+                                    System.out.println("What event do you want to schedule room for?");
 
                                     em.print_events();
 
                                     int id = userInput.nextInt();
                                     if(em.event_exist(id)){
-                                        System.out.println("What room what do you want ot schedule");
+                                        System.out.println("What room what do you want to schedule?");
                                         for (Room room : eventController.get_rooms()) {
                                             System.out.println(rm.roomToString(room));
                                         }
@@ -261,15 +264,15 @@ class UserInterface {
                                 break;
 
                             case "AT":
-                                System.out.println("What event you adding talk to?");
+                                System.out.println("What event are you adding a talk to?");
                                 em.print_events();
-                                int eventID = userInput.nextInt();
-                                System.out.println("When does the talk start");
+                                int event = userInput.nextInt();
+                                System.out.println("When does the talk start?");
                                 start = userInput.next();
-                                System.out.println("When does the talk end");
+                                System.out.println("When does the talk end?");
                                 end = userInput.next();
-                                if(eventController.add_talk(start,end,eventID)){
-                                    System.out.println("Talk was added to Event " + eventID);
+                                if(eventController.add_talk(start,end,event)){
+                                    System.out.println("Talk was added to Event " + event);
                                 }else{
                                     System.out.println("Talk was not added.");
                                 }
@@ -356,7 +359,7 @@ class UserInterface {
                             if (flag){
                                 System.out.println("You've been registered!");
                             } else {
-                                System.out.println("This event no longer has any space");
+                                System.out.println("This event no longer has any space.");
                             }
                         }
                     }
@@ -528,45 +531,44 @@ class UserInterface {
                             "\n - View Messaging History and Respond to Individual Attendee- enter VMH" +
                             "\n - Exit - enter E");
                     String inboxOption = userInput.next();
-                    switch(inboxOption){
-                        case "SM":
-                            System.out.println("You are currently scheduled to talk at " + speaker.getTalksSpeaking().size() + "talks.");
-                            System.out.println("How many of these talks' attendees would you like to message?");
-                            int numberOfTalks = userInput.nextInt();
+                    if ("SM".equals(inboxOption)) {
+                        System.out.println("You are currently scheduled to talk at " + speaker.getTalksSpeaking().size() + "talks.");
+                        System.out.println("How many of these talks' attendees would you like to message?");
+                        int numberOfTalks = userInput.nextInt();
 
-                            while(numberOfTalks > speaker.getTalksSpeaking().size()){
-                                System.out.println("You are not speaking at this many talks. Please re-enter.");
-                                numberOfTalks = userInput.nextInt();
-                            }
+                        while (numberOfTalks > speaker.getTalksSpeaking().size()) {
+                            System.out.println("You are not speaking at this many talks. Please re-enter.");
+                            numberOfTalks = userInput.nextInt();
+                        }
 
-                            // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
-                            System.out.println("On a new line for each event, please enter ids of all the events that you " +
-                                    "want to send messages to the attendees of.");
-                            ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
-                            for (int i = 0; i < numberOfTalks; i++){
-                                String a = userInput.nextLine(); // stores the input to be added
-                                toSendMessagesTo.add(a); // adds the talk to the list
-                            }
-                            ArrayList<Event> events_at = new ArrayList<Event>();
+                        // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
+                        System.out.println("On a new line for each event, please enter ids of all the events that you " +
+                                "want to send messages to the attendees of.");
+                        ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
+                        for (int i = 0; i < numberOfTalks; i++) {
+                            String a = userInput.nextLine(); // stores the input to be added
+                            toSendMessagesTo.add(a); // adds the talk to the list
+                        }
+                        ArrayList<Event> events_at = new ArrayList<Event>();
 
-                            for (Talk t: speaker.getTalksSpeaking()){
-                                if (!(events_at.contains(t.getEvent()))){
-                                    events_at.add(t.getEvent());
-                                }
+                        for (Talk t : speaker.getTalksSpeaking()) {
+                            if (!(events_at.contains(t.getEvent()))) {
+                                events_at.add(t.getEvent());
                             }
-                            ArrayList<Event> final_events = new ArrayList<Event>();
+                        }
+                        ArrayList<Event> final_events = new ArrayList<Event>();
 
-                            for (String s : toSendMessagesTo) {
-                                if (events_at.contains(eventManager.find_event(Integer.parseInt(s)))){
-                                    final_events.add((eventManager.find_event(Integer.parseInt(s))));
-                                }
+                        for (String s : toSendMessagesTo) {
+                            if (events_at.contains(eventManager.find_event(Integer.parseInt(s)))) {
+                                final_events.add((eventManager.find_event(Integer.parseInt(s))));
                             }
+                        }
 
-                            System.out.println("Please enter the message you would like to send to all the attendees" +
-                                    " of these selected talks.");
-                            String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
-                            ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
-                            }
+                        System.out.println("Please enter the message you would like to send to all the attendees" +
+                                " of these selected talks.");
+                        String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
+                        ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
+                    }
                             break;
                         case "VMH":
                             boolean hasMessagesFromContact = false;
