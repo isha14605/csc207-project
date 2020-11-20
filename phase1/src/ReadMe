@@ -2,12 +2,13 @@ To start program go to UserInterface and run the main method.
 Your will be prompted to Login to see the multiple different interfaces that are created due to type of user uses
 these login in credentials:
 
-Speaker Email: e, Password: 1
+Speaker Email: e, Password: 1.
 
-Organizer Email: 4, Password: 4
+Organizer Email: 4, Password: 4.
 
-Attendee Email: 2, Password: 2
+Attendee Email: 2, Password: 2.
 
 Each will print out the interface that you have access to with that user type.
 
 Then interact with the program from there.
+
