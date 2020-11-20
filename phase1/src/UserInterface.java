@@ -225,18 +225,22 @@ class UserInterface {
                                 int talkID = userInput.nextInt();
                                 System.out.println("Enter the email of the speaker you want to schedule.");
                                 String speaker = userInput.next();
-                                for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
-                                    if (talk.getId() == talkID && um.checkUserExists(speaker)) {
-                                        // Check that speaker can be scheduled
-                                        boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
-                                        if (check) {
-                                            System.out.println("Speaker has been scheduled!");
+                                if (!(em.find_event(eventID).getTalks().size() == 0)) {
+                                    for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
+                                        if (talk.getId() == talkID && um.checkUserExists(speaker)) {
+                                            // Check that speaker can be scheduled
+                                            boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
+                                            if (check) {
+                                                System.out.println("Speaker has been scheduled!");
+                                            } else {
+                                                System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                            }
                                         } else {
-                                            System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                            System.out.println("Error. This talk does not exist or speaker does not exist.");
                                         }
-                                    } else {
-                                        System.out.println("Error. This talk does not exist or speaker does not exist.");
                                     }
+                                } else {
+                                    System.out.println("There are no talks for this event.");
                                 }
                                 break;
 
@@ -324,7 +328,7 @@ class UserInterface {
 //                        String end = userInput.next();
 //                      System.out.println("And end time");
 //                        LocalTime endF = eventManager.date_formatting_time(end);
-                        ArrayList<Event> browsed = signUpSystem.browseEvents(dateF);
+                        ArrayList<Event> browsed = signUpSystem.browseEvents(ec.em, dateF);
                         System.out.println(browsed.size());
                         for (Event event : browsed) {
                             System.out.println("It sorta works");
@@ -346,10 +350,10 @@ class UserInterface {
                         System.out.println("Enter the event id of the event you want to join.");
                         int event_id = userInput.nextInt();
                         //Issue with getEvents() in EM, needs to be fixed
-//                        while (event_id > eventManager.getEvents().size() || event_id < 1){
-//                            System.out.println("Invalid id! Please try again.");
-//                            event_id = userInput.nextInt();
-//                        }
+                        while (event_id > ec.em.getEvents().size() || event_id < 1){
+                            System.out.println("Invalid id! Please try again.");
+                            event_id = userInput.nextInt();
+                        }
                         Event event = ec.em.find_event(event_id);
                         if(event.getEventRoom() == null){
                             System.out.println("Sorry, the event hasn't been assigned a room. Unable to join.\n");

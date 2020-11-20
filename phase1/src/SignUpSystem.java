@@ -20,7 +20,7 @@ public class SignUpSystem {
      * @return a list containing potential events that the Attendee is interested in attending for further perusal
      */
     // Allows the Attendee to browse the events and decide which ones they want to see based on date and time
-    public ArrayList<Event> browseEvents(LocalDate date){
+    public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){
 //        ArrayList<Event> interestList = new ArrayList<>();
 //        ArrayList<Event> allEventsList = eM.getEvents();
 //        for (Event event: allEventsList) {
