@@ -334,9 +334,7 @@ class UserInterface {
 //                      System.out.println("And end time");
 //                        LocalTime endF = eventManager.date_formatting_time(end);
                         ArrayList<Event> browsed = signUpSystem.browseEvents(ec.em, dateF);
-                        System.out.println(browsed.size());
                         for (Event event : browsed) {
-                            System.out.println("It sorta works");
                             System.out.println(eventManager.eventToString(event));
                         }
                     }
