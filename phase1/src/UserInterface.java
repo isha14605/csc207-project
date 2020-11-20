@@ -166,7 +166,7 @@ class UserInterface {
                             }
                             break;
 
-                        case "exit":
+                        case "Exit":
                             on_page = false;
                     }
 
@@ -293,7 +293,7 @@ class UserInterface {
                     eventController.save();
                     break;
 
-                case "exit":
+                case "Exit":
                     on_page = false;
 
             }
