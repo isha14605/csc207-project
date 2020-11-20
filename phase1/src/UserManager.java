@@ -12,18 +12,15 @@ public class UserManager{
 
 
     protected UserManager(){
-//        users.add(new User("LiuHao", "12345", "liuhao@gmail.com"));
-//        users.add(new User("Test1", "12345", "Test1@gmail.com"));
-//        users.add(new User("Test2", "12345", "Test2@gmail.com"));
-//        users.add(new Organizer("Chevoy","1","t"));
-        this.addUser("Tanya", "1", "1", "attendee");
-        this.addUser("Isha", "2", "2", "attendee");
-        this.addUser("Anushka", "3", "3", "attendee");
-        this.addUser("O", "4", "4", "organizer");
-//        email.add("liuhao@gmail.com");
-//        email.add("Test1@gmail.com");
-//        email.add("Test2@gmail.com");
-//        email.add("t");
+        this.addUser("s1", "s1", "s1", "speaker");
+        this.addUser("s2", "s2", "s2", "speaker");
+        this.addUser("s3", "s3", "s3", "speaker");
+        this.addUser("o1", "o1", "o1", "organizer");
+        this.addUser("o2", "o2", "o2", "organizer");
+        this.addUser("o3", "o3", "o3", "organizer");
+        this.addUser("a1", "a1", "a1", "attendee");
+        this.addUser("a2", "a2", "a2", "attendee");
+        this.addUser("a3", "a3", "a3", "attendee");
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.

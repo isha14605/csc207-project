@@ -51,6 +51,8 @@ public class MessagingSystem {
         return inputs;
     }
 
+
+
     public boolean sendAttendeeMessage(User from, User to, String message) {
         return um.message(from, to, message);
     }

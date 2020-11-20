@@ -226,27 +226,32 @@ class UserInterface {
                                 System.out.println("Enter the email of the speaker you want to schedule.");
                                 String speaker = userInput.next();
                                 boolean flag = false;
-                                if (!(em.find_event(eventID).getTalks().size() == 0)) {
-                                    for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
-                                        if (talk.getId() == talkID && um.checkUserExists(speaker)) {
-                                            // Check that speaker can be scheduled
-                                            boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
-                                            if (check) {
-                                                System.out.println("Speaker has been scheduled!");
-                                                flag = true;
+                                if (!(um.checkUserExists(speaker))){
+                                    System.out.println("No such speaker found!");
+                                } else{
+                                    if (!(em.find_event(eventID).getTalks().size() == 0)) {
+                                        for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
+                                            if (talk.getId() == talkID && um.checkUserExists(speaker)) {
+                                                // Check that speaker can be scheduled
+                                                boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
+                                                if (check) {
+                                                    System.out.println("Speaker has been scheduled!");
+                                                    flag = true;
 
-                                            } else {
-                                                System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                                } else {
+                                                    System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                                }
+                                                break;
                                             }
-                                            break;
                                         }
+                                        if (!flag){
+                                            System.out.println("Error. This talk does not exist.");
+                                        }
+                                    } else {
+                                        System.out.println("There are no talks for this event.");
                                     }
-                                    if (!flag){
-                                        System.out.println("Error. This talk does not exist.");
-                                    }
-                                } else {
-                                    System.out.println("There are no talks for this event.");
                                 }
+
                                   break;
 
                             case "SR":
