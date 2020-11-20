@@ -659,60 +659,6 @@ class UserInterface {
         boolean signed_in = false;
 
         while (!signed_in) {
-            boolean ca = true;
-            System.out.println("|===== Phase 1 login =====|");
-            System.out.println("CREATE ACCOUNT - CA");
-            System.out.println("LOGIN - LO");
-            String opt = userInput.next();
-            if (opt.equals("CA")){
-                System.out.println("Enter your name");
-                String name = userInput.next();
-                System.out.println("Enter email id");
-                String email_id = userInput.next();
-                System.out.println("Enter password");
-                String password = userInput.next();
-                System.out.println("Enter type of user you want to be\n" + "Attendee\n" + "Organizer\n" + "Speaker ");
-                String type = userInput.next();
-                if (userManager.addUser(name, email_id, password, type.toLowerCase())){
-                    System.out.println("Account created!");
-                } else {
-                    System.out.println("Email already in use");
-                }
-
-                System.out.println("Would you like to create another account? Yes/No");
-                String choice = userInput.next();
-                if (choice.equals("No")){
-                    ca = false;
-                }
-
-                while (ca){
-                    if (!(choice.equals("No"))){
-                        System.out.println("Enter your name");
-                        String n = userInput.next();
-                        System.out.println("Enter email id");
-                        String eid = userInput.next();
-                        System.out.println("Enter password");
-                        String pd = userInput.next();
-                        System.out.println("Enter type of user you want to be\n" + "Attendee\n" + "Organizer\n" + "Speaker ");
-                        String ty = userInput.next();
-                        if (userManager.addUser(n, eid, pd, ty.toLowerCase())){
-                            System.out.println("Account created!");
-                        } else {
-                            System.out.println("Email already in use");
-                        }
-
-                    }
-                    System.out.println("Would you like to create another account? Yes/No");
-                    choice = userInput.next();
-                    if (choice.equals("No")){
-                        ca = false;
-                    }
-
-                }
-            }
-
-
-
             System.out.println("|===== Phase 1 login =====|");
             System.out.println("Enter your email");
             String email = userInput.next();
