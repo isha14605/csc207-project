@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 class UserInterface {
 
-    public static void OrganizerInterface(EventController eventController) throws IOException {
+    public static void OrganizerInterface(EventController eventController, UserManager um,
+                                          MessagingSystem ms, String email) throws IOException {
+        Organizer organizer = (Organizer) um.findUser(email);
 
         boolean on_page = true;
         while (on_page) {
@@ -16,10 +18,12 @@ class UserInterface {
             System.out.println("==============Organizer Interface==================" +
                     "\n -Add Event- enter AE-" +
                     "\n -Create Room- enter CR-" +
+                    "\n -Create Speaker- enter CS-" +
                     "\n -Event Options- enter EO-" +
                     "\n -View Events- enter VE-" +
                     "\n -View Rooms- enter VR-" +
-                    "\n -Exit-");
+                    "\n -Inbox- enter IB" +
+                    "\n -Exit- enter exit");
 
             String option = userInput.nextLine();  // Read user input
             switch (option) {
@@ -55,6 +59,121 @@ class UserInterface {
                     eventController.add_room(room_name, capacity, open, close);
 
                     break;
+
+                case "CS":
+                    System.out.println("====Speaker Creator====");
+
+                    System.out.println("Enter the Speaker's name");
+                    String speakerName = userInput.nextLine();
+                    System.out.println("Enter the Speaker's email");
+                    String speakerEmail = userInput.nextLine();
+                    System.out.println("Enter the Speaker's password");
+                    String speakerPassword = userInput.nextLine();
+
+                    um.addUser(speakerName, speakerEmail, speakerPassword, "speaker");
+
+                    break;
+
+                case "IB":
+                    System.out.println("====Messages Inbox====" +
+                            "\n -Send individual message- enter IM" +
+                            "\n -Send group message- enter GM" +
+                            "\n -Add contact- enter AD" +
+                            "\n -View messaging history- enter MH" +
+                            "\n -View contacts- enter CO" +
+                            "\n -Exit- enter exit");
+
+                    String userOption = userInput.next();
+                    switch(userOption) {
+                        case "IM":
+                            System.out.println("Enter the email of the contact you would like to message");
+                            String contactEmail = userInput.nextLine();
+                            if (um.checkUserExists(contactEmail)) {
+                                if (organizer.getContacts().contains(um.findUser(contactEmail))) {
+                                    System.out.println("Enter the message you would like to send");
+                                    String message = userInput.nextLine();
+                                    ms.sendMessageOrganizer(organizer, um.findUser(contactEmail), message);
+                                } else {
+                                    System.out.println("Error: This user is not in your contacts list");
+                                }
+                            } else {
+                                System.out.println("Error: This user does not exist");
+                            }
+
+                        case "GM":
+                            System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
+                                    "\n Enter A for Attendees or S for Speakers");
+                            String choice = userInput.nextLine();
+                            System.out.println("Enter the message you would like to send");
+                            String message = userInput.nextLine();
+                            switch(choice) {
+                                case "A":
+                                    ms.sendMessageOrganizer(organizer, message); // to all Attendees
+                                    // maybe we add check to see if message sent successfully?
+                                case "S":
+                                    ms.sendMessageOrganizer(organizer, message); // to all Speakers
+                            }
+
+                        case "AD":
+                            System.out.println("Enter the email of the contact you would like to add");
+                            String newContact = userInput.nextLine();
+
+                            if (um.checkUserExists(newContact)) {
+                                if (!organizer.getContacts().contains(um.findUser(newContact))) {
+                                    organizer.addContact(um.findUser(email));
+                                    System.out.println("Contact added successfully");
+                                } else {
+                                    System.out.println("Error: This contact is already in your list of contacts");
+                                }
+                            } else {
+                                System.out.println("Error: This user does not exist");
+                            }
+
+                            break;
+
+                        case "MH":
+                            System.out.println("Enter the email of the contact you would like to review your " +
+                                    "message history with");
+                            String contact = userInput.nextLine();
+
+                            if (um.checkUserExists(contact) &&
+                                    organizer.getContacts().contains(um.findUser(contact))) {
+                                ArrayList<String> messagesReceived =
+                                        organizer.getMessagesReceived().get(um.findUser(contact));
+                                if (!(messagesReceived.size() == 0)) {
+                                    System.out.println("Enter the number of messages you would like to see");
+                                    String num = userInput.next();
+                                    while (Integer.parseInt(num) > messagesReceived.size()) {
+                                        System.out.println("Enter the number of messages you would like to see");
+                                        num = userInput.next();
+                                    }
+                                    for (int i = messagesReceived.size() - Integer.parseInt(num);
+                                         i < messagesReceived.size(); i++) {
+                                        System.out.println(messagesReceived.get(i));
+                                    }
+                                } else {
+                                    System.out.println("You have no messages from this person.");
+                                }
+                            } else {
+                                System.out.println("Error: This user does not exist or is not in your contacts list");
+                            }
+
+                            break;
+
+                        case "CO":
+                            if (!(organizer.contacts.size() == 0)) {
+                                System.out.println("====Contacts====");
+                                for (User c: organizer.contacts) {
+                                    System.out.println(c.name);
+                                }
+                            } else {
+                                System.out.println("You do not have any contacts.");
+                            }
+                            break;
+
+                        case "exit":
+                            on_page = false;
+                    }
 
                 case "VE":
 
@@ -104,7 +223,7 @@ class UserInterface {
                                 break;
 
                             case "SS":
-                                System.out.println("need implementation");
+                                System.out.println("need implementation"); //TODO
                                 break;
 
                             case "SR":
@@ -519,7 +638,7 @@ class UserInterface {
                             break;
 
                         case "OO":
-                            OrganizerInterface(ec);
+                            OrganizerInterface(ec, userManager, ms, email);
                             break;
 
                         case "SO":
