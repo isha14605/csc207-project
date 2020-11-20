@@ -20,6 +20,7 @@ public class UserManager{
         this.addUser("Isha", "2", "2", "attendee");
         this.addUser("Anushka", "3", "3", "attendee");
         this.addUser("O", "4", "4", "organizer");
+        this.addUser("Random", "5", "5", "speaker");
 //        email.add("liuhao@gmail.com");
 //        email.add("Test1@gmail.com");
 //        email.add("Test2@gmail.com");

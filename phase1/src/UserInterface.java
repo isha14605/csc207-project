@@ -631,16 +631,18 @@ class UserInterface {
                 while (homeScreen) {
                     System.out.println("=============== Phase 1 System ===============");
                     char usertype = userManager.findUser(email).userType();
-                    // Ne
-                    System.out.println("-User Options- UO");
                     if (usertype == 'O') {
                         System.out.println("-Organiser Options- OO");
+                    } else if (usertype == 'A') {
+                        System.out.println("-Attendee Options - AO");
+                    } else if (usertype == 'S') {
+                        System.out.println("-Speaker Options - SO");
                     }
                     System.out.println("-Log Out- LO");
                     String option = userInput.next();
 
                     switch (option) {
-                        case "UO":
+                        case "AO":
                             AttendeeInterface(su,em,ec, userManager, ms, email);
                             break;
 
