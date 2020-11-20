@@ -1,22 +1,34 @@
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+/**
+ * Manages Talks and Functionality
+ *
+ * @author Chevoy Ingram
+ * @version 1.0
+ */
 
 public class TalkManager implements Serializable{
     private final ArrayList<Talk> talks = new ArrayList<Talk>();
 
     public TalkManager(){}
 
-    /** code use case classes that directly add/ create new entities **/
+    /** Allows user to create a talk entity
+     * @param startTime start time of the talk
+     * @param endTime end time of the talk
+     * @param event the event that talk will he held in
+     * @return The talk entity **/
     protected Talk create_talk(LocalTime startTime, LocalTime endTime, Event event){
         Talk talk = new Talk(startTime, endTime, event);
         talk.setId(talks.size()+1);
         talks.add(talk);
         return talk;
     }
+
+
     protected void add_talk(Talk talk, Event event) {
         for (Talk scheduled : event.getTalks()) {
             if (talk.getStartTime().equals(scheduled.getStartTime())) {
@@ -26,12 +38,20 @@ public class TalkManager implements Serializable{
         event.addTalk(talk);
     }
 
+    /**Schedules speaker to event
+     *@param talk talk that speaker is being scheduled to.
+     *@param speaker Speaker that is being scheduled
+     * */
     protected void schedule_speaker(Speaker speaker, Talk talk){
         speaker.addTalk(talk);
         talk.setSpeaker(speaker);
     }
 
     /** Checkers **/
+
+    /**Check if speaker can be scheduled for talk
+     *@param talk talk being checked
+     *@return true if speaker can be scheduled */
     protected boolean speaker_can_be_scheduled(Talk talk){
         return talk.getSpeaker() == null;
     }
@@ -46,30 +66,47 @@ public class TalkManager implements Serializable{
         }
         return same_time;
     }
-    private ArrayList<Talk> getTalks(){
+
+    protected ArrayList<Talk> getTalks(){
         return talks;
     }
 
+    /** Prints the string version of this talk
+     * @param talk talk converted
+     * */
+    public void toString(Talk talk){
+        String speakerN = null;
+        Speaker speaker = talk.getSpeaker();
+
+        if(speaker == null){
+            speakerN = "None";
+        }else {
+            speakerN = speaker.getName();
+        }
+        System.out.println("Talk id: " + talk.getId() +" Speaker : " +
+                speakerN + " at " + talk.getStartTime()
+                + " to " + talk.getEndTime());
+    }
+
+    /** Prints the string version of all talks within a event
+     * @param event what talks are being converted
+     * */
+    protected void print_talks(Event event){
+        for (Talk talk: event.getTalks()) {
+            toString(talk);
+        }
+    }
+
+    protected Talk getTalk(int talkId){
+        for(Talk talk: talks){
+            if(talk.getId() == talkId){
+                return talk;
+            }
+        }
+        System.out.println("talk not found");
+        return null;
+    }
     /** helper functions **/
-    protected LocalDateTime get_localDateTime(LocalDate date, LocalTime time){
-        return LocalDateTime.of(date, time);
-    }
-    protected LocalDateTime date_formatting_DT(String date){
-        int len = date.length();
-        if(len == 16){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            return LocalDateTime.parse(date, formatter);
-        }
-        throw new IllegalArgumentException("Input is not a valid format");
-    }
-    protected LocalDate date_formatting_date(String date){
-        int len = date.length();
-        if(len == 10){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return LocalDate.parse(date, formatter);
-        }
-        throw new IllegalArgumentException("Input is not a valid format");
-    }
 
     protected LocalTime date_formatting_time(String date){
         int len = date.length();

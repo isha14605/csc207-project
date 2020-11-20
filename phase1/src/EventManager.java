@@ -7,6 +7,13 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Manages Events and their functionality.
+ *
+ * @author Chevoy Ingram & Farhad Siddique
+ * @version 1.0
+ */
+
 public class EventManager implements Serializable {
     private static final Logger logger = Logger.getLogger(EventManager.class.getName());
 
@@ -78,51 +85,17 @@ public class EventManager implements Serializable {
         return on_same_day;
     }
 
+    /** Check if event exist
+     * @param  event_id event that is being check
+     @return  returns true if event exist */
     protected boolean event_exist(int event_id){ return event_id > 0 && event_id <= events.size();
     }
 
+    /**Print all events that are within events*/
     protected void print_events(){
         for (Event event : events) {
             System.out.println(this.eventToString(event));
         }
-    }
-
-    /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
-     * @param user the
-     * @param event
-     @return  event */
-    protected boolean can_join_event(Attendee user, Event event){
-        for(Event attending: user.getEventsAttending()){
-            if(time_conflict(attending, event)){
-                return false;
-            }
-            if(user.getEventsAttending().contains(event)){
-                return false;
-            }
-            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEventRoom().getRoomCapacity()){
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
-     * @param event
-     * @param user
-     @return  event */
-    protected boolean can_join_event(Organizer user, Event event){
-        for(Event attending: user.getEventsAttending()){
-            if(time_conflict(attending, event)){
-                return false;
-            }
-            if(user.getEventsAttending().contains(event)){
-                return false;
-            }
-            if(event.getAttendees().size() + event.getOrganizers().size() < event.getEventRoom().getRoomCapacity()){
-                return false;
-            }
-        }
-        return true;
     }
 
     /** Checks if speaker can be scheduled for a talk and a certain event.
@@ -159,15 +132,6 @@ public class EventManager implements Serializable {
                 event.getEndTime() + " on " + event.getEventDate() + " Talks " + event.getTalks() + "\n");
     }
 
-    /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
-     * @param event date of the event of event in local time.
-     * @param user User that is trying to join event */
-    protected void add_user(Attendee user, Event event){
-        event.addAttendee(user);
-    }
-    protected void add_user(Organizer user, Event event){
-        event.addOrganizer(user);
-    }
 
     /** Checks if there is a time conflict between two events
      * @param event1 date of the event of event in local time.
@@ -218,12 +182,26 @@ public class EventManager implements Serializable {
                 event1.getEndTime().isBefore(event2.getEndTime());
     }
 
+    /**Checks if talk is within event operational hours
+     * @param event event that talk is being added to.
+     * @param talk talk being checked
+     * @return if talk is within event
+     * */
     protected boolean within_event(Talk talk, Event event){
-            if(talk.getStartTime().isBefore(event.getStartTime())){
-                return false;
-            }
-            else return !talk.getEndTime().isAfter(talk.getEndTime());
 
+        if(talk.getStartTime().equals(event.getStartTime())){
+            return true;
+        }
+        else if(talk.getStartTime().isAfter(event.getStartTime()) &&
+                talk.getStartTime().isBefore(event.getEndTime())){
+            return true;
+        }
+        else if(talk.getEndTime().isAfter(event.getStartTime()) &&
+                talk.getEndTime().isBefore(event.getStartTime())){
+            return true;
+            }
+
+        return false;
     }
 
     /** Checks if a value was in valid format
@@ -239,18 +217,6 @@ public class EventManager implements Serializable {
      @return  the local date time  */
     protected LocalDateTime get_localDateTime(LocalDate date, LocalTime time){
         return LocalDateTime.of(date, time);
-    }
-
-    /** Checks if the formatting on date is correct
-     * @param date of the event of event in local time.
-     @return  local date time of this string representation */
-    protected LocalDateTime date_formatting_DT(String date){
-        int len = date.length();
-        if(len == 16){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            return LocalDateTime.parse(date, formatter);
-        }
-        return null;
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.

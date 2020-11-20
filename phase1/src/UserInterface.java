@@ -14,6 +14,7 @@ class UserInterface {
         while (on_page) {
             EventManager em = eventController.em;
             RoomManager rm = eventController.rm;
+            TalkManager tm = eventController.tm;
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
             System.out.println("==============Organizer Interface==================" +
                     "\n -Add Event- enter AE-" +
@@ -179,6 +180,7 @@ class UserInterface {
                         System.out.println("No events are Scheduled");
                     }
                     break;
+
                 case "VR":
                     RoomManager roomManager = new RoomManager();
                     for (Room room : eventController.get_rooms()) {
@@ -219,7 +221,52 @@ class UserInterface {
                                 break;
 
                             case "SS":
-                                System.out.println("need implementation"); //TODO
+                                System.out.println("What event are you scheduling speaker for");
+                                em.print_events();
+
+
+                                try {
+                                    event_id = userInput.nextInt();
+                                }catch(Exception e){
+                                    System.out.println("invalid input.");
+                                    break;
+                                }
+
+                                if(em.find_event(event_id).getTalks().size() == 0){
+                                    System.out.println("Event has no talks to schedule speakers to.");
+                                    break;
+                                }
+                                int talk_id;
+                                System.out.println("Which talk is speaker speaking in. Enter talk id");
+                                tm.print_talks(em.find_event(event_id));
+
+                                try {
+                                    talk_id = userInput.nextInt();
+                                }catch (Exception e){
+                                    System.out.println("invalid input");
+                                    break;
+                                }
+
+                                if(tm.getTalk(talk_id) == null){
+                                    break;
+                                }
+
+                                System.out.println("Enter the email of the speaker who will be speaking");
+                                email = userInput.next();
+                                Speaker speaker = null;
+
+                                if(speaker == null){
+                                    break;
+                                }
+
+                                if(speaker.userType() == 'S'){
+                                    eventController.schedule_speaker(speaker,tm.getTalk(talk_id),
+                                            em.find_event(event_id));
+                                    System.out.println("Speaker was Scheduled");
+                                }else {
+                                    System.out.println("Speaker was not Scheduled");
+                                }
+
                                 break;
 
                             case "SR":
@@ -636,6 +683,9 @@ class UserInterface {
                     System.out.println("-User Options- UO");
                     if (usertype == 'O') {
                         System.out.println("-Organiser Options- OO");
+                    }
+                    if (usertype == 'S'){
+                        System.out.println("-Speaker Options- SO");
                     }
                     System.out.println("-Log Out- LO");
                     String option = userInput.next();

@@ -55,13 +55,22 @@ public class Talk implements Serializable {
      * sets the speaker of this talk.
      * @param speaker the speaker of this talk
      */
-
-
     public void setSpeaker(Speaker speaker) {
         this.speaker = speaker;
     }
 
+    /**
+     * sets the id of this talk.
+     * @param id the speaker of this talk
+     */
     public void setId(int id){
         this.id = id;
+    }
+
+    /**
+     * gets the id of this talk
+     */
+    public int getId() {
+        return id;
     }
 }

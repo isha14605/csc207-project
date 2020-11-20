@@ -1,42 +1,41 @@
 import java.io.*;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+/**
+ * Manages Rooms and functionality
+ *
+ * @author Chevoy Ingram
+ * @version 1.0
+ */
 
 public class RoomManager implements Serializable {
-    private ArrayList<Room> rooms = new ArrayList<Room>();
+    private final ArrayList<Room> rooms = new ArrayList<>();
 
     public RoomManager(){}
 
-/** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
- *@param name
- * @param room_capacity
- * @param open_time
- * @param close_time
+/** Creates a new room entity based on parameters set below
+ *@param name Name of the event.
+ * @param room_capacity Number of uses allowed to join the room
+ * @param open_time Time the room is open in LocalTime
+ * @param close_time Time the room closes in LocalTime
  * */
     protected void create_room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time){
         Room r = new Room(name, room_capacity, open_time, close_time);
         rooms.add(r);
     }
 
-/** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
- * @param event
- * @param room
- * */
-
-    /**
-     * @param room
-     * @param event
+    /** Sets The event parameter of room entity
+     * @param room room entity
+     * @param event event entity
      * */
     protected void schedule_room(Room room, Event event){
         event.setEventRoom(room);
     }
 
-    /**
-     * @param name
-     * */
+    /** Finds and returns room by getting the name
+     * @param name name of the room
+     * @return returns the Room if it exists returns null if room doesn't exist*/
     protected Room find_room(String name){
         for(Room room: rooms){
             if(room.getName().equals(name)){
@@ -46,9 +45,9 @@ public class RoomManager implements Serializable {
         return null;
     }
 
-    /**
-     * @param room
-     * @param unbooked
+    /** Checks if room is booked and can be scheduled for a unbooked event
+     * @param room room entity
+     * @param unbooked Unbooked room Entity
      * */
     protected boolean is_room_booked(Room room, Event unbooked){
         for(Event booked: room.getBookings().keySet()){
@@ -60,6 +59,10 @@ public class RoomManager implements Serializable {
         return false;
     }
 
+    /** Checks if event can be scheduled for this room;
+     * @param event event that room is be scheduled to.
+     * @param room room that is being scheduled.
+     * @return a list of all the rooms that have been saved*/
     protected boolean can_fit_event(Event event, Room room){
         if(event.getStartTime().isBefore(room.getOpenTime())){
             return false;
@@ -67,22 +70,24 @@ public class RoomManager implements Serializable {
         else return !event.getEndTime().isAfter(room.getCloseTime());
     }
 
+    /** Gets a list of rooms that user has access to.
+     * @return a list of all the rooms that have been saved*/
     protected ArrayList<Room> getRooms(){
         return rooms;
     }
 
-    /**
+    /** Takes a room and converts it into readable strings
      * @param room
-     * */
+     * @return String representation of the room*/
     protected String roomToString(Room room){
-        return new String("Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
-                + room.getCloseTime() + "\n");
+        return "Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
+                + room.getCloseTime() + "\n";
     }
 
-    /**
-     * @param scheduling
-     * @param event
-     * */
+    /** Checks if there is a time conflict between a event and talk that wants to be scheduled
+     * @param scheduling the talk the is being scheduled
+     * @param event the event the talk wants to be added to.
+     * @return true if there is a time conflict within events*/
     protected boolean time_conflict(Talk scheduling, Event event){
         for(Talk scheduled: event.getTalks()){
             if(scheduling.getStartTime().equals(scheduled.getStartTime())){
@@ -110,26 +115,9 @@ public class RoomManager implements Serializable {
                 event1.getEndTime().isBefore(event2.getEndTime());
     }
 
-
-    protected LocalDateTime get_localDateTime(LocalDate date, LocalTime time){
-        return LocalDateTime.of(date, time);
-    }
-    protected LocalDateTime date_formatting_DT(String date){
-        int len = date.length();
-        if(len == 16){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-            return LocalDateTime.parse(date, formatter);
-        }
-        return null;
-    }
-    protected LocalDate date_formatting_date(String date){
-        int len = date.length();
-        if(len == 10){
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return LocalDate.parse(date, formatter);
-        }
-        return null;
-    }
+    /** Filters user input by checking and converting input into a readable LocalTime
+     * @param date the string representation of a time
+     @return  the local time of this string representation  */
     protected LocalTime date_formatting_time(String date){
         int len = date.length();
         if(len == 5){
