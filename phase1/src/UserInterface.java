@@ -242,7 +242,7 @@ class UserInterface {
                                 } else {
                                     System.out.println("There are no talks for this event.");
                                 }
-                                break;
+                                  break;
 
                             case "SR":
                                 if (eventController.get_rooms().size() == 0) {
@@ -644,14 +644,40 @@ class UserInterface {
         boolean signed_in = false;
 
         while (!signed_in) {
-            System.out.println("|===== Phase 1 login =====|");
-            System.out.println("Enter your Email");
+            boolean ca = true;
+            while (ca){
+                System.out.println("|===== Phase 1 login =====|");
+                System.out.println("CREATE ACCOUNT - CA");
+                System.out.println("LOGIN - LO");
+                String option = userInput.next();
+                if (option.equals("CA")){
+                    System.out.println("Enter your name");
+                    String name = userInput.next();
+                    System.out.println("Enter email id");
+                    String email_id = userInput.next();
+                    System.out.println("Enter password");
+                    String password = userInput.next();
+                    System.out.println("Enter type of user you want to be\n" + "Attendee\n" + "Organizer\n" + "Speaker ");
+                    String type = userInput.next();
+                    userManager.addUser(name, email_id, password, type.toLowerCase()); // do we want to print if account created?
+                }
+                System.out.println("CREATE ACCOUNT - CA");
+                System.out.println("LOGIN - LO");
+                option = userInput.next();
+                if (option.equals("CA")){
+                    ca = true;
+                } else {
+                    ca = false;
+                }
+            }
+
+            System.out.println("Enter your email");
             String email = userInput.next();
-            System.out.println("Enter your Password");
+            System.out.println("Enter your password");
             String password = userInput.next();
             signed_in = loginSystem.checkLogIn(email, password);
             if (!signed_in) {
-                System.out.println("Invalid Login Credentials");
+                System.out.println("Invalid login credentials");
             }
 
             if (signed_in) {
