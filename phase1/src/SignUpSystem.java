@@ -1,11 +1,5 @@
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Handles signing up functionality for events.
@@ -26,18 +20,18 @@ public class SignUpSystem {
      * @return a list containing potential events that the Attendee is interested in attending for further perusal
      */
     // Allows the Attendee to browse the events and decide which ones they want to see based on date and time
-    public ArrayList<Event> browseEvents(LocalDate date){
-        ArrayList<Event> interestList = new ArrayList<Event>();
-        ArrayList<Event> allEventsList = eM.getEvents();
-        for (Event event: allEventsList) {
-            if (event.getEventDate().equals(date)){
-
-//                    && event.getStartTime().equals(startTime)
-//                    && (endTime.isBefore(event.getEndTime()) || event.getEndTime().equals(endTime)))
-                interestList.add(event);
-            }
-        }
-        return interestList; // Return the list of events so the Attendee can browse
+    public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){
+//        ArrayList<Event> interestList = new ArrayList<>();
+//        ArrayList<Event> allEventsList = eM.getEvents();
+//        for (Event event: allEventsList) {
+//            if (event.getEventDate().equals(date)){
+//
+////                    && event.getStartTime().equals(startTime)
+////                    && (endTime.isBefore(event.getEndTime()) || event.getEndTime().equals(endTime)))
+//                interestList.add(event);
+//            }
+//        }
+        return eM.get_events_on(date); // Return the list of events so the Attendee can browse
     }
 
     /**

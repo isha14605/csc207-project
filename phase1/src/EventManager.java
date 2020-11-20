@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -120,16 +119,16 @@ public class EventManager implements Serializable {
      * @param event event that will be turned into string
      @return  String of event */
     protected String eventToString(Event event){
-        String room = new String();
+        String room;
         if(event.getEventRoom() == null){
             room = "None";
         }
         else{
             room = event.getEventRoom().getName();
         }
-        return new String("Event id: " + event.getEventId() + " | Event name: " + event.getName() +
+        return "Event id: " + event.getEventId() + " | Event name: " + event.getName() +
                 " | Room: " + room + "\nEvent Starts from " + event.getStartTime() + " to " +
-                event.getEndTime() + " on " + event.getEventDate() + " Talks " + event.getTalks() + "\n");
+                event.getEndTime() + " on " + event.getEventDate() + " Talks " + event.getTalks() + "\n";
     }
 
 
@@ -226,8 +225,8 @@ public class EventManager implements Serializable {
         int len = date.length();
         try {
             if (len == 10) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                return LocalDate.parse(date, formatter);
+//                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                return LocalDate.parse(date);
             }
         }catch (Exception e){
             System.out.println("Date is not a valid date");

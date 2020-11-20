@@ -2,13 +2,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Controls the behaviour of event, rooms and talks and how the are updated and used.
- *
- * @author Chevoy Ingram
- * @version 1.0
- */
-
 public class EventController implements Serializable{
 
     EventManager em = new EventManager();
@@ -26,9 +19,6 @@ public class EventController implements Serializable{
         System.out.println("changes have been saved");
     }
 
-    /**
-     * Adds events to the system
-     */
     public void add_event(String name, String description, String start, String end, String date) throws IOException {
         if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))
         || em.not_valid_format(em.date_formatting_date(date))) {
@@ -41,14 +31,10 @@ public class EventController implements Serializable{
         }
     }
 
-
     public ArrayList<Event> get_events(){
         return em.getEvents();
     }
 
-    /**
-     * Adds events to the system
-     */
     public void add_room(String name, Integer capacity, String start, String end) throws IOException {
         if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))) {
             System.out.println("Invalid time!");
@@ -59,14 +45,8 @@ public class EventController implements Serializable{
         }
     }
 
-    /**
-     * Adds events to the system
-     */
     public ArrayList<Room> get_rooms(){return rm.getRooms();}
 
-    /**
-     * Adds talks to the system
-     */
     public boolean add_talk(String start, String end, Integer event_id) throws IOException {
 
         if(em.date_formatting_time(start) == null || em.date_formatting_time(end) == null ){
@@ -93,9 +73,6 @@ public class EventController implements Serializable{
         }
     }
 
-    /**
-     * Assigns a room to event if it fits event parameters
-     */
     public void schedule_room(String room_name, Integer event_id) throws IOException {
         Event event = em.find_event(event_id);
         Room room = rm.find_room(room_name);
@@ -114,9 +91,6 @@ public class EventController implements Serializable{
         }
     }
 
-    /**
-     * Adds speaker to a talk and updates talk and speaker to the change
-     */
     public void schedule_speaker(Speaker speaker, Talk talk, Event event){
         if(em.can_schedule_speaker(event,talk,speaker) && tm.speaker_can_be_scheduled(talk)){
             speaker.addTalk(talk);
