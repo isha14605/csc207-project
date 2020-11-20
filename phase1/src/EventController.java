@@ -62,7 +62,7 @@ public class EventController implements Serializable{
         Talk talk = tm.create_talk(tm.date_formatting_time(start),
                 tm.date_formatting_time(end), em.find_event(event_id));
 
-        if (!rm.time_conflict(talk, em.find_event(event_id)) || em.within_event(talk,em.find_event(event_id))) {
+        if (!rm.time_conflict(talk, em.find_event(event_id)) && em.within_event(talk,em.find_event(event_id))) {
             tm.add_talk(talk, em.find_event(event_id));
             tm.writeToFile("TalkSave.ser");
             return true;
