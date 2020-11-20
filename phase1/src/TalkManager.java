@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class TalkManager implements Serializable{
-    private final ArrayList<Talk> talks = new ArrayList<Talk>();
+    public ArrayList<Talk> talks = new ArrayList<Talk>();
 
     public TalkManager(){}
 
@@ -85,24 +85,24 @@ public class TalkManager implements Serializable{
         OutputStream buffer = new BufferedOutputStream(file);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this);
+        output.writeObject(talks);
         output.close();
 
     }
 
-    public TalkManager readFile(String fileName) throws IOException, ClassNotFoundException {
+    public ArrayList<Talk> readFile(String fileName) throws IOException, ClassNotFoundException {
         try {
             InputStream file = new FileInputStream(fileName);
             InputStream buffer = new BufferedInputStream(file);
             ObjectInput input = new ObjectInputStream(buffer);
 
-            TalkManager tm = (TalkManager) input.readObject();
+            ArrayList<Talk> talks1 = (ArrayList<Talk>) input.readObject();
             input.close();
-            return tm;
+            return talks1;
         } catch (IOException | ClassNotFoundException ignored) {
             System.out.println("couldn't read room file.");
         }
-        return new TalkManager();
+        return talks;
     }
 
     public Event findTalk(String talk){

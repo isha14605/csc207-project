@@ -195,27 +195,27 @@ class UserInterface {
                     } else {
                         System.out.println("-Schedule Speaker- SS");
                         System.out.println("-Schedule Room- SR");
-                        System.out.println("-Create Talk- enter CT");
+//                        System.out.println("-Create Talk- enter CT");
                         System.out.println("-Add Talk- AT");
                         String event_options = userInput.nextLine();
                         switch (event_options) {
-                            case "CT":
-                                System.out.println("====Talk Creator====");
-                                System.out.println("What Event Would you like to add talk to");
-                                em.print_events();
-                                int event_id = userInput.nextInt();
-                                if (em.find_event(event_id).getEventRoom() == null) {
-                                    System.out.println("Event needs to be scheduled a room before" +
-                                            "talks can be added");
-                                } else {
-                                    System.out.println("When does the talk start");
-                                    start = userInput.next();
-                                    System.out.println("When does the talk end");
-                                    end = userInput.next();
-                                    eventController.add_talk(start, end, event_id);
-
-                                }
-                                break;
+//                            case "CT":
+//                                System.out.println("====Talk Creator====");
+//                                System.out.println("What Event Would you like to add talk to");
+//                                em.print_events();
+//                                int event_id = userInput.nextInt();
+//                                if (em.find_event(event_id).getEventRoom() == null) {
+//                                    System.out.println("Event needs to be scheduled a room before" +
+//                                            "talks can be added");
+//                                } else {
+//                                    System.out.println("When does the talk start");
+//                                    start = userInput.next();
+//                                    System.out.println("When does the talk end");
+//                                    end = userInput.next();
+//                                    eventController.add_talk(start, end, event_id);
+//
+//                                }
+//                                break;
 
                             case "SS":
                                 System.out.println("What event would you like to schedule speaker for?");
@@ -225,6 +225,7 @@ class UserInterface {
                                 int talkID = userInput.nextInt();
                                 System.out.println("Enter the email of the speaker you want to schedule.");
                                 String speaker = userInput.next();
+                                boolean flag = false;
                                 if (!(em.find_event(eventID).getTalks().size() == 0)) {
                                     for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
                                         if (talk.getId() == talkID && um.checkUserExists(speaker)) {
@@ -232,12 +233,16 @@ class UserInterface {
                                             boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
                                             if (check) {
                                                 System.out.println("Speaker has been scheduled!");
+                                                flag = true;
+
                                             } else {
                                                 System.out.println("Error. This speaker cannot be scheduled for this talk.");
                                             }
-                                        } else {
-                                            System.out.println("Error. This talk does not exist or speaker does not exist.");
+                                            break;
                                         }
+                                    }
+                                    if (!flag){
+                                        System.out.println("Error. This talk does not exist.");
                                     }
                                 } else {
                                     System.out.println("There are no talks for this event.");
@@ -574,6 +579,7 @@ class UserInterface {
                                 String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
                                 ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
                             } else {
+                                System.out.println("No attendees will be messaged");
                                 on_page = false; // exit SM
                             }
                             break;
@@ -584,24 +590,28 @@ class UserInterface {
 
                             // Check if this user exists in the system
                             if (userManager.checkUserExists(email)) {
-                                ArrayList<String> messages_received = speaker.getMessagesReceived().get(um.findUser(emailOfContact));
-
-                                System.out.println("Enter the number of messages you would like to see.");
-                                String numMessages = userInput.next();
-
-                                if (!(messages_received.size() == 0)) {
-                                    // Code runs when there are more than 0 messages between speaker and the attendee
-                                    while (Integer.parseInt(numMessages) > messages_received.size()) {
-                                        System.out.println("Enter the number of messages you would like to see.");
-                                        numMessages = userInput.next();
+                                if (speaker.getMessagesReceived().get(um.findUser(emailOfContact)) == null){
+                                    System.out.println("No history with them");
+                                }
+                                else{
+                                    System.out.println("Enter the number of messages you would like to see.");
+                                    String numMessages = userInput.next();
+                                    ArrayList<String> messages_received = speaker.getMessagesReceived().get(um.findUser(emailOfContact));
+                                    System.out.println(messages_received.size());
+                                    if (!(messages_received.size() == 0)) {
+                                        // Code runs when there are more than 0 messages between speaker and the attendee
+                                        while (Integer.parseInt(numMessages) > messages_received.size()) {
+                                            System.out.println("Enter the number of messages you would like to see.");
+                                            numMessages = userInput.next();
+                                        }
+                                        for (int i = messages_received.size() - Integer.parseInt(numMessages); i < messages_received.size(); i++) {
+                                            System.out.println(messages_received.get(i));
+                                            hasMessagesFromContact = true;
+                                        }
+                                    } else {
+                                        // Code runs when there are zero messages between the two
+                                        System.out.println("You have no messages from this person.");
                                     }
-                                    for (int i = messages_received.size() - Integer.parseInt(numMessages); i < messages_received.size(); i++) {
-                                        System.out.println(messages_received.get(i));
-                                        hasMessagesFromContact = true;
-                                    }
-                                } else if (messages_received.size() == 0){
-                                    // Code runs when there are zero messages between the two
-                                    System.out.println("You have no messages from this person.");
                                 }
                             } else {
                                 // runs if the user does not exist
@@ -620,14 +630,16 @@ class UserInterface {
                                         break;
                                     case "No":
                                         on_page = false;
+
                                 }
                             }
                             break;
+
                         case "E":
                             on_page = false;
-                        case "Exit":
-                            on_page = false;
-                    }
+                   }
+                case "Exit":
+                        on_page = false;
             }
         }
     }
@@ -645,32 +657,60 @@ class UserInterface {
 
         while (!signed_in) {
             boolean ca = true;
-            while (ca){
-                System.out.println("|===== Phase 1 login =====|");
-                System.out.println("CREATE ACCOUNT - CA");
-                System.out.println("LOGIN - LO");
-                String option = userInput.next();
-                if (option.equals("CA")){
-                    System.out.println("Enter your name");
-                    String name = userInput.next();
-                    System.out.println("Enter email id");
-                    String email_id = userInput.next();
-                    System.out.println("Enter password");
-                    String password = userInput.next();
-                    System.out.println("Enter type of user you want to be\n" + "Attendee\n" + "Organizer\n" + "Speaker ");
-                    String type = userInput.next();
-                    userManager.addUser(name, email_id, password, type.toLowerCase()); // do we want to print if account created?
-                }
-                System.out.println("CREATE ACCOUNT - CA");
-                System.out.println("LOGIN - LO");
-                option = userInput.next();
-                if (option.equals("CA")){
-                    ca = true;
+            System.out.println("|===== Phase 1 login =====|");
+            System.out.println("CREATE ACCOUNT - CA");
+            System.out.println("LOGIN - LO");
+            String opt = userInput.next();
+            if (opt.equals("CA")){
+                System.out.println("Enter your name");
+                String name = userInput.next();
+                System.out.println("Enter email id");
+                String email_id = userInput.next();
+                System.out.println("Enter password");
+                String password = userInput.next();
+                System.out.println("Enter type of user you want to be\n" + "Attendee\n" + "Organizer\n" + "Speaker ");
+                String type = userInput.next();
+                if (userManager.addUser(name, email_id, password, type.toLowerCase())){
+                    System.out.println("Account created!");
                 } else {
+                    System.out.println("Email already in use");
+                }
+
+                System.out.println("Would you like to create another account? Yes/No");
+                String choice = userInput.next();
+                if (choice.equals("No")){
                     ca = false;
+                }
+
+                while (ca){
+                    if (!(choice.equals("No"))){
+                        System.out.println("Enter your name");
+                        String n = userInput.next();
+                        System.out.println("Enter email id");
+                        String eid = userInput.next();
+                        System.out.println("Enter password");
+                        String pd = userInput.next();
+                        System.out.println("Enter type of user you want to be\n" + "Attendee\n" + "Organizer\n" + "Speaker ");
+                        String ty = userInput.next();
+                        if (userManager.addUser(n, eid, pd, ty.toLowerCase())){
+                            System.out.println("Account created!");
+                        } else {
+                            System.out.println("Email already in use");
+                        }
+
+                    }
+                    System.out.println("Would you like to create another account? Yes/No");
+                    choice = userInput.next();
+                    if (choice.equals("No")){
+                        ca = false;
+                    }
+
                 }
             }
 
+
+
+            System.out.println("|===== Phase 1 login =====|");
             System.out.println("Enter your email");
             String email = userInput.next();
             System.out.println("Enter your password");
