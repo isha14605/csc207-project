@@ -92,11 +92,13 @@ public class EventController implements Serializable{
         }
     }
 
-    public void schedule_speaker(Speaker speaker, Talk talk, Event event){
+    public boolean schedule_speaker(Speaker speaker, Talk talk, Event event){
         if(em.can_schedule_speaker(event,talk,speaker) && tm.speaker_can_be_scheduled(talk)){
             speaker.addTalk(talk);
             talk.setSpeaker(speaker);
+            return true;
         }
+        return false;
     }
 
 

@@ -51,6 +51,9 @@ public class Talk implements Serializable {
      */
     public Event getEvent() {return this.event;}
 
+    /**
+     * gets the id of this talk
+     */
     public int getId() {
         return id;
     }
@@ -69,12 +72,5 @@ public class Talk implements Serializable {
      */
     public void setId(int id){
         this.id = id;
-    }
-
-    /**
-     * gets the id of this talk
-     */
-    public int getId() {
-        return id;
     }
 }
