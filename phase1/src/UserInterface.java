@@ -73,11 +73,11 @@ class UserInterface {
                     switch(userOption) {
                         case "IM":
                             System.out.println("Enter the email of the contact you would like to message.");
-                            String contactEmail = userInput.nextLine();
+                            String contactEmail = userInput.next();
                             if (um.checkUserExists(contactEmail)) {
                                 if (organizer.getContacts().contains(um.findUser(contactEmail))) {
                                     System.out.println("Enter the message you would like to send.");
-                                    String message = userInput.nextLine();
+                                    String message = userInput.next();
                                     ms.sendAttendeeMessage(organizer, um.findUser(contactEmail), message);
                                 } else {
                                     System.out.println("Error: This user is not in your contacts list.");
@@ -85,6 +85,7 @@ class UserInterface {
                             } else {
                                 System.out.println("Error: This user does not exist.");
                             }
+                            break;
 
                         case "GM":
                             System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
@@ -94,7 +95,7 @@ class UserInterface {
                             int event = userInput.nextInt();
                             System.out.println("Enter the message you would like to send.");
                             String message = userInput.next();
-                            ms.sendMessageOrganizer(organizer, choice, eventController.em, event,  message);
+                            ms.sendMessageOrganizer(organizer, choice, event,  message);
                             break;
 
                         case "AD":
