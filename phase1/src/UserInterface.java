@@ -570,35 +570,12 @@ class UserInterface {
                                     if (speakersEvents.contains(Integer.parseInt(eventID))) {
                                         System.out.println("Please enter the message you would like to send to all the attendees in the event with ID: " +
                                                 eventID);
-                                        String messageToSend = userInput.nextLine();
-                                        ms.sendMessageSpeaker(speaker, eventManager.find_event(Integer.parseInt(eventID)), messageToSend);
+                                        String messageToSend = userInput.next();
+                                        ms.sendMessageSpeaker(speaker, ec.em.find_event(Integer.parseInt(eventID)), messageToSend);
                                     } else {
                                         System.out.println("Error. You cannot message attendees for this event.");
                                     }
                                 }
-//                                ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
-//                                for (int i = 0; i < numberOfTalks; i++) {
-//                                    String a = userInput.nextLine(); // stores the input to be added
-//                                    toSendMessagesTo.add(a); // adds the talk to the list
-//                                }
-//                                ArrayList<Event> events_at = new ArrayList<Event>();
-//
-//                                for (Talk t : speaker.getTalksSpeaking()) {
-//                                    if (!(events_at.contains(t.getEvent()))) {
-//                                        events_at.add(t.getEvent());
-//                                    }
-//                                }
-//                                ArrayList<Event> final_events = new ArrayList<Event>();
-//
-//                                for (String s : toSendMessagesTo) {
-//                                    if (events_at.contains(ec.em.find_event(Integer.parseInt(s)))) {
-//                                        final_events.add((ec.em.find_event(Integer.parseInt(s))));
-//                                    }
-//                                }
-//                                System.out.println("Please enter the message you would like to send to all the attendees" +
-//                                        " of these selected talks.");
-//                                String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
-//                                ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
                             } else {
                                 System.out.println("No attendees will be messaged");
                                 on_page = false; // exit SM
@@ -618,7 +595,7 @@ class UserInterface {
                                     System.out.println("Enter the number of messages you would like to see.");
                                     String numMessages = userInput.next();
                                     ArrayList<String> messages_received = speaker.getMessagesReceived().get(um.findUser(emailOfContact));
-                                    System.out.println(messages_received.size());
+//                                    System.out.println(messages_received.size());
                                     if (!(messages_received.size() == 0)) {
                                         // Code runs when there are more than 0 messages between speaker and the attendee
                                         while (Integer.parseInt(numMessages) > messages_received.size()) {

@@ -59,7 +59,7 @@ public class MessagingSystem {
 
 
     public void sendMessageSpeaker(Speaker from, Event event_name, String message) {
-        for(User u: event_name.getAttendees()){
+        for(Attendee u: event_name.getAttendees()){
             um.message(from, u, message);
         }
     }
