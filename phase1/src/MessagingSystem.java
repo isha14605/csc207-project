@@ -65,7 +65,7 @@ public class MessagingSystem {
      * Sends an Speaker message to all Attendees signed up for an event
      */
     public void sendMessageSpeaker(Speaker from, Event event_name, String message) {
-        for(User u: event_name.getAttendees()){
+        for(Attendee u: event_name.getAttendees()){
             um.message(from, u, message);
         }
     }

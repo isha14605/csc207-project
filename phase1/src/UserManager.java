@@ -137,6 +137,7 @@ public class UserManager{
 
 
     private boolean speakerMessage(Speaker from, User to, String message){
+        from.addContact(to);
         for (Talk t: from.getTalksSpeaking()){
             Event e = t.getEvent();
             if (e.getAttendees().contains(to)){
