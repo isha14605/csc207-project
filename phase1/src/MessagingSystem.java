@@ -16,6 +16,7 @@ public class MessagingSystem {
     public MessagingSystem() {
     }
 
+    ;
 
     /**
      * Returns a list of string of content of the message the user wants to send from the console
@@ -51,19 +52,12 @@ public class MessagingSystem {
     }
 
 
-    /**
-     * Sends an Attendee message
-     *
-     * @return true if the message was sent successfully
-     */
+
     public boolean sendAttendeeMessage(User from, User to, String message) {
         return um.message(from, to, message);
     }
 
 
-    /**
-     * Sends an Speaker message to all Attendees signed up for an event
-     */
     public void sendMessageSpeaker(Speaker from, Event event_name, String message) {
         for(Attendee u: event_name.getAttendees()){
             um.message(from, u, message);
@@ -71,18 +65,15 @@ public class MessagingSystem {
     }
 
 
-    /**
-     * Sends an Organizer message to all the Speakers or all the Attendees signed up for an event
-     */
-    public void sendMessageOrganizer(Organizer from, String to, int event_id, String message) {
+    public void sendMessageOrganizer(Organizer from, String to,EventManager EM, int event_id, String message) {
         if (to.equals("Attendee")){
-            Event event = em.find_event(event_id);
+            Event event = EM.find_event(event_id);
             for(Attendee a: event.getAttendees()){
                 um.message(from, a, message);
             }
 
         } else if (to.equals("Speaker")) {
-            Event event = em.find_event(event_id);
+            Event event = EM.find_event(event_id);
             ArrayList<Talk> talks = new ArrayList<Talk>();
             for (Talk t: event.getTalks()){
                 talks.add(t);

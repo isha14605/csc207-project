@@ -17,7 +17,7 @@ class UserInterface {
             System.out.println("==============Organizer Interface==================" +
                     "\n -Add Event- enter AE-" +
                     "\n -Create Room- enter CR-" +
-                    "\n -Create Speaker- enter CS-" +
+//                  "\n -Create Speaker- enter CS-" +
                     "\n -Event Options- enter EO-" +
                     "\n -View Events- enter VE-" +
                     "\n -View Rooms- enter VR-" +
@@ -59,19 +59,6 @@ class UserInterface {
 
                     break;
 
-                case "CS":
-                    System.out.println("====Speaker Creator====");
-
-                    System.out.println("Enter the speaker's name.");
-                    String speakerName = userInput.nextLine();
-                    System.out.println("Enter the speaker's email.");
-                    String speakerEmail = userInput.nextLine();
-                    System.out.println("Enter the speaker's password.");
-                    String speakerPassword = userInput.nextLine();
-
-                    um.addUser(speakerName, speakerEmail, speakerPassword, "speaker");
-
-                    break;
 
                 case "IB":
                     System.out.println("====Messages Inbox====" +
@@ -102,16 +89,17 @@ class UserInterface {
                         case "GM":
                             System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
                                     "\n Enter Attendee for Attendees or Speaker for Speakers");
-                            String choice = userInput.nextLine();
+                            String choice = userInput.next();
                             System.out.println("Enter the event id relevant to this message.");
                             int event = userInput.nextInt();
                             System.out.println("Enter the message you would like to send.");
-                            String message = userInput.nextLine();
-                            ms.sendMessageOrganizer(organizer, choice, event,  message);
+                            String message = userInput.next();
+                            ms.sendMessageOrganizer(organizer, choice, eventController.em, event,  message);
+                            break;
 
                         case "AD":
                             System.out.println("Enter the email of the contact you would like to add.");
-                            String newContact = userInput.nextLine();
+                            String newContact = userInput.next();
 
                             if (um.checkUserExists(newContact)) {
                                 if (!organizer.getContacts().contains(um.findUser(newContact))) {
@@ -129,7 +117,7 @@ class UserInterface {
                         case "MH":
                             System.out.println("Enter the email of the contact you would like to review your " +
                                     "message history with.");
-                            String contact = userInput.nextLine();
+                            String contact = userInput.next();
 
                             if (um.checkUserExists(contact) &&
                                     organizer.getContacts().contains(um.findUser(contact))) {
@@ -168,7 +156,9 @@ class UserInterface {
 
                         case "Exit":
                             on_page = false;
+
                     }
+                    break;
 
                 case "VE":
 
@@ -240,6 +230,7 @@ class UserInterface {
 
                                                 } else {
                                                     System.out.println("Error. This speaker cannot be scheduled for this talk.");
+                                                    flag = true;
                                                 }
                                                 break;
                                             }

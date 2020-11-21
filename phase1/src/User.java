@@ -76,10 +76,12 @@ public class User {
      * @param user the user that is added to their contact.
      */
     protected void addContact(User user){
-        this.contacts.add(user);
-        this.messagesSent.put(user, new ArrayList<String>());
-        this.messagesReceived.put(user, new ArrayList<String>());
-        user.add_opp_contact(this);
+        if (!(this.contacts.contains(user))){
+            this.contacts.add(user);
+            this.messagesSent.put(user, new ArrayList<String>());
+            this.messagesReceived.put(user, new ArrayList<String>());
+            user.add_opp_contact(this);
+        }
     }
 
     private void add_opp_contact(User user){
@@ -96,8 +98,19 @@ public class User {
      */
     protected void sendMessage(User who, String message){
         ArrayList<String> x = this.messagesSent.get(who);
-        x.add(message);
-        this.messagesSent.replace(who, x);
+        ArrayList<String> y = new ArrayList<String>(x);
+        y.add(message);
+        this.messagesSent.replace(who, y);
+//        if (!(x == null)){
+//            ArrayList<String> y = new ArrayList<String>(x);
+//            y.add(message);
+//            this.messagesSent.replace(who, y);
+//        } else {
+//            ArrayList<String> m = new ArrayList<String>();
+//            m.add(message);
+//            this.messagesSent.put(who, m);
+//        }
+
     }
 
     /* The message a user is supposed to receive*/
@@ -111,6 +124,15 @@ public class User {
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);
         this.messagesReceived.replace(who, y);
+//        if (!(x == null)){
+//            ArrayList<String> y = new ArrayList<String>(x);
+//            y.add(message);
+//            this.messagesReceived.replace(who, y);
+//        } else {
+//            ArrayList<String> m = new ArrayList<String>();
+//            m.add(message);
+//            this.messagesReceived.put(who, m);
+//        }
     }
 
     /**
