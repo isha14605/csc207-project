@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 /**
  * Manages Talks and Functionality
- *
  * @author Chevoy Ingram
  * @version 1.0
  */
@@ -16,11 +15,14 @@ public class TalkManager implements Serializable{
 
     public TalkManager(){}
 
-    /** Allows user to create a talk entity
+    /**
+     * Allows user to create a talk entity
      * @param startTime start time of the talk
      * @param endTime end time of the talk
      * @param event the event that talk will he held in
-     * @return The talk entity **/
+     * @return the talk entity that was created
+     * @see Talk#setId(int)
+     **/
     protected Talk create_talk(LocalTime startTime, LocalTime endTime, Event event){
         Talk talk = new Talk(startTime, endTime, event);
         talk.setId(talks.size()+1);
@@ -28,7 +30,13 @@ public class TalkManager implements Serializable{
         return talk;
     }
 
-
+    /**
+     * Adds a given Talk to the list of scheduled talks in Event
+     * @param talk the Talk that needs to be added to the Event.
+     * @param event the Event to which the Talk is being added.
+     * @see Talk#getStartTime()
+     * @see Event#getTalks()
+     */
     protected void add_talk(Talk talk, Event event) {
         for (Talk scheduled : event.getTalks()) {
             if (talk.getStartTime().equals(scheduled.getStartTime())) {
@@ -38,25 +46,35 @@ public class TalkManager implements Serializable{
         event.addTalk(talk);
     }
 
-    /**Schedules speaker to event
+    /**
+     * Schedules speaker to event
      *@param talk talk that speaker is being scheduled to.
      *@param speaker Speaker that is being scheduled
-     * */
+     *@see Speaker#addTalk(Talk)
+     * @see Talk#setSpeaker(Speaker)
+     */
     protected void schedule_speaker(Speaker speaker, Talk talk){
         speaker.addTalk(talk);
         talk.setSpeaker(speaker);
     }
 
-    /** Checkers **/
-
-    /**Check if speaker can be scheduled for talk
+    /**
+     * Check if speaker can be scheduled for talk
      *@param talk talk being checked
-     *@return true if speaker can be scheduled */
+     *@return true if speaker can be scheduled
+     *@see Talk#getSpeaker()
+     */
     protected boolean speaker_can_be_scheduled(Talk talk){
         return talk.getSpeaker() == null;
     }
 
-    /** getter **/
+    /**
+     * Obtains and returns a list of Talks from an Event that start at the same time.
+     * @param time the time that the talks at the event should start
+     * @param event the event from which the talks are being obtained based on their start time
+     * @return an ArrayList of Talk objects that contain talks at the Event that start at the desired time smae_time.
+     * @see Event#getTalks()
+     */
     protected ArrayList<Talk> get_talks_at(LocalDateTime time, Event event){
         ArrayList<Talk> same_time = new ArrayList<>();
         for(Talk talk: event.getTalks()){
@@ -67,13 +85,21 @@ public class TalkManager implements Serializable{
         return same_time;
     }
 
+    /**
+     * Retrieves and returns a list of Talks
+     * @return a list of Talks
+     * @see Talk
+     */
     protected ArrayList<Talk> getTalks(){
         return talks;
     }
 
-    /** Prints the string version of this talk
+    /**
+     * Prints a String interpretation of this Talk
      * @param talk talk converted
-     * */
+     * @see Talk
+     * @see Speaker
+     */
     public void toString(Talk talk){
         String speakerN = null;
         Speaker speaker = talk.getSpeaker();
@@ -88,7 +114,8 @@ public class TalkManager implements Serializable{
                 + " to " + talk.getEndTime() +"Event it is part of: " + talk.getEvent());
     }
 
-    /** Prints the string version of all talks within a event
+    /**
+     * Prints the string version of all talks within a event
      * @param event what talks are being converted
      * */
     protected void print_talks(Event event){
@@ -97,17 +124,28 @@ public class TalkManager implements Serializable{
         }
     }
 
+    /**
+     * Retrieves the Talk that is associated with the provided talkId
+     * @param talkId
+     * @return the Talk object associated with talkId
+     */
     protected Talk getTalk(int talkId){
         for(Talk talk: talks){
             if(talk.getId() == talkId){
                 return talk;
             }
         }
-        System.out.println("talk not found");
+        System.out.println("Talk Not Found");
         return null;
     }
-    /** helper functions **/
 
+    /** Helper Functions **/
+
+    /**
+     *
+     * @param date
+     * @return
+     */
     protected LocalTime date_formatting_time(String date){
         int len = date.length();
         if(len == 5){
@@ -117,6 +155,11 @@ public class TalkManager implements Serializable{
         throw new IllegalArgumentException("Input is not a valid format");
     }
 
+    /**
+     *
+     * @param fileName
+     * @throws IOException
+     */
     public void writeToFile(String fileName) throws IOException {
         OutputStream file = new FileOutputStream(fileName);
         OutputStream buffer = new BufferedOutputStream(file);
@@ -124,9 +167,15 @@ public class TalkManager implements Serializable{
 
         output.writeObject(talks);
         output.close();
-
     }
 
+    /**
+     *
+     * @param fileName the name of the file that needs to be read from
+     * @return a list of Talks that have been read from the file
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
     public ArrayList<Talk> readFile(String fileName) throws IOException, ClassNotFoundException {
         try {
             InputStream file = new FileInputStream(fileName);
@@ -142,6 +191,11 @@ public class TalkManager implements Serializable{
         return talks;
     }
 
+    /**
+     * Finds and returns the Talk object that has the provided id
+     * @param talk the id of the Talk that is desired
+     * @return a Talk that has the id provided
+     */
     public Talk findTalk(int talk){
         for(Talk t: talks){
             if (t.getId() == talk) {
