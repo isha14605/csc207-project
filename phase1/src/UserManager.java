@@ -134,9 +134,10 @@ public class UserManager{
      * @return true if the message was sent successfully
      */
     private boolean organizerMessage(Organizer from, User to, String message){
+        from.addContact(to);
         if (users.contains(to)){
-            from.sendMessage(from, message);
-            to.receiveMessage(to, message);
+            from.sendMessage(to, message);
+            to.receiveMessage(from, message);
             return true;
         }
         return false;
