@@ -8,17 +8,31 @@ public class EventController implements Serializable{
     RoomManager rm = new RoomManager();
     TalkManager tm = new TalkManager();
 
+    /**
+     * EventController Constructor
+     */
     public EventController() throws ClassNotFoundException, IOException {
         em.events = em.readFile("EventSave.ser");
         rm = rm.readFile("RoomSave.ser");
         tm.talks = tm.readFile("TalkSave.ser");
     }
 
+    /**
+     * Saves EventController data to file
+     */
     public void save() throws IOException {
         em.writeToFile("EventSave.ser");
         System.out.println("changes have been saved");
     }
 
+    /**
+     * Adds Event according to given parameters
+     * @param name the name of the event
+     * @param description description of the event
+     * @param start start time of the event
+     * @param end end time of the event
+     * @param date date of the event
+     */
     public void add_event(String name, String description, String start, String end, String date) throws IOException {
         if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))
         || em.not_valid_format(em.date_formatting_date(date))) {
@@ -32,6 +46,11 @@ public class EventController implements Serializable{
         }
     }
 
+    /**
+     * Returns existing Events
+     *
+     * @return ArrayList of Events
+     */
     public ArrayList<Event> get_events(){
         return em.getEvents();
     }
@@ -46,8 +65,18 @@ public class EventController implements Serializable{
         }
     }
 
+    /**
+     * Returns existing Rooms
+     *
+     * @return ArrayList of Rooms
+     */
     public ArrayList<Room> get_rooms(){return rm.getRooms();}
 
+    /**
+     * Adds Talk to an existing Event
+     *
+     * @return true if talk is added successfully
+     */
     public boolean add_talk(String start, String end, Integer event_id) throws IOException {
 
         if(em.date_formatting_time(start) == null || em.date_formatting_time(end) == null ){
@@ -74,6 +103,9 @@ public class EventController implements Serializable{
         }
     }
 
+    /**
+     * Schedules a Room for an existing Event
+     */
     public void schedule_room(String room_name, Integer event_id) throws IOException {
         Event event = em.find_event(event_id);
         Room room = rm.find_room(room_name);
@@ -85,13 +117,18 @@ public class EventController implements Serializable{
             rm.schedule_room(room, event);
             room.addBookings(event, em.get_localDateTime(event.getEventDate(),event.getStartTime()),
                     em.get_localDateTime(event.getEventDate(),event.getEndTime()));
-            System.out.println("Room has Been Booked for event");
+            System.out.println("Room has been booked for event");
             em.writeToFile("EventSave");
         }else{
-            System.out.println("Room Scheduled Due to time conflict");
+            System.out.println("Room not scheduled due to time conflict");
         }
     }
 
+    /**
+     * Schedules a Speaker for an existing Event
+     *
+     * @return true if Speaker is scheduled successfully
+     */
     public boolean schedule_speaker(Speaker speaker, Talk talk, Event event){
         if(em.can_schedule_speaker(event,talk,speaker) && tm.speaker_can_be_scheduled(talk)){
             speaker.addTalk(talk);

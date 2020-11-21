@@ -5,10 +5,19 @@ import java.util.Scanner;
 public class LoginSystem {
     private UserManager userManager;
 
+    /**
+     * LoginSystem Constructor
+     */
     public LoginSystem(UserManager usermanager){
         this.userManager = usermanager;
     }
 
+    /**
+     * Verifies User login information
+     * @param email email of the User
+     * @param password password of the User
+     * @return true if login successful
+     */
     public boolean checkLogIn(String email, String password) throws
             FileNotFoundException {
         Scanner scanner = new Scanner(new FileInputStream("phase1/login.txt"));

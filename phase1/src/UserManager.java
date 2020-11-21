@@ -10,7 +10,9 @@ public class UserManager{
     protected static ArrayList<User> users = new ArrayList<User>();
     protected static ArrayList<String> email = new ArrayList<String>();
 
-
+    /**
+     * UserManager Constructor
+     */
     protected UserManager(){
         this.addUser("s1", "s1", "s1", "speaker");
         this.addUser("s2", "s2", "s2", "speaker");
@@ -29,7 +31,6 @@ public class UserManager{
      * @param email the email of this users account.
      * @return true if the new user is created else false.
      */
-
     public boolean addUser(String name, String email, String password, String typeOfUser) {
         if (!UserManager.email.contains(email)) {
             UserManager.email.add(email);
@@ -112,7 +113,6 @@ public class UserManager{
      * @param message the content of the message.
      * @return true if the message was successfully sent.
      */
-
     protected boolean message(User from, User to, String message){
         boolean t = false;
 
@@ -126,6 +126,13 @@ public class UserManager{
         return t;
     }
 
+    /**
+     * Sends an Organizer message
+     * @param from the Organizer sending the message
+     * @param to the User receiving the message
+     * @param message content of message to be sent
+     * @return true if the message was sent successfully
+     */
     private boolean organizerMessage(Organizer from, User to, String message){
         if (users.contains(to)){
             from.sendMessage(from, message);
@@ -136,6 +143,11 @@ public class UserManager{
     }
 
 
+    /**
+     * Sends a Speaker message
+     *
+     * @return true if the message was sent successfully
+     */
     private boolean speakerMessage(Speaker from, User to, String message){
         from.addContact(to);
         for (Talk t: from.getTalksSpeaking()){
@@ -150,6 +162,11 @@ public class UserManager{
         return false;
     }
 
+    /**
+     * Sends an Attendee message
+     *
+     * @return true if the message was sent successfully
+     */
     private boolean attendeeMessage(Attendee from, User to, String message){
         if (to.userType() == 'A' |  to.userType()=='S'){
             if (!from.getContacts().contains(to)){
@@ -162,6 +179,11 @@ public class UserManager{
         return false;
     }
 
+    /**
+     * Identifies the User from the provided email address
+     *
+     * @return User associated with provided email address
+     */
     protected User findUser(String email){
         int i;
         i = UserManager.email.indexOf(email);
@@ -169,6 +191,11 @@ public class UserManager{
         return UserManager.users.get(i);
     }
 
+    /**
+     * Verifies if there is a User stored who is associated with the provided email address
+     *
+     * @return true if the User exists
+     */
     protected boolean checkUserExists(String email) {
         return UserManager.email.contains(email);
     }

@@ -53,7 +53,9 @@ public class MessagingSystem {
 
     /**
      * Sends an Attendee message
-     *
+     * @param from the User sending the message
+     * @param to the User receiving the message
+     * @param message content of the message to be sent
      * @return true if the message was sent successfully
      */
     public boolean sendAttendeeMessage(User from, User to, String message) {
@@ -62,7 +64,10 @@ public class MessagingSystem {
 
 
     /**
-     * Sends an Speaker message to all Attendees signed up for an event
+     * Sends a Speaker message to all Users signed up for an event
+     * @param from the Speaker sending the message
+     * @param event_name name of the event whose users are being messaged
+     * @param message content of the message to be sent
      */
     public void sendMessageSpeaker(Speaker from, Event event_name, String message) {
         for(Attendee u: event_name.getAttendees()){
@@ -73,6 +78,10 @@ public class MessagingSystem {
 
     /**
      * Sends an Organizer message to all the Speakers or all the Attendees signed up for an event
+     * @param from the Organizer sending the message
+     * @param to type of the Users receiving the message
+     * @param event_id id of the event whose users are being messaged
+     * @param message content of the message to be sent
      */
     public void sendMessageOrganizer(Organizer from, String to, int event_id, String message) {
         if (to.equals("Attendee")){
