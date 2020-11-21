@@ -65,15 +65,15 @@ public class MessagingSystem {
     }
 
 
-    public void sendMessageOrganizer(Organizer from, String to, int event_id, String message) {
+    public void sendMessageOrganizer(Organizer from, String to,EventManager EM, int event_id, String message) {
         if (to.equals("Attendee")){
-            Event event = em.find_event(event_id);
+            Event event = EM.find_event(event_id);
             for(Attendee a: event.getAttendees()){
                 um.message(from, a, message);
             }
 
         } else if (to.equals("Speaker")) {
-            Event event = em.find_event(event_id);
+            Event event = EM.find_event(event_id);
             ArrayList<Talk> talks = new ArrayList<Talk>();
             for (Talk t: event.getTalks()){
                 talks.add(t);
