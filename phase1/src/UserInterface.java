@@ -512,7 +512,7 @@ class UserInterface {
         }
     }
 
-    public static void SpeakerInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec,
+    public static void SpeakerInterface(SignUpSystem signUpSystem, EventManager eventManager, TalkManager tm, EventController ec,
                                         UserManager um, MessagingSystem ms, String email) {
         UserManager userManager = new UserManager();
 
@@ -546,41 +546,59 @@ class UserInterface {
                     switch (inboxOption) {
                         case "SM":
                             System.out.println("You are currently scheduled to talk at " + speaker.getTalksSpeaking().size() + " talks.");
-                            System.out.println("How many of these talks' attendees would you like to message?");
+                            System.out.println("List the total number of talks that you want to message attendees for.");
                             int numberOfTalks = userInput.nextInt();
 
-                            while (numberOfTalks > speaker.getTalksSpeaking().size()) {
+                            while (numberOfTalks > speaker.getTalksSpeaking().size()) { //Checks if valid number of talks was entered
                                 System.out.println("You are not speaking at this many talks. Please re-enter.");
                                 numberOfTalks = userInput.nextInt();
                             }
 
                             if (numberOfTalks > 0) {
+                                ArrayList<Integer> speakersEvents = new ArrayList<>();
+                                for (Talk speakerTalk: speaker.getTalksSpeaking()) {
+                                    speakersEvents.add(speakerTalk.getEvent().getEventId());
+                                    tm.toString(speakerTalk);
+                                }
                                 // Allows speaker to enter all the talks that they want to send to a message to the attendees of.
-                                System.out.println("On a new line for each event, please enter ids of all the events that you " +
-                                        "want to send messages to the attendees of.");
-                                ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
-                                for (int i = 0; i < numberOfTalks; i++) {
-                                    String a = userInput.nextLine(); // stores the input to be added
-                                    toSendMessagesTo.add(a); // adds the talk to the list
-                                }
-                                ArrayList<Event> events_at = new ArrayList<Event>();
+                                System.out.println("Please enter ids of all the events that you " +
+                                        "want to send messages to the attendees of. Use this format: 1,2,3");
+                                String eventsInput = userInput.next();
+                                String[] eventsToMessage = eventsInput.split(",");
 
-                                for (Talk t : speaker.getTalksSpeaking()) {
-                                    if (!(events_at.contains(t.getEvent()))) {
-                                        events_at.add(t.getEvent());
+                                for (String eventID: eventsToMessage) {
+                                    if (speakersEvents.contains(Integer.parseInt(eventID))) {
+                                        System.out.println("Please enter the message you would like to send to all the attendees in the event with ID: " +
+                                                eventID);
+                                        String messageToSend = userInput.nextLine();
+                                        ms.sendMessageSpeaker(speaker, eventManager.find_event(Integer.parseInt(eventID)), messageToSend);
+                                    } else {
+                                        System.out.println("Error. You cannot message attendees for this event.");
                                     }
                                 }
-                                ArrayList<Event> final_events = new ArrayList<Event>();
-
-                                for (String s : toSendMessagesTo) {
-                                    if (events_at.contains(eventManager.find_event(Integer.parseInt(s)))) {
-                                        final_events.add((eventManager.find_event(Integer.parseInt(s))));
-                                    }
-                                }
-                                System.out.println("Please enter the message you would like to send to all the attendees" +
-                                        " of these selected talks.");
-                                String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
-                                ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
+//                                ArrayList<String> toSendMessagesTo = new ArrayList<>(numberOfTalks); // Creates a new list
+//                                for (int i = 0; i < numberOfTalks; i++) {
+//                                    String a = userInput.nextLine(); // stores the input to be added
+//                                    toSendMessagesTo.add(a); // adds the talk to the list
+//                                }
+//                                ArrayList<Event> events_at = new ArrayList<Event>();
+//
+//                                for (Talk t : speaker.getTalksSpeaking()) {
+//                                    if (!(events_at.contains(t.getEvent()))) {
+//                                        events_at.add(t.getEvent());
+//                                    }
+//                                }
+//                                ArrayList<Event> final_events = new ArrayList<Event>();
+//
+//                                for (String s : toSendMessagesTo) {
+//                                    if (events_at.contains(ec.em.find_event(Integer.parseInt(s)))) {
+//                                        final_events.add((ec.em.find_event(Integer.parseInt(s))));
+//                                    }
+//                                }
+//                                System.out.println("Please enter the message you would like to send to all the attendees" +
+//                                        " of these selected talks.");
+//                                String messageToSend = userInput.nextLine(); // Takes the message the speaker wants to send
+//                                ms.sendMessageSpeaker(speaker, final_events, messageToSend); // calls the method from UserManager to send the messages
                             } else {
                                 System.out.println("No attendees will be messaged");
                                 on_page = false; // exit SM
@@ -656,6 +674,7 @@ class UserInterface {
         MessagingSystem ms = new MessagingSystem();
         Scanner userInput = new Scanner(System.in);
         EventManager em = new EventManager();
+        TalkManager tm = new TalkManager();
         boolean signed_in = false;
 
         while (!signed_in) {
@@ -695,7 +714,7 @@ class UserInterface {
                             break;
 
                         case "SO":
-                            SpeakerInterface(su,em,ec, userManager, ms, email);
+                            SpeakerInterface(su,em,tm, ec, userManager, ms, email);
                             break;
 
                         case "LO":

@@ -85,7 +85,7 @@ public class TalkManager implements Serializable{
         }
         System.out.println("Talk id: " + talk.getId() +" Speaker : " +
                 speakerN + " at " + talk.getStartTime()
-                + " to " + talk.getEndTime());
+                + " to " + talk.getEndTime() +"Event it is part of: " + talk.getEvent());
     }
 
     /** Prints the string version of all talks within a event
@@ -142,10 +142,10 @@ public class TalkManager implements Serializable{
         return talks;
     }
 
-    public Event findTalk(String talk){
+    public Talk findTalk(int talk){
         for(Talk t: talks){
-            if (t.getEvent().equals(talk)){
-                return t.getEvent();
+            if (t.getId() == talk) {
+                return t;
             }
         }
         return null;
