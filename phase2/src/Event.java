@@ -17,8 +17,8 @@ public class Event implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate eventDate;
-    private ArrayList<Attendee> attendees;
-    private ArrayList<Organizer> organizers;
+    private ArrayList<String> attendeeEmails;
+    private ArrayList<String> organizerEmails;
     private ArrayList<Talk> talks;
     private Room eventRoom;
 
@@ -39,8 +39,10 @@ public class Event implements Serializable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.eventDate = eventDate;
-        this.attendees = new ArrayList<Attendee>();
-        this.organizers = new ArrayList<Organizer>();
+        // Contains email address of attendees
+        this.attendeeEmails = new ArrayList<String>();
+        // Contains email address of Organizers
+        this.organizerEmails = new ArrayList<String>();
         this.talks = new ArrayList<Talk>();
     }
 
@@ -89,16 +91,16 @@ public class Event implements Serializable {
     public LocalDate getEventDate() {return eventDate;}
 
     /**
-     * Returns an ArrayList of Attendee objects who are attending this event.
-     * @return an ArrayList of Attendee objects who are attending this event.
+     * Returns an ArrayList of String objects that are emails of Attendees of this event.
+     * @return an ArrayList of String objects that are emails of Attendees of this event.
      */
-    public ArrayList<Attendee> getAttendees() {return attendees;}
+    public ArrayList<String> getAttendeeEmails() {return attendeeEmails;}
 
     /**
-     * Returns an ArrayList of Organizer objects who are organizing this event.
-     * @return an ArrayList of Organizer objects who are organizing this event.
+     * Returns an ArrayList of String objects that are emails of Organizers of this event.
+     * @return an ArrayList of String objects that are emails of Organizers of this event.
      */
-    public ArrayList<Organizer> getOrganizers() {return organizers;}
+    public ArrayList<String> getOrganizerEmails() {return organizerEmails;}
 
     /**
      * Returns an ArrayList of Talk objects that are included in this event.
@@ -135,27 +137,27 @@ public class Event implements Serializable {
     protected void setEventRoom(Room room) {this.eventRoom = room;}
 
     /**
-     * Adds an Attendee object to this event
+     * Adds an Attendee's email to this event
      * @param attendee an attendee that will attend this event.
      */
     protected void addAttendee(Attendee attendee) {
-        attendees.add(attendee);
+        attendeeEmails.add(attendee.getEmail());
     }
 
     /**
-     * Removes an Attendee object from this event
+     * Removes an Attendee's email from this event
      * @param attendee an attendee that will no longer attend this event.
      */
     protected void removeAttendee(Attendee attendee) {
-        attendees.remove(attendee);
+        attendeeEmails.remove(attendee.getEmail());
     }
 
     /**
-     * Adds an Organizer object to this event
+     * Adds an Organizer's email to this event
      * @param organizer an Organizer that will organize this event.
      */
     protected void addOrganizer(Organizer organizer) {
-        organizers.add(organizer);
+        organizerEmails.add(organizer.getEmail());
     }
 
     /**
