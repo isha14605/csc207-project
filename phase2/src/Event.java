@@ -178,4 +178,12 @@ public class Event implements Serializable {
     protected void addTalk(Talk talk) {
         talks.add(talk);
     }
+
+    /**
+     * Resets the Attendee Capacity of the event. Should be called by an Organizer of the event.
+     * Organizer must ensure that attendeeCapacity is less than or equal to RoomCapacity of the room
+     * assigned to this event, before calling this method.
+     * @param attendeeCapacity a int that is the maximum Attendee Capacity of this event.
+     */
+    protected void setAttendeeCapacity(int attendeeCapacity) {this.attendeeCapacity = attendeeCapacity;}
 }
