@@ -22,6 +22,7 @@ public class Event implements Serializable {
     private ArrayList<Talk> talks;
     private Room eventRoom;
     private int attendeeCapacity;
+    private boolean vipOnly;
 
     // Constructor for Event
     /**
@@ -32,9 +33,10 @@ public class Event implements Serializable {
      * @param endTime the time when the event ends
      * @param eventDate the date when the event is happening
      * @param attendeeCapacity the maximum number of attendees that can participate in the event
+     * @param vipOnly indicates if  the event is only for VIP attendees or not
      */
     public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate,
-                 int attendeeCapacity){
+                 int attendeeCapacity, boolean vipOnly){
         numOfEvents += 1;
         this.eventId = numOfEvents;
         this.name = name;
@@ -43,6 +45,7 @@ public class Event implements Serializable {
         this.endTime = endTime;
         this.eventDate = eventDate;
         this.attendeeCapacity = attendeeCapacity;
+        this.vipOnly = vipOnly;
         // Contains email address of attendees
         this.attendeeEmails = new ArrayList<String>();
         // Contains email address of Organizers
@@ -101,6 +104,12 @@ public class Event implements Serializable {
     public int getAttendeeCapacity() {return attendeeCapacity;}
 
     /**
+     * Returns a boolean, that if True indicates event is for VIP attendees only, else event is open to all attendees.
+     * @return a boolean that if True indicates event is for VIP attendees only, else event is open to all attendees.
+     */
+    public boolean isVipOnly() {return vipOnly;}
+
+    /**
      * Returns an ArrayList of String objects that are emails of Attendees of this event.
      * @return an ArrayList of String objects that are emails of Attendees of this event.
      */
@@ -149,6 +158,7 @@ public class Event implements Serializable {
 
     /**
      * Adds an Attendee's email to this event
+     * UserManager must ensure that only VIP attendees can sign up for VIP events.
      * @param attendee an attendee that will attend this event.
      */
     protected void addAttendee(Attendee attendee) {
