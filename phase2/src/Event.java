@@ -21,6 +21,7 @@ public class Event implements Serializable {
     private ArrayList<String> organizerEmails;
     private ArrayList<Talk> talks;
     private Room eventRoom;
+    private int attendeeCapacity;
 
     // Constructor for Event
     /**
@@ -30,8 +31,10 @@ public class Event implements Serializable {
      * @param startTime the time when the event starts
      * @param endTime the time when the event ends
      * @param eventDate the date when the event is happening
+     * @param attendeeCapacity the maximum number of attendees that can participate in the event
      */
-    public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate){
+    public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate,
+                 int attendeeCapacity){
         numOfEvents += 1;
         this.eventId = numOfEvents;
         this.name = name;
@@ -39,6 +42,7 @@ public class Event implements Serializable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.eventDate = eventDate;
+        this.attendeeCapacity = attendeeCapacity;
         // Contains email address of attendees
         this.attendeeEmails = new ArrayList<String>();
         // Contains email address of Organizers
@@ -91,6 +95,12 @@ public class Event implements Serializable {
     public LocalDate getEventDate() {return eventDate;}
 
     /**
+     * Returns a int that is the maximum Attendee Capacity of this event.
+     * @return a int that is the maximum Attendee Capacity of this event.
+     */
+    public int getAttendeeCapacity() {return attendeeCapacity;}
+
+    /**
      * Returns an ArrayList of String objects that are emails of Attendees of this event.
      * @return an ArrayList of String objects that are emails of Attendees of this event.
      */
@@ -130,8 +140,9 @@ public class Event implements Serializable {
 
     /**
      * sets the designated room for this event.
-     * Should be called by RoomManager. RoomManager will be responsible for checking room availability and booking
-     * the room for required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
+     * Should be called by RoomManager. RoomManager will be responsible for checking room availability, ensuring that
+     * room capacity is more than or equal to attendeeCapacity of event and booking the room for
+     * required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
      * @param room the room for this event.
      */
     protected void setEventRoom(Room room) {this.eventRoom = room;}
