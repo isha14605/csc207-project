@@ -9,7 +9,7 @@ import java.time.LocalTime;
 public class Talk implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
-    private Speaker speaker;
+    private String speakerEmail;
     private Event event;
     private int id;
 
@@ -26,7 +26,7 @@ public class Talk implements Serializable {
         this.startTime = startTime;
         this.endTime = endTime;
         this.event = event;
-        this.speaker = null;
+        this.speakerEmail = null;
     }
 
     /* getters */
@@ -41,10 +41,10 @@ public class Talk implements Serializable {
      */
     public LocalTime getStartTime() {return this.startTime;}
     /**
-     * gets the speaker of this talk.
-     * @return the speaker.
+     * gets the email of the speaker of this talk.
+     * @return the email of the speaker.
      */
-    public Speaker getSpeaker() {return this.speaker;}
+    public String getSpeakerEmail() {return this.speakerEmail;}
     /**
      * gets the event of this talk.
      * @return the event.
@@ -59,11 +59,11 @@ public class Talk implements Serializable {
     }
 
     /**
-     * sets the speaker of this talk.
+     * sets the email of the speaker of this talk.
      * @param speaker the speaker of this talk
      */
     public void setSpeaker(Speaker speaker) {
-        this.speaker = speaker;
+        this.speakerEmail = speaker.getEmail();
     }
 
     /**
