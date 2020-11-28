@@ -51,6 +51,7 @@ public class Event implements Serializable {
         // Contains email address of Organizers
         this.organizerEmails = new ArrayList<String>();
         this.talks = new ArrayList<Talk>();
+        this.eventRoom = null;
     }
 
     // Getters
@@ -72,12 +73,6 @@ public class Event implements Serializable {
      * @return an int that is the id of this event.
      */
     public int getEventId() {return eventId;}
-
-    /**
-     * Returns an int that is the id of this event.
-     * @return an int that is the id of this event.
-     */
-    public void setEventId(int eventId) {this.eventId = eventId;}
 
     /**
      * Returns a LocalTime that is the start time of this event.
@@ -134,13 +129,13 @@ public class Event implements Serializable {
     public Room getEventRoom() {return eventRoom;}
 
     /**
-     * Returns an ArrayList of Speaker objects that are speaking in talks of this event.
-     * @return an ArrayList of Speaker objects that are speaking in talks of this event.
+     * Returns an ArrayList of String objects that are emails of speakers speaking in talks of this event.
+     * @return an ArrayList of String objects that are emails of speakers speaking in talks of this event.
      */
-    public ArrayList<Speaker> getSpeakers() {
-        ArrayList<Speaker> x = new ArrayList<Speaker>();
+    public ArrayList<String> getSpeakerEmails() {
+        ArrayList<String> x = new ArrayList<String>();
         for (int i = 0; i < talks.size(); i++) {
-            x.add(talks.get(i).getSpeaker());
+            x.add(talks.get(i).getSpeakerEmail());
         }
         return x;
     }
