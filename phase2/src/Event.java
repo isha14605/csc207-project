@@ -74,12 +74,6 @@ public class Event implements Serializable {
     public int getEventId() {return eventId;}
 
     /**
-     * Returns an int that is the id of this event.
-     * @return an int that is the id of this event.
-     */
-    public void setEventId(int eventId) {this.eventId = eventId;}
-
-    /**
      * Returns a LocalTime that is the start time of this event.
      * @return a LocalTime that is the start time of this event.
      */
