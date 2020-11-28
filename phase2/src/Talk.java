@@ -12,6 +12,7 @@ public class Talk implements Serializable {
     private Speaker speaker;
     private Event event;
     private int id;
+    private String talkName;
 
    /* Call this constructor only if there's no overlapping between talks of a particular event and
    this talk happens 9-5. */
@@ -21,12 +22,13 @@ public class Talk implements Serializable {
      * @param endTime end time of the talk
      * @param event event this talk belongs to
      */
-    public Talk(LocalTime startTime, LocalTime endTime, Event event)
+    public Talk(String talkName, LocalTime startTime, LocalTime endTime, Event event)
     {
         this.startTime = startTime;
         this.endTime = endTime;
         this.event = event;
         this.speaker = null;
+        this.talkName = talkName;
     }
 
     /* getters */
@@ -51,12 +53,6 @@ public class Talk implements Serializable {
      */
     public Event getEvent() {return this.event;}
 
-    /**
-     * gets the id of this talk
-     */
-    public int getId() {
-        return id;
-    }
 
     /**
      * sets the speaker of this talk.
@@ -66,11 +62,8 @@ public class Talk implements Serializable {
         this.speaker = speaker;
     }
 
-    /**
-     * sets the id of this talk.
-     * @param id the speaker of this talk
-     */
-    public void setId(int id){
-        this.id = id;
+
+    public String getTalkName() {
+        return talkName;
     }
 }

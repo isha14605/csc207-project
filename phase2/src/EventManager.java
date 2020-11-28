@@ -29,9 +29,11 @@ public class EventManager implements Serializable {
      * @param start start of the event in localtime.
      * @param end end of the event in localtime.
      * @param date date of the event of event in local time.
+     * @param capacity
+     * @param event_only
      */
-    protected void create_event(String name, String desc, LocalTime start, LocalTime end, LocalDate date) throws IOException {
-        Event event = new Event(name, desc, start, end, date);
+    protected void create_event(String name, String desc, LocalTime start, LocalTime end, LocalDate date, int capacity, boolean event_only) throws IOException {
+        Event event = new Event(name, desc, start, end, date,capacity,event_only);
         if(event.getEventId() <= events.size()){
             event.setEventId(events.size()+1);
         }
@@ -120,9 +122,9 @@ public class EventManager implements Serializable {
      @return  String of event */
     protected String eventToString(Event event){
         String room;
-        ArrayList<Integer> talks = new ArrayList<Integer>();
+        ArrayList<String> talks = new ArrayList<>();
         for(Talk t: event.getTalks()){
-            talks.add(t.getId());
+            talks.add(t.getTalkName());
         }
         if(event.getEventRoom() == null){
             room = "None";

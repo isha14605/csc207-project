@@ -23,9 +23,8 @@ public class TalkManager implements Serializable{
      * @return the talk entity that was created
      * @see Talk#setId(int)
      **/
-    protected Talk create_talk(LocalTime startTime, LocalTime endTime, Event event){
-        Talk talk = new Talk(startTime, endTime, event);
-        talk.setId(talks.size()+1);
+    protected Talk create_talk(String talkName, LocalTime startTime, LocalTime endTime, Event event){
+        Talk talk = new Talk(talkName, startTime, endTime, event);
         talks.add(talk);
         return talk;
     }
@@ -109,7 +108,7 @@ public class TalkManager implements Serializable{
         }else {
             speakerN = speaker.getName();
         }
-        System.out.println("Talk id: " + talk.getId() +" Speaker : " +
+        System.out.println("Talk Name: " + talk.getTalkName() +" Speaker : " +
                 speakerN + " at " + talk.getStartTime()
                 + " to " + talk.getEndTime() +"Event it is part of: " + talk.getEvent());
     }
@@ -126,12 +125,12 @@ public class TalkManager implements Serializable{
 
     /**
      * Retrieves the Talk that is associated with the provided talkId
-     * @param talkId
+     * @param talkName
      * @return the Talk object associated with talkId
      */
-    protected Talk getTalk(int talkId){
+    protected Talk getTalk(String talkName){
         for(Talk talk: talks){
-            if(talk.getId() == talkId){
+            if(talk.getTalkName().equals(talkName)){
                 return talk;
             }
         }
@@ -196,9 +195,9 @@ public class TalkManager implements Serializable{
      * @param talk the id of the Talk that is desired
      * @return a Talk that has the id provided
      */
-    public Talk findTalk(int talk){
+    public Talk findTalk(String talk){
         for(Talk t: talks){
-            if (t.getId() == talk) {
+            if (t.getTalkName() == talk) {
                 return t;
             }
         }

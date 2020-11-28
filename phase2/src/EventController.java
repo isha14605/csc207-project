@@ -32,18 +32,24 @@ public class EventController implements Serializable{
      * @param start start time of the event
      * @param end end time of the event
      * @param date date of the event
+     * @param capacity
+     * @param event_only
+     * @return
      */
-    public void add_event(String name, String description, String start, String end, String date) throws IOException {
+    public boolean add_event(String name, String description, String start, String end, String date, int capacity, boolean event_only) throws IOException {
         if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))
         || em.not_valid_format(em.date_formatting_date(date))) {
             System.out.println("Invalid time or date! Event not added.");
+            return false;
         }else {
             em.create_event(name, description, em.date_formatting_time(start),
-                    em.date_formatting_time(end), em.date_formatting_date(date));
+                    em.date_formatting_time(end), em.date_formatting_date(date), capacity, event_only);
             em.writeToFile("EventSave.ser");
             System.out.println("Event was added.");
             System.out.println();
+            return true;
         }
+
     }
 
     /**
@@ -55,13 +61,15 @@ public class EventController implements Serializable{
         return em.getEvents();
     }
 
-    public void add_room(String name, Integer capacity, String start, String end) throws IOException {
+    public boolean add_room(String name, Integer capacity, String start, String end) throws IOException {
         if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))) {
             System.out.println("Invalid time!");
+            return false;
         }else {
             rm.create_room(name, capacity, rm.date_formatting_time(start), rm.date_formatting_time(end));
             rm.writeToFile("RoomSave.ser");
             System.out.println("Room was added");
+            return true;
         }
     }
 
@@ -77,7 +85,7 @@ public class EventController implements Serializable{
      *
      * @return true if talk is added successfully
      */
-    public boolean add_talk(String start, String end, Integer event_id) throws IOException {
+    public boolean add_talk(String talkName, String start, String end, Integer event_id) throws IOException {
 
         if(em.date_formatting_time(start) == null || em.date_formatting_time(end) == null ){
             System.out.println("Invalid time");
@@ -89,7 +97,7 @@ public class EventController implements Serializable{
             return false;
         }
 
-        Talk talk = tm.create_talk(tm.date_formatting_time(start),
+        Talk talk = tm.create_talk(talkName, tm.date_formatting_time(start),
                 tm.date_formatting_time(end), em.find_event(event_id));
 
         if (!rm.time_conflict(talk, em.find_event(event_id)) && em.within_event(talk,em.find_event(event_id))) {
