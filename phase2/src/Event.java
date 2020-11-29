@@ -2,6 +2,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Represents an Event.
@@ -10,8 +11,8 @@ import java.util.ArrayList;
  */
 
 abstract class Event implements Serializable {
-    private static int numOfEvents;
-    private int eventId;
+    private static AtomicInteger numOfEvents = new AtomicInteger(0);
+    private Integer eventId;
     private String name;
     private String eventDescription;
     private LocalTime startTime;
@@ -37,8 +38,7 @@ abstract class Event implements Serializable {
      */
     public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate,
                  int attendeeCapacity, boolean vipOnly){
-        numOfEvents += 1;
-        this.eventId = numOfEvents;
+        this.eventId = numOfEvents.incrementAndGet();
         this.name = name;
         this.eventDescription = eventDescription;
         this.startTime = startTime;
@@ -71,7 +71,7 @@ abstract class Event implements Serializable {
      * Returns an int that is the id of this event.
      * @return an int that is the id of this event.
      */
-    public int getEventId() {return eventId;}
+    public Integer getEventId() {return eventId;}
 
     /**
      * Returns a LocalTime that is the start time of this event.

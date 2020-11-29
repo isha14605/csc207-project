@@ -6,7 +6,7 @@ public class Talk extends Event{
 
     /**
      * Creates a Talk event Event with the specified name, description, start time, end time, date of event, event capacity
-     * and indicator if the event is VIP only.
+     * and indicator if the event is VIP only. A talk can have one speaker.
      *
      * @param name             the name of the specified User
      * @param eventDescription the description of the event

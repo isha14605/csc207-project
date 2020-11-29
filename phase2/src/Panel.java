@@ -7,7 +7,7 @@ public class Panel extends Event{
 
     /**
      * Creates a Panel event with the specified name, description, start time, end time, date of event, event capacity
-     * and indicator if the event is VIP only.
+     * and indicator if the event is VIP only. A Panel can have multiple speakers.
      *
      * @param name             the name of the specified User
      * @param eventDescription the description of the event
