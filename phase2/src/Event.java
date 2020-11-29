@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * @version 1.0
  */
 
-public class Event implements Serializable {
+abstract class Event implements Serializable {
     private static int numOfEvents;
     private int eventId;
     private String name;
@@ -19,14 +19,14 @@ public class Event implements Serializable {
     private LocalDate eventDate;
     private ArrayList<String> attendeeEmails;
     private ArrayList<String> organizerEmails;
-    private ArrayList<Talk> talks;
     private Room eventRoom;
     private int attendeeCapacity;
     private boolean vipOnly;
 
     // Constructor for Event
     /**
-     * Creates an Event with the specified name, description, start time, end time and date of event.
+     * Creates an Event with the specified name, description, start time, end time, date of event, event capacity
+     * and indicator if the event is VIP only.
      * @param name the name of the specified User
      * @param eventDescription the description of the event
      * @param startTime the time when the event starts
@@ -50,7 +50,6 @@ public class Event implements Serializable {
         this.attendeeEmails = new ArrayList<String>();
         // Contains email address of Organizers
         this.organizerEmails = new ArrayList<String>();
-        this.talks = new ArrayList<Talk>();
         this.eventRoom = null;
     }
 
@@ -117,28 +116,10 @@ public class Event implements Serializable {
     public ArrayList<String> getOrganizerEmails() {return organizerEmails;}
 
     /**
-     * Returns an ArrayList of Talk objects that are included in this event.
-     * @return an ArrayList of Talk objects that are included in this event.
-     */
-    public ArrayList<Talk> getTalks() {return talks;}
-
-    /**
      * Returns an eventRoom object that is the designated room for this event.
      * @return an eventRoom object that is the designated room for this event.
      */
     public Room getEventRoom() {return eventRoom;}
-
-    /**
-     * Returns an ArrayList of String objects that are emails of speakers speaking in talks of this event.
-     * @return an ArrayList of String objects that are emails of speakers speaking in talks of this event.
-     */
-    public ArrayList<String> getSpeakerEmails() {
-        ArrayList<String> x = new ArrayList<String>();
-        for (int i = 0; i < talks.size(); i++) {
-            x.add(talks.get(i).getSpeakerEmail());
-        }
-        return x;
-    }
 
     // Setters
 
@@ -174,14 +155,6 @@ public class Event implements Serializable {
      */
     protected void addOrganizer(Organizer organizer) {
         organizerEmails.add(organizer.getEmail());
-    }
-
-    /**
-     * Adds a Talk object to this event
-     * @param talk a talk that will be included in this event.
-     */
-    protected void addTalk(Talk talk) {
-        talks.add(talk);
     }
 
     /**
