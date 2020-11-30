@@ -37,20 +37,19 @@ public class UserManager{
         if (!UserManager.email.contains(email)) {
             UserManager.email.add(email);
             switch (typeOfUser) {
-                case "organizer" -> {
+                case "organizer":
                     users.add(new Organizer(name, password, email));
                     return true;
-                }
-                case "speaker" -> {
+                case "speaker":
                     users.add(new Speaker(name, password, email));
                     return true;
-                }
-                case "attendee" -> {
+                case "attendee":
                     users.add(new Attendee(name, password, email));
                     return true;
+                case "vip":
+                    users.add(new VIP(name, password, email));
                 }
             }
-        }
         return false;
     }
 
@@ -140,6 +139,8 @@ public class UserManager{
         } else if (from.userType() == 'O'){
             organizerMessage(from, to, message);
         } else if (from.userType() == 'A') {
+            attendeeMessage(from, to, message);
+        }  else if(from.userType() == 'V'){
             attendeeMessage(from, to, message);
         }
     }
