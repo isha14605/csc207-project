@@ -1,19 +1,31 @@
 import java.util.ArrayList;
 
-/*
-Potential idea to discuss: a point system for VIPs, the more vip-only events they attend the more points they get?
-or something along those lines to add some complexity
+/**
+ * Represents a VIP user. This is a subclass of the Attendee class.
+ * @author Anushka Saini
+ * @version 1.0
+ * @see User
+ * @see Attendee
  */
-
 public class VIP extends Attendee{
     private ArrayList<Integer> vipEventsAttending;
 
+    /**
+     * Creates a VIP with the provided name, password, and email.
+     * @param name the name of this VIP.
+     * @param password the password of this VIP.
+     * @param email the email of this VIP.
+     */
     // Constructor for VIP
     VIP(String name, String password, String email) {
         super(name, password, email);
         this.vipEventsAttending = new ArrayList<Integer>();
     }
 
+    /**
+     *
+     * @return an arraylist of the vip-only events that the VIP is schedulled to attend
+     */
     public ArrayList<Integer> getVipEventsAttending(){
         return this.vipEventsAttending;
     }
