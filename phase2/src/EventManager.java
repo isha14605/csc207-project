@@ -46,7 +46,7 @@ public class EventManager implements Serializable {
      @return  returns the event that has the event_id value if event doesn't exist returns null */
     protected Event find_event(Integer event_id){
         for(Event event: events){
-            if(event_id == event.getEventId()){
+            if(event_id.equals(event.getEventId())){
                 return event;
             }
         }

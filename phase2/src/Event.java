@@ -137,24 +137,24 @@ abstract class Event implements Serializable {
      * UserManager must ensure that only VIP attendees can sign up for VIP events.
      * @param attendee an attendee that will attend this event.
      */
-    protected void addAttendee(Attendee attendee) {
-        attendeeEmails.add(attendee.getEmail());
+    protected void addAttendee(String email) {
+        attendeeEmails.add(email);
     }
 
     /**
      * Removes an Attendee's email from this event
      * @param attendee an attendee that will no longer attend this event.
      */
-    protected void removeAttendee(Attendee attendee) {
-        attendeeEmails.remove(attendee.getEmail());
+    protected void removeAttendee(String email) {
+        attendeeEmails.remove(email);
     }
 
     /**
      * Adds an Organizer's email to this event
      * @param organizer an Organizer that will organize this event.
      */
-    protected void addOrganizer(Organizer organizer) {
-        organizerEmails.add(organizer.getEmail());
+    protected void addOrganizer(String email) {
+        organizerEmails.add(email);
     }
 
     /**

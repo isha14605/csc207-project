@@ -8,15 +8,15 @@ import java.util.Map;
  * @version 1.0
  */
 
-public class User {
+public abstract class User{
     protected String name;
     protected String password;
     protected String email;
-    protected HashMap<User, ArrayList<String>> messagesSent;
+    protected HashMap<String, ArrayList<String>> messagesSent;
     /*For messages_sent, The key is the user they are sending a message to, value is the message*/
-    protected HashMap<User, ArrayList<String>> messagesReceived;
+    protected HashMap<String, ArrayList<String>> messagesReceived;
     /*For messages_received, The key is the user who sent them a message, value is the message*/
-    protected ArrayList<User> contacts;
+    protected ArrayList<String> contacts;
 
     // Constructor for User
     /**
@@ -30,9 +30,9 @@ public class User {
         this.name = name;
         this.password = password;
         this.email = email;
-        this.messagesSent = new HashMap<User, ArrayList<String>>();
-        this.messagesReceived = new HashMap<User, ArrayList<String>>();
-        this.contacts = new ArrayList<User>();
+        this.messagesSent = new HashMap<String, ArrayList<String>>();
+        this.messagesReceived = new HashMap<String, ArrayList<String>>();
+        this.contacts = new ArrayList<String>();
     }
 
     // Getters for User
@@ -64,84 +64,52 @@ public class User {
      * Returns an ArrayList of User objects who are in present in this users contacts.
      * @return an ArrayList of User objects who are in present in this users contacts.
      */
-    public ArrayList<User> getContacts(){return this.contacts;}
+    public ArrayList<String> getContacts(){return this.contacts;}
 
-    public Map<User, ArrayList<String>> getMessagesSent(){return this.messagesSent;};
+    public Map<String, ArrayList<String>> getMessagesSent(){return this.messagesSent;};
 
-    public Map<User, ArrayList<String>> getMessagesReceived(){return this.messagesReceived;};
+    public Map<String, ArrayList<String>> getMessagesReceived(){return this.messagesReceived;};
 
 
     /**
      * Adds a contact to the users contact list.
-     * @param user the user that is added to their contact.
+     * @param email of the user that is added to their contact.
      */
-    protected void addContact(User user){
-        if (!(this.contacts.contains(user))){
-            this.contacts.add(user);
-            this.messagesSent.put(user, new ArrayList<String>());
-            this.messagesReceived.put(user, new ArrayList<String>());
-            user.add_opp_contact(this);
-        }
+    protected void addContact(String email){
+        this.contacts.add(email);
+        this.messagesSent.put(email, new ArrayList<String>());
+        this.messagesReceived.put(email, new ArrayList<String>());
     }
 
-    private void add_opp_contact(User user){
-        this.contacts.add(user);
-        this.messagesSent.put(user, new ArrayList<String>());
-        this.messagesReceived.put(user, new ArrayList<String>());
-    }
-
-    /* To send a message to another user*/
     /**
      * Sends a message to their contact.
-     * @param who the recipient of the message the user wants to send.
+     * @param email the recipient of the message the user wants to send.
      * @param  message is the content of the message they want to send.
      */
-    protected void sendMessage(User who, String message){
-        ArrayList<String> x = this.messagesSent.get(who);
+    protected void sendMessage(String email, String message){
+        ArrayList<String> x = this.messagesSent.get(email);
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);
-        this.messagesSent.replace(who, y);
-//        if (!(x == null)){
-//            ArrayList<String> y = new ArrayList<String>(x);
-//            y.add(message);
-//            this.messagesSent.replace(who, y);
-//        } else {
-//            ArrayList<String> m = new ArrayList<String>();
-//            m.add(message);
-//            this.messagesSent.put(who, m);
-//        }
-
+        this.messagesSent.replace(email, y);
     }
 
     /* The message a user is supposed to receive*/
     /**
      * A message is received from another user.
-     *@param who the sender of the message.
+     *@param email the sender of the message.
      *@param  message is the content of the message they received.
      */
-    protected void receiveMessage(User who, String message){
-        ArrayList<String> x = this.messagesReceived.get(who);
+    protected void receiveMessage(String email, String message){
+        ArrayList<String> x = this.messagesReceived.get(email);
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);
-        this.messagesReceived.replace(who, y);
-//        if (!(x == null)){
-//            ArrayList<String> y = new ArrayList<String>(x);
-//            y.add(message);
-//            this.messagesReceived.replace(who, y);
-//        } else {
-//            ArrayList<String> m = new ArrayList<String>();
-//            m.add(message);
-//            this.messagesReceived.put(who, m);
-//        }
+        this.messagesReceived.replace(email, y);
     }
 
     /**
      * Returns a character that determines what kind of a user this is.
      * @return a character that determines if this user is an attendee/ speaker.
      */
-    protected char userType(){
-        return 'N';
-    };
-
+    protected abstract char userType();
 
 }

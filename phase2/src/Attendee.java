@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @see User
  */
 public class Attendee extends User{
-    private ArrayList<Event> eventsAttending;
+    private ArrayList<Integer> eventsAttending;
 
     // Constructor for Attendee
     /**
@@ -19,7 +19,7 @@ public class Attendee extends User{
      */
     Attendee(String name, String password, String email) {
         super(name, password, email);
-        this.eventsAttending = new ArrayList<Event>();
+        this.eventsAttending = new ArrayList<Integer>();
     }
 
     // Getters
@@ -28,7 +28,7 @@ public class Attendee extends User{
      * @return a list containing each Event that the specified Attendee is attending
      * @see Event
      */
-    public ArrayList<Event> getEventsAttending(){
+    public ArrayList<Integer> getEventsAttending(){
         return this.eventsAttending;
     }
 
@@ -46,7 +46,7 @@ public class Attendee extends User{
      * @param event the event that the Attendee would like to attend
      * @see Event
      */
-    protected void attendEvent(Event event){
+    protected void attendEvent(Integer event){
         this.eventsAttending.add(event);
     }
 
@@ -55,7 +55,7 @@ public class Attendee extends User{
      * @param event the event that the Attendee would no longer like to attend
      * @see Event
      */
-    protected void removeEvent(Event event) {
+    protected void removeEvent(Integer event) {
         this.eventsAttending.remove(event);
     }
 }

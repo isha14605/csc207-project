@@ -6,23 +6,23 @@ or something along those lines to add some complexity
  */
 
 public class VIP extends Attendee{
-    private ArrayList<Event> vipEventsAttending;
+    private ArrayList<Integer> vipEventsAttending;
 
     // Constructor for VIP
     VIP(String name, String password, String email) {
         super(name, password, email);
-        this.vipEventsAttending = new ArrayList<Event>();
+        this.vipEventsAttending = new ArrayList<Integer>();
     }
 
-    public ArrayList<Event> getVipEventsAttending(){
+    public ArrayList<Integer> getVipEventsAttending(){
         return this.vipEventsAttending;
     }
 
-    protected void attendVipEvent(Event event){
+    protected void attendVipEvent(Integer event){
         this.vipEventsAttending.add(event);
     }
 
-    protected void removeEvent(Event event) {
+    protected void removeEvent(Integer event) {
         this.vipEventsAttending.remove(event);
     }
 

@@ -9,20 +9,21 @@ import java.util.ArrayList;
 public class UserManager{
     protected static ArrayList<User> users = new ArrayList<User>();
     protected static ArrayList<String> email = new ArrayList<String>();
+    protected EventManager em = new EventManager();
 
     /**
      * UserManager Constructor
      */
     protected UserManager(){
-        this.addUser("s1", "s1", "s1", "speaker");
-        this.addUser("s2", "s2", "s2", "speaker");
-        this.addUser("s3", "s3", "s3", "speaker");
-        this.addUser("o1", "o1", "o1", "organizer");
-        this.addUser("o2", "o2", "o2", "organizer");
-        this.addUser("o3", "o3", "o3", "organizer");
-        this.addUser("a1", "a1", "a1", "attendee");
-        this.addUser("a2", "a2", "a2", "attendee");
-        this.addUser("a3", "a3", "a3", "attendee");
+//        this.addUser("s1", "s1", "s1", "speaker");
+//        this.addUser("s2", "s2", "s2", "speaker");
+//        this.addUser("s3", "s3", "s3", "speaker");
+//        this.addUser("o1", "o1", "o1", "organizer");
+//        this.addUser("o2", "o2", "o2", "organizer");
+//        this.addUser("o3", "o3", "o3", "organizer");
+//        this.addUser("a1", "a1", "a1", "attendee");
+//        this.addUser("a2", "a2", "a2", "attendee");
+//        this.addUser("a3", "a3", "a3", "attendee");
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -31,18 +32,23 @@ public class UserManager{
      * @param email the email of this users account.
      * @return true if the new user is created else false.
      */
+    // DISCUSS WITH ISHA, CHECKING RELATED
     public boolean addUser(String name, String email, String password, String typeOfUser) {
         if (!UserManager.email.contains(email)) {
             UserManager.email.add(email);
-            if (typeOfUser.equals("organizer")) {
-                users.add(new Organizer(name, password, email));
-                return true;
-            } else if (typeOfUser.equals("speaker")) {
-                users.add(new Speaker(name, password, email));
-                return true;
-            } else if (typeOfUser.equals("attendee")) {
-                users.add(new Attendee(name, password, email));
-                return true;
+            switch (typeOfUser) {
+                case "organizer" -> {
+                    users.add(new Organizer(name, password, email));
+                    return true;
+                }
+                case "speaker" -> {
+                    users.add(new Speaker(name, password, email));
+                    return true;
+                }
+                case "attendee" -> {
+                    users.add(new Attendee(name, password, email));
+                    return true;
+                }
             }
         }
         return false;
@@ -54,21 +60,21 @@ public class UserManager{
      * for the specified Event.
      * @param attendee the Attendee who wants to sign up for an event
      * @param event the Event that the attendee would like to attend
-     * @see Attendee#getEventsAttending() 
-     * @see Attendee#attendEvent(Event) 
-     * @see Event#getEventRoom() 
-     * @see Event#getAttendees()
-     * @see Event#addAttendee(Attendee) 
-     * @see Room#getRoomCapacity() 
+     * @see Event#getAttendeeCapacity()
+     * @see Event#getAttendeeEmails()
+     * @see Event#getEventId()
+     * @see Attendee#attendEvent(Integer)
+     * @see Attendee#attendEvent(Integer)
+     * @see Attendee#getEmail()
      */
     protected boolean signUp(Attendee attendee, Event event){
-        if ((event.getEventRoom().getRoomCapacity() > event.getAttendees().size()) &&
-                !attendee.getEventsAttending().contains(event)) {
-            attendee.attendEvent(event);
-            event.addAttendee(attendee);
-            return true;
+        if ((event.getAttendeeCapacity()> event.getAttendeeEmails().size()) &&
+                !attendee.getEventsAttending().contains(event.getEventId())) {
+            attendee.attendEvent(event.getEventId());
+            event.addAttendee(attendee.getEmail());
+            return true; //successfully signed up
         }
-        return false;
+        return false; //cannot be signed up
     }
 
     /**
@@ -77,14 +83,18 @@ public class UserManager{
      * @param attendee the Attendee who wants to cancel registration for an event
      * @param event the Event that the attendee would no longer like to attend
      * @see Attendee#getEventsAttending() 
-     * @see Attendee#removeEvent(Event)
-     * @see Event#removeAttendee(Attendee) 
+     * @see Attendee#removeEvent(Integer)
+     * @see Attendee#getEmail()
+     * @see Event#removeAttendee(String)
+     * @see EventManager#find_event(Integer)
      */
-    protected void cancelRegistration(Attendee attendee, Event event){
+    protected boolean cancelRegistration(Attendee attendee, Integer event){
         if (attendee.getEventsAttending().contains(event)) {
             attendee.removeEvent(event);
-            event.removeAttendee(attendee);
+            em.find_event(event).removeAttendee(attendee.getEmail());
+            return true; //if event cancelled
         }
+        return false; //if event not cancelled
     }
 
     /**
@@ -96,8 +106,8 @@ public class UserManager{
      * @see User#getPassword()
     */
     protected boolean verifyLogin(String email, String password){
-        if (this.email.contains(email)){
-            for(User u: users){
+        if (UserManager.email.contains(email)){
+            for( User u: users){
                 if (u.getEmail().equals(email) && u.getPassword().equals(password)){
                     return true;
                 }
@@ -106,78 +116,85 @@ public class UserManager{
         return false;
     }
 
+    protected boolean inContact(String current, String email){
+        ArrayList<String> u = findUser(current).getContacts();
+        if (u.contains(email)){
+            findUser(current).addContact(email);
+            findUser(email).addContact(current);
+            return false;
+        }
+        return true;
+    }
+
     /**
      *
      * @param from, the user who wants to send the message.
-     * @param to the user who is the recipient of this message.
+     * @param to list of Users/ events that the sender wants to send the messages to
      * @param message the content of the message.
-     * @return true if the message was successfully sent.
      */
-    protected boolean message(User from, User to, String message){
-        boolean t = false;
+    protected void message(String from, ArrayList<String> to, String message){
+        //WHEN CALLING THIS NEED TO CHECK IF USERS EXISTS
 
-        if (from.userType() == 'S'){
-            t = speakerMessage((Speaker) from, to, message);
-        } else if (from.userType() == 'O'){
-            t = organizerMessage((Organizer) from, to, message);
-        } else if (from.userType() == 'A') {
-            t = attendeeMessage((Attendee) from, to, message);
+        if (findUser(from).userType() == 'S'){
+            speakerMessage(from, to, message);
+        } else if (findUser(from).userType() == 'O'){
+            organizerMessage(from, to, message);
+        } else if (findUser(from).userType() == 'A') {
+            attendeeMessage(from, to, message);
         }
-        return t;
     }
 
-    /**
-     * Sends an Organizer message
-     * @param from the Organizer sending the message
-     * @param to the User receiving the message
-     * @param message content of message to be sent
-     * @return true if the message was sent successfully
-     */
-    private boolean organizerMessage(Organizer from, User to, String message){
-        from.addContact(to);
-        if (users.contains(to)){
-            from.sendMessage(to, message);
-            to.receiveMessage(from, message);
-            return true;
+    // doesn't check anything at all! Still need to check if valid recipients
+    private void organizerMessage(String from, ArrayList<String> to, String message){
+        // to has to be attendees/ speakers only!
+        ArrayList<User> u = findUsers(to);
+
+        for(User u1: u) {
+            inContact(from, u1.getEmail());
+            findUser(from).sendMessage(u1.getEmail(), message);
+            u1.receiveMessage(from, message);
         }
-        return false;
+
     }
 
 
-    /**
-     * Sends a Speaker message
-     *
-     * @return true if the message was sent successfully
-     */
-    private boolean speakerMessage(Speaker from, User to, String message){
-        from.addContact(to);
-        for (Talk t: from.getTalksSpeaking()){
-            Event e = t.getEvent();
-            if (e.getAttendees().contains(to)){
-                to.receiveMessage(from, message);
-                from.sendMessage(to, message);
-                return true;
-
+    // the only thing this method does is send messages, where to represents array of string of event id. It doesn't
+    // check anything
+    private void speakerMessage(String from, ArrayList<String> to, String message){
+        ArrayList<String> a = new ArrayList<String>();
+        for(String i : to){
+            if (em.find_event(Integer.parseInt(i)) != null){
+                a.addAll(em.find_event(Integer.parseInt(i)).getAttendeeEmails());
             }
         }
-        return false;
+        ArrayList<User> u = new ArrayList<User>();
+        u = findUsers(a);
+        for(User i: u){
+            inContact(from, i.getEmail());
+            findUser(from).sendMessage(i.getEmail(), message);
+            i.receiveMessage(from, message);
+        }
     }
 
-    /**
-     * Sends an Attendee message
-     *
-     * @return true if the message was sent successfully
-     */
-    private boolean attendeeMessage(Attendee from, User to, String message){
-        if (to.userType() == 'A' |  to.userType()=='S'){
-            if (!from.getContacts().contains(to)){
-                from.addContact(to);
-            }
-            to.receiveMessage(from, message);
-            from.sendMessage(to, message);
-            return true;
+
+    /// the only thing this method does is send messages. It doesn't check anything
+    private void attendeeMessage(String from, ArrayList<String> to, String message){
+        User from_user = findUser(from);
+        ArrayList<User> to_user = findUsers(to);
+        for(User u : to_user){
+            inContact(from ,u.getEmail());
+            u.receiveMessage(from, message);
+            from_user.sendMessage(u.getEmail(), message);
         }
-        return false;
+    }
+
+
+    private ArrayList<User> findUsers(ArrayList<String> emails){
+        ArrayList<User> user_obj = new ArrayList<User>();
+        for(String i : emails){
+            user_obj.add(this.findUser(i));
+        }
+        return user_obj;
     }
 
     /**
@@ -188,7 +205,6 @@ public class UserManager{
     protected User findUser(String email){
         int i;
         i = UserManager.email.indexOf(email);
-        //System.out.println(i);
         return UserManager.users.get(i);
     }
 

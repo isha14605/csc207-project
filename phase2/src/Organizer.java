@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * @see User
  */
 
-public class Organizer extends Attendee {
-    protected ArrayList<Event> eventsOrganizing;
+public class Organizer extends Attendee{
+    protected ArrayList<Integer> eventsOrganizing;
 
     // Constructor method for Organizer
     /**
@@ -21,7 +21,7 @@ public class Organizer extends Attendee {
      */
     Organizer(String name, String password, String email) {
         super(name, password, email);
-        this.eventsOrganizing = new ArrayList<Event>();
+        this.eventsOrganizing = new ArrayList<Integer>();
     }
 
     // Getters
@@ -38,7 +38,7 @@ public class Organizer extends Attendee {
      * @return a list of all Events that the Organizer is organizing.
      * @see Event
      */
-    public ArrayList<Event> getEventsOrganizing() {
+    public ArrayList<Integer> getEventsOrganizing() {
         return eventsOrganizing;
     }
 
@@ -48,7 +48,7 @@ public class Organizer extends Attendee {
      * @param event the Event that the Organizer is to be organizing.
      * @see Event
      */
-    protected void addEvent(Event event) {
+    protected void addEvent(Integer event) {
         this.eventsOrganizing.add(event);
     }
 
