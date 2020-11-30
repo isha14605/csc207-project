@@ -282,5 +282,15 @@ public class EventManager implements Serializable {
         return events;
     }
 
+    // NEED TO DISCUSS, HAVEN'T CHECKED IF EVENT EXISTS
+    protected ArrayList<Event> findEvents(ArrayList<String> id){
+        ArrayList<Event> e = new ArrayList<Event>();
+        for(String i : id){
+            if (find_event(Integer.parseInt(i)) != null){
+                e.add(find_event(Integer.parseInt(i)));
+            }
+        }
+    }
+
 
 }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Handles the messaging functionality of Users.
@@ -11,100 +10,40 @@ public class MessagingSystem {
 
     UserManager um = new UserManager();
     EventManager em = new EventManager();
-    TalkManager tm = new TalkManager();
+
 
     public MessagingSystem() {
     }
 
+    public boolean sendMessage(String from, ArrayList<String> to, String message){
+        if (!(um.checkUserExists(from))){
+            return false;
+        }
+        if (um.findUser(from).userType() == 'A' || um.findUser(from).userType() == 'O'){
+            ArrayList<User> recipeints = um.findUsers(checkUsers(to)); // returns array of existing users
+            um.message(um.findUser(from), recipeints, message);
+            return true;
+        } else if (um.findUser(from).userType() == 'S'){
+            ArrayList<Event> e = em.findEvents(to);
+            ArrayList<User> attendees = new ArrayList<User>();
+            for(Event i: e){
+                attendees.addAll(um.findUsers(i.getAttendeeEmails()));
+            }
+            um.message(um.findUser(from), attendees, message);
+            return true;
+        }
+        return false;
 
-    /**
-     * Returns a list of string of content of the message the user wants to send from the console
-     *
-     * @return a list of string of content of message.
-     */
-    public String[] readMessage() {
-        Scanner scanner = new Scanner(System.in);
-        String[] record;
-        record = scanner.nextLine().split("\n");
-        scanner.close();
-        return record;
     }
 
-    /**
-     * Returns the recipient (i.e. who the user wants to send the message to) name from console
-     *
-     * @return a string of recipient name
-     */
-    public ArrayList<String> readRecipient() {
-        Scanner scanner = new Scanner(System.in);
-        ArrayList<String> inputs = new ArrayList<String>();
-        String record = scanner.nextLine();
-        if (!(record.equals("All"))) {
-            inputs.add(record);
-            while (scanner.hasNextLine()) {
-                record = scanner.nextLine();
-                inputs.add(record);
+    private ArrayList<String> checkUsers(ArrayList<String> from){
+        ArrayList<String> u = new ArrayList<String>();
+        for(String i: from){
+            if (um.checkUserExists(i)){
+                u.add(i);
             }
         }
-        inputs.add("All");
-        return inputs;
-    }
-
-
-    /**
-     * Sends an Attendee message
-     * @param from the User sending the message
-     * @param to the User receiving the message
-     * @param message content of the message to be sent
-     * @return true if the message was sent successfully
-     */
-    public boolean sendAttendeeMessage(User from, User to, String message) {
-        return um.message(from, to, message);
-    }
-
-
-    /**
-     * Sends a Speaker message to all Users signed up for an event
-     * @param from the Speaker sending the message
-     * @param event_name name of the event whose users are being messaged
-     * @param message content of the message to be sent
-     */
-    public void sendMessageSpeaker(Speaker from, Event event_name, String message) {
-        for(Attendee u: event_name.getAttendees()){
-            um.message(from, u, message);
-        }
-    }
-
-
-    /**
-     * Sends an Organizer message to all the Speakers or all the Attendees signed up for an event
-     * @param from the Organizer sending the message
-     * @param to type of the Users receiving the message
-     * @param event_id id of the event whose users are being messaged
-     * @param message content of the message to be sent
-     */
-    public void sendMessageOrganizer(Organizer from, String to, int event_id, String message) {
-        if (to.equals("Attendee")){
-            Event event = em.find_event(event_id);
-            for(Attendee a: event.getAttendees()){
-                um.message(from, a, message);
-            }
-
-        } else if (to.equals("Speaker")) {
-            Event event = em.find_event(event_id);
-            ArrayList<Talk> talks = new ArrayList<Talk>();
-            for (Talk t: event.getTalks()){
-                talks.add(t);
-            }
-            ArrayList<Speaker> speakers = new ArrayList<Speaker>();
-            for (Talk s: talks){
-                speakers.add(s.getSpeaker());
-            }
-            for (Speaker s: speakers){
-                um.message(from, s ,message);
-            }
-        }
-
+        return u;
     }
 }
 

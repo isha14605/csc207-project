@@ -132,27 +132,27 @@ public class UserManager{
      * @param to list of Users/ events that the sender wants to send the messages to
      * @param message the content of the message.
      */
-    protected void message(String from, ArrayList<String> to, String message){
+    protected void message(User from, ArrayList<User> to, String message){
         //WHEN CALLING THIS NEED TO CHECK IF USERS EXISTS
 
-        if (findUser(from).userType() == 'S'){
+        if (from.userType() == 'S'){
             speakerMessage(from, to, message);
-        } else if (findUser(from).userType() == 'O'){
+        } else if (from.userType() == 'O'){
             organizerMessage(from, to, message);
-        } else if (findUser(from).userType() == 'A') {
+        } else if (from.userType() == 'A') {
             attendeeMessage(from, to, message);
         }
     }
 
     // doesn't check anything at all! Still need to check if valid recipients
-    private void organizerMessage(String from, ArrayList<String> to, String message){
+    private void organizerMessage(User from, ArrayList<User> to, String message){
         // to has to be attendees/ speakers only!
-        ArrayList<User> u = findUsers(to);
+//        ArrayList<User> u = findUsers(to);
 
-        for(User u1: u) {
-            inContact(from, u1.getEmail());
-            findUser(from).sendMessage(u1.getEmail(), message);
-            u1.receiveMessage(from, message);
+        for(User u1: to) {
+            inContact(from.getEmail(), u1.getEmail());
+            from.sendMessage(u1.getEmail(), message);
+            u1.receiveMessage(from.getEmail(), message);
         }
 
     }
@@ -160,36 +160,36 @@ public class UserManager{
 
     // the only thing this method does is send messages, where to represents array of string of event id. It doesn't
     // check anything
-    private void speakerMessage(String from, ArrayList<String> to, String message){
-        ArrayList<String> a = new ArrayList<String>();
-        for(String i : to){
-            if (em.find_event(Integer.parseInt(i)) != null){
-                a.addAll(em.find_event(Integer.parseInt(i)).getAttendeeEmails());
-            }
-        }
-        ArrayList<User> u = new ArrayList<User>();
-        u = findUsers(a);
-        for(User i: u){
-            inContact(from, i.getEmail());
-            findUser(from).sendMessage(i.getEmail(), message);
-            i.receiveMessage(from, message);
+    private void speakerMessage(User from, ArrayList<User> to, String message){
+//        ArrayList<String> a = new ArrayList<String>();
+//        for(String i : to){
+//            if (em.find_event(Integer.parseInt(i)) != null){
+//                a.addAll(em.find_event(Integer.parseInt(i)).getAttendeeEmails());
+//            }
+//        }
+//        ArrayList<User> u = new ArrayList<User>();
+//        u = findUsers(a);
+        for(User i: to){
+            inContact(from.getEmail(), i.getEmail());
+            from.sendMessage(i.getEmail(), message);
+            i.receiveMessage(from.getEmail(), message);
         }
     }
 
 
     /// the only thing this method does is send messages. It doesn't check anything
-    private void attendeeMessage(String from, ArrayList<String> to, String message){
-        User from_user = findUser(from);
-        ArrayList<User> to_user = findUsers(to);
-        for(User u : to_user){
-            inContact(from ,u.getEmail());
-            u.receiveMessage(from, message);
-            from_user.sendMessage(u.getEmail(), message);
+    private void attendeeMessage(User from, ArrayList<User> to, String message){
+//        User from_user = findUser(from);
+//        ArrayList<User> to_user = findUsers(to);
+        for(User u : to){
+            inContact(from.getEmail() ,u.getEmail());
+            u.receiveMessage(from.getEmail(), message);
+            from.sendMessage(u.getEmail(), message);
         }
     }
 
 
-    private ArrayList<User> findUsers(ArrayList<String> emails){
+    protected ArrayList<User> findUsers(ArrayList<String> emails){
         ArrayList<User> user_obj = new ArrayList<User>();
         for(String i : emails){
             user_obj.add(this.findUser(i));
