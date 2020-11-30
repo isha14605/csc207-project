@@ -20,7 +20,7 @@ abstract class Event implements Serializable {
     private LocalDate eventDate;
     private ArrayList<String> attendeeEmails;
     private ArrayList<String> organizerEmails;
-    private Room eventRoom;
+    private String roomName;
     private int attendeeCapacity;
     private boolean vipOnly;
 
@@ -50,7 +50,7 @@ abstract class Event implements Serializable {
         this.attendeeEmails = new ArrayList<String>();
         // Contains email address of Organizers
         this.organizerEmails = new ArrayList<String>();
-        this.eventRoom = null;
+        this.roomName = null;
     }
 
     // Getters
@@ -117,9 +117,9 @@ abstract class Event implements Serializable {
 
     /**
      * Returns an eventRoom object that is the designated room for this event.
-     * @return an eventRoom object that is the designated room for this event.
+     * @return a String object that is the name of the designated room for this event.
      */
-    public Room getEventRoom() {return eventRoom;}
+    public String getRoomName() {return roomName;}
 
     // Setters
 
@@ -128,14 +128,14 @@ abstract class Event implements Serializable {
      * Should be called by RoomManager. RoomManager will be responsible for checking room availability, ensuring that
      * room capacity is more than or equal to attendeeCapacity of event and booking the room for
      * required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
-     * @param room the room for this event.
+     * @param roomName the room for this event.
      */
-    protected void setEventRoom(Room room) {this.eventRoom = room;}
+    protected void setRoomName(String roomName) {this.roomName = roomName;}
 
     /**
      * Adds an Attendee's email to this event
      * UserManager must ensure that only VIP attendees can sign up for VIP events.
-     * @param attendee an attendee that will attend this event.
+     * @param email email of an attendee that will attend this event.
      */
     protected void addAttendee(String email) {
         attendeeEmails.add(email);
@@ -143,7 +143,7 @@ abstract class Event implements Serializable {
 
     /**
      * Removes an Attendee's email from this event
-     * @param attendee an attendee that will no longer attend this event.
+     * @param email email of an attendee that will no longer attend this event.
      */
     protected void removeAttendee(String email) {
         attendeeEmails.remove(email);
@@ -151,7 +151,7 @@ abstract class Event implements Serializable {
 
     /**
      * Adds an Organizer's email to this event
-     * @param organizer an Organizer that will organize this event.
+     * @param email email of an Organizer that will organize this event.
      */
     protected void addOrganizer(String email) {
         organizerEmails.add(email);
