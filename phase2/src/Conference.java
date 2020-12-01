@@ -9,6 +9,7 @@ public class Conference {
     private LocalTime endTime;
     private LocalDate confDate;
     private ArrayList<Integer> eventIds;
+    private ArrayList<String> eventName;
 
     // Constructor for Conference
     /**
@@ -28,6 +29,7 @@ public class Conference {
         this.endTime = endTime;
         this.confDate = confDate;
         this.eventIds = new ArrayList<Integer>();
+        this.eventName = new ArrayList<>();
     }
 
     // Getters
@@ -63,6 +65,14 @@ public class Conference {
     public LocalDate getConfDate() {return confDate;}
 
     /**
+     * Returns an arraylist that contains Integer objects that are the names of events in the conference.
+     * @return an arraylist that contains Integer objects that are the names of events in the conference.
+     */
+    public ArrayList<String> getEventName() {
+        return eventName;
+    }
+
+    /**
      * Returns an arraylist that contains Integer objects that are the ids of events in the conference.
      * @return an arraylist that contains Integer objects that are the ids of events in the conference.
      */
@@ -78,6 +88,13 @@ public class Conference {
      * @param event an event that is a part of this conference.
      */
     protected void addEvent(Event event) { eventIds.add(event.getEventId());}
+
+    /**
+     * Adds an Event's Name to this conference's eventIds list
+     * Conference Manager must ensure that two events running at the same time are not added.
+     * @param event an event that is a part of this conference.
+     */
+    protected void addEventName(Event event) { eventName.add(event.getName());}
 
     /**
      * Removes an Event's id to this conference's eventIds list

@@ -11,13 +11,14 @@ import java.util.HashMap;
  */
 
 public class Room implements Serializable {
+    private final ArrayList<String> techAvailable;
     private String name;
     private int roomCapacity;
     private LocalTime openTime;
     private LocalTime closeTime;
     /* bookings is a HashMap where each key is an Event object and corresponding value is an ArrayList
      * containing startTime and endTime of the event consecutively.*/
-    private HashMap<Event, ArrayList<LocalDateTime>> bookings;
+    private HashMap<Integer, ArrayList<LocalDateTime>> bookings;
 
     // Constructor for Room
     /**
@@ -32,7 +33,8 @@ public class Room implements Serializable {
         this.roomCapacity = roomCapacity;
         this.openTime = openTime;
         this.closeTime = closeTime;
-        this.bookings = new HashMap<Event, ArrayList<LocalDateTime>>();
+        this.bookings = new HashMap<Integer, ArrayList<LocalDateTime>>();
+        this.techAvailable = new ArrayList<>();
     }
 
     // Getters
@@ -61,12 +63,20 @@ public class Room implements Serializable {
     public LocalTime getCloseTime() {return closeTime;}
 
     /**
+     * Returns a LocalTime that is the close time of this room.
+     * @return a LocalTime that is the close time of this room.
+     */
+    public ArrayList<String> getTechAvailable() {
+        return techAvailable;
+    }
+
+    /**
      * Returns all bookings i.e. a HashMap where each key is an Event object and corresponding value is an ArrayList
      * containing startTime and endTime of the event consecutively.
      * @return A HashMap where each key is an Event object and corresponding value is an ArrayList containing startTime
      * and endTime of the event consecutively.
      */
-    public HashMap<Event, ArrayList<LocalDateTime>> getBookings() {return bookings;}
+    public HashMap<Integer, ArrayList<LocalDateTime>> getBookings() {return bookings;}
 
     /**
      * Adds a booking to this room. This method should be called by Room Manager
@@ -79,6 +89,10 @@ public class Room implements Serializable {
         ArrayList<LocalDateTime> time = new ArrayList<LocalDateTime>();
         time.add(startTime);
         time.add(endTime);
-        this.bookings.put(event, time);
+        this.bookings.put(event.getEventId(), time);
+    }
+
+    protected void addTechRequirement(String tech){
+        this.techAvailable.add(tech);
     }
 }
