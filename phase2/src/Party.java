@@ -24,6 +24,16 @@ public class Party extends Event {
 
     }
 
+    @Override
+    protected String eventType() {
+        return "Party";
+    }
+
+    @Override
+    protected void setSpeaker(String speakerName) {
+
+    }
+
     /* getters */
 
     /**

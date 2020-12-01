@@ -21,6 +21,15 @@ public class Talk extends Event{
         super(name, eventDescription, startTime, endTime, eventDate, attendeeCapacity, vipOnly);
         this.speakerEmail = null;
     }
+
+    @Override
+    protected String eventType() {
+        return "Talk";
+    }
+
+
+
+
     /* getters */
 
     /**
@@ -31,12 +40,14 @@ public class Talk extends Event{
 
     /* setters */
 
+
     /**
      * sets the email of the speaker of this talk.
      * @param speaker the speaker of this talk
      */
-    public void setSpeaker(Speaker speaker) {
-        this.speakerEmail = speaker.getEmail();
+    @Override
+    protected void setSpeaker(String speakerName) {
+        this.speakerEmail = speakerName;
     }
 
 }

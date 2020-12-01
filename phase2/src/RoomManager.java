@@ -2,6 +2,7 @@ import java.io.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
 /**
  * Manages Rooms and functionality
  *
@@ -11,8 +12,12 @@ import java.util.ArrayList;
 
 public class RoomManager implements Serializable {
     private final ArrayList<Room> rooms = new ArrayList<>();
+    EventManager em = null;
+    private ArrayList<String> techOptions;
 
-    public RoomManager(){}
+    public RoomManager(EventManager em){
+        this.em = em;
+    }
 
 /** Creates a new room entity based on parameters set below
  *@param name Name of the event.
@@ -50,9 +55,9 @@ public class RoomManager implements Serializable {
      * @param unbooked Unbooked room Entity
      * */
     protected boolean is_room_booked(Room room, Event unbooked){
-        for(Event booked: room.getBookings().keySet()){
-            if(booked.getEventDate().equals(unbooked.getEventDate()))
-                if(time_conflict(unbooked, booked)){
+        for(Integer booked: room.getBookings().keySet()){
+            if(em.find_event(booked).getEventDate().equals(unbooked.getEventDate()))
+                if(time_conflict(unbooked, em.find_event(booked))){
                     return true;
                 }
         }
@@ -85,25 +90,9 @@ public class RoomManager implements Serializable {
     }
 
     /** Checks if there is a time conflict between a event and talk that wants to be scheduled
-     * @param scheduling the talk the is being scheduled
-     * @param event the event the talk wants to be added to.
+     * @param event1 the talk the is being scheduled
+     * @param event2 the event the talk wants to be added to.
      * @return true if there is a time conflict within events*/
-    protected boolean time_conflict(Talk scheduling, Event event){
-        for(Talk scheduled: event.getTalks()){
-            if(scheduling.getStartTime().equals(scheduled.getStartTime())){
-                return true;
-            }
-            else if(scheduling.getStartTime().isAfter(scheduled.getStartTime()) &&
-                    scheduling.getStartTime().isBefore(scheduled.getEndTime())){
-                return true;
-            }
-            else if(scheduling.getEndTime().isAfter(scheduled.getStartTime()) &&
-                    scheduling.getEndTime().isBefore(scheduled.getStartTime())){
-                return true;
-            }
-        }
-        return false;
-    }
     protected boolean time_conflict(Event event1, Event event2) {
         if (event1.getStartTime().equals((event2.getStartTime()))) {
             System.out.println("time conflict");
@@ -127,6 +116,19 @@ public class RoomManager implements Serializable {
         return null;
     }
 
+    protected void addTechOptions(String tech){
+        techOptions.add(tech);
+    }
+
+    protected ArrayList<String> getTechOptions(){
+        return techOptions;
+    }
+
+    protected boolean meetsRequirements(String roomName,Integer eventId){
+        return find_room(roomName).getTechAvailable().containsAll(em.find_event(eventId).getTechRequirements());
+    }
+
+
     public void writeToFile(String fileName) throws IOException {
         OutputStream file = new FileOutputStream(fileName);
         OutputStream buffer = new BufferedOutputStream(file);
@@ -149,6 +151,6 @@ public class RoomManager implements Serializable {
         } catch (IOException | ClassNotFoundException ignored) {
             System.out.println("couldn't read room file.");
         }
-        return new RoomManager();
+        return new RoomManager(em);
     }
 }

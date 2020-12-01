@@ -20,9 +20,11 @@ abstract class Event implements Serializable {
     private LocalDate eventDate;
     private ArrayList<String> attendeeEmails;
     private ArrayList<String> organizerEmails;
-    private String roomName;
+    private Room eventRoom;
     private int attendeeCapacity;
     private boolean vipOnly;
+    private String themes;
+    private ArrayList<String> techRequirements;
 
     // Constructor for Event
     /**
@@ -50,8 +52,13 @@ abstract class Event implements Serializable {
         this.attendeeEmails = new ArrayList<String>();
         // Contains email address of Organizers
         this.organizerEmails = new ArrayList<String>();
-        this.roomName = null;
+        this.eventRoom = null;
+        this.themes = null;
+        this.techRequirements = new ArrayList<>();
     }
+    abstract String eventType();
+
+    abstract void setSpeaker(String speakerEmail);
 
     // Getters
 
@@ -117,9 +124,13 @@ abstract class Event implements Serializable {
 
     /**
      * Returns an eventRoom object that is the designated room for this event.
-     * @return a String object that is the name of the designated room for this event.
+     * @return an eventRoom object that is the designated room for this event.
      */
-    public String getRoomName() {return roomName;}
+    public Room getEventRoom() {return eventRoom;}
+
+    public ArrayList<String> getTechRequirements() {
+        return techRequirements;
+    }
 
     // Setters
 
@@ -128,14 +139,14 @@ abstract class Event implements Serializable {
      * Should be called by RoomManager. RoomManager will be responsible for checking room availability, ensuring that
      * room capacity is more than or equal to attendeeCapacity of event and booking the room for
      * required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
-     * @param roomName the room for this event.
+     * @param room the room for this event.
      */
-    protected void setRoomName(String roomName) {this.roomName = roomName;}
+    protected void setEventRoom(Room room) {this.eventRoom = room;}
 
     /**
      * Adds an Attendee's email to this event
      * UserManager must ensure that only VIP attendees can sign up for VIP events.
-     * @param email email of an attendee that will attend this event.
+     * @param attendee an attendee that will attend this event.
      */
     protected void addAttendee(String email) {
         attendeeEmails.add(email);
@@ -143,7 +154,7 @@ abstract class Event implements Serializable {
 
     /**
      * Removes an Attendee's email from this event
-     * @param email email of an attendee that will no longer attend this event.
+     * @param attendee an attendee that will no longer attend this event.
      */
     protected void removeAttendee(String email) {
         attendeeEmails.remove(email);
@@ -151,7 +162,7 @@ abstract class Event implements Serializable {
 
     /**
      * Adds an Organizer's email to this event
-     * @param email email of an Organizer that will organize this event.
+     * @param organizer an Organizer that will organize this event.
      */
     protected void addOrganizer(String email) {
         organizerEmails.add(email);

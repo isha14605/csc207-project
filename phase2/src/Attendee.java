@@ -8,7 +8,8 @@ import java.util.ArrayList;
  * @see User
  */
 public class Attendee extends User{
-    private ArrayList<Integer> eventsAttending;
+    protected ArrayList<Integer> eventsAttending;
+    protected ArrayList<String> conferenceAttending;
 
     // Constructor for Attendee
     /**
@@ -20,6 +21,7 @@ public class Attendee extends User{
     Attendee(String name, String password, String email) {
         super(name, password, email);
         this.eventsAttending = new ArrayList<Integer>();
+        this.conferenceAttending = new ArrayList<String>();
     }
 
     // Getters
@@ -33,6 +35,12 @@ public class Attendee extends User{
     }
 
     /**
+     * Returns an array of String that represents the name of the conference the user is attending
+     * @return an arraylist of string representing the conferences they are attending
+     */
+    protected ArrayList<String> getConferenceAttending(){return this.conferenceAttending;}
+
+    /**
      * Returns a string that represents the type of User this object is, eg. A for Attendee.
      * @return a string representing the type of User this object is
      */
@@ -40,11 +48,12 @@ public class Attendee extends User{
         return 'A';
     }
 
+
+
     // Setters
     /**
      * Adds an Event to an Attendee's list of events that they are attending.
      * @param event the event that the Attendee would like to attend
-     * @see Event
      */
     protected void attendEvent(Integer event){
         this.eventsAttending.add(event);
@@ -53,9 +62,15 @@ public class Attendee extends User{
     /**
      * Removes an Event from an Attendee's list of events that they are attending.
      * @param event the event that the Attendee would no longer like to attend
-     * @see Event
      */
     protected void removeEvent(Integer event) {
         this.eventsAttending.remove(event);
     }
+
+    /**
+     * Removes a conference from an Attendee's list of conferences that they are attending
+     * @param conference a string that represent the conference that the Attendee no longer wants to attend
+     */
+    protected void removeConference(String conference){this.conferenceAttending.remove(conference);}
+
 }

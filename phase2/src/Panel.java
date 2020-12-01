@@ -23,6 +23,19 @@ public class Panel extends Event{
         this.speakerEmails = new ArrayList<String>();
     }
 
+    @Override
+    protected String eventType() {
+        return "Panel";
+    }
+
+    @Override
+    protected void setSpeaker(String  speakerEmail) {
+        if(this.speakerEmails.contains(speakerEmail)) {
+            this.speakerEmails.add(speakerEmail);
+        }
+    }
+
+
     /* getters */
 
     /**
