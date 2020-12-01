@@ -290,6 +290,7 @@ public class EventManager implements Serializable {
                 e.add(find_event(Integer.parseInt(i)));
             }
         }
+        return e;
     }
 
 

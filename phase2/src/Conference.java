@@ -14,7 +14,7 @@ public class Conference {
     /**
      * Creates a Conference with the specified name, description, start time, end time, date of Conference and an
      * empty list of event ids.
-     * @param name the name of the specified User
+     * @param name the name of the specified conference
      * @param confDescription the description of the conference
      * @param startTime the time when the conference starts
      * @param endTime the time when the conference ends

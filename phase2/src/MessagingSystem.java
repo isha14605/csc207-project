@@ -12,38 +12,30 @@ public class MessagingSystem {
     EventManager em = new EventManager();
 
 
-    public MessagingSystem() {
-    }
+    public MessagingSystem() {}
 
     public boolean sendMessage(String from, ArrayList<String> to, String message){
         if (!(um.checkUserExists(from))){
             return false;
         }
-        if (um.findUser(from).userType() == 'A' || um.findUser(from).userType() == 'O'){
-            ArrayList<User> recipeints = um.findUsers(checkUsers(to)); // returns array of existing users
-            um.message(um.findUser(from), recipeints, message);
+        if (um.findUser(from).userType() == 'A' || um.findUser(from).userType() == 'O' ||
+                um.findUser(from).userType() == 'V' ){
+            ArrayList<String> recipients = um.checkUsers(to); // returns array of existing users
+            um.message(from, recipients, message);
             return true;
         } else if (um.findUser(from).userType() == 'S'){
-            ArrayList<Event> e = em.findEvents(to);
-            ArrayList<User> attendees = new ArrayList<User>();
+            ArrayList<Event> e = em.findEvents(to); // returns the events they are part of based on input
+            ArrayList<String> attendees = new ArrayList<String>();
             for(Event i: e){
-                attendees.addAll(um.findUsers(i.getAttendeeEmails()));
+                attendees.addAll(i.getAttendeeEmails());
             }
-            um.message(um.findUser(from), attendees, message);
+            um.message(from, attendees, message);
             return true;
         }
         return false;
 
     }
 
-    private ArrayList<String> checkUsers(ArrayList<String> from){
-        ArrayList<String> u = new ArrayList<String>();
-        for(String i: from){
-            if (um.checkUserExists(i)){
-                u.add(i);
-            }
-        }
-        return u;
-    }
+
 }
 

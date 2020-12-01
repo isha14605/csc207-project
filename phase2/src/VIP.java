@@ -30,11 +30,19 @@ public class VIP extends Attendee{
         return this.vipEventsAttending;
     }
 
+    /**
+     * Adds the particular VIP event to the list of VIP events that the user is attending
+     * @param event is the id of the event the VIP wants to attend
+     */
     protected void attendVipEvent(Integer event){
         this.vipEventsAttending.add(event);
     }
 
-    protected void removeEvent(Integer event) {
+    /**
+     * Removes VIP event that this user is attending
+     * @param event is the id of the VIP event the user no longer wishes to attend
+     */
+    protected void removeVipEvent(Integer event) {
         this.vipEventsAttending.remove(event);
     }
 

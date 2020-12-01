@@ -15,35 +15,33 @@ public class SignUpSystem {
      * Returns a list of events that an Attendee can attend, based on a specified date, start time, and end time. Checks
      * to see that there are events occurring on the specified date between the times provided.
      * @param date the date that the Attendee is interested in viewing events for
-     * @param startTime the start time that the Attendee is interested in viewing events for
-     * @param endTime the end time that the Attendee is interested in viewing events for
      * @return a list containing potential events that the Attendee is interested in attending for further perusal
      */
     // Allows the Attendee to browse the events and decide which ones they want to see based on date and time
-    public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){
-//        ArrayList<Event> interestList = new ArrayList<>();
-//        ArrayList<Event> allEventsList = eM.getEvents();
-//        for (Event event: allEventsList) {
-//            if (event.getEventDate().equals(date)){
-//
-////                    && event.getStartTime().equals(startTime)
-////                    && (endTime.isBefore(event.getEndTime()) || event.getEndTime().equals(endTime)))
-//                interestList.add(event);
-//            }
-//        }
+    public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){ // need to discuss
         return eM.get_events_on(date); // Return the list of events so the Attendee can browse
     }
 
     /**
      * Allows an Attendee to sign up for an Event.
-     * @param a the Attendee that wants to sign up for an an Event.
-     * @param e the Event that the Attendee wants to be signed up for.
-     * @see UserManager#signUp(Attendee, Event)
+     * @param email the Attendee that wants to sign up for an an Event.
+     * @param event the Event that the Attendee wants to be signed up for.
+     * @see UserManager#signUpEvent(Attendee, Event)
      */
     // Method to sign up an Attendee for an Event
-    public boolean signUpEvent(Attendee a, Event e){
+    public boolean signUpEvent(String email, Integer event){
         // Sign the Attendee up for the Event
-        return uM.signUp(a,e);
+        return uM.signUpEvent((Attendee) uM.findUser(email), eM.find_event(event));
+    }
+
+    /**
+     *
+     * @param email the attendee who wants to cancel Registration for an event
+     * @param event the event if that the user wants to cancel registration from
+     * @return true if succesfully cancelled
+     */
+    public boolean cancelRegEvent(String email, Integer event){
+        return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), event);
     }
 
 }

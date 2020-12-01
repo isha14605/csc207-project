@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @see User
  */
 
-public class Organizer extends Attendee{
+public class Organizer extends User{
     protected ArrayList<Integer> eventsOrganizing;
 
     // Constructor method for Organizer

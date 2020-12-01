@@ -27,6 +27,17 @@ public class LoginController {
      * @see UserManager#verifyLogin(String email, String password)
      */
     public boolean checkLogIn(String email, String password) {
-        return userManager.verifyLogin(email, password);
+        if(userManager.checkUserExists(email)){
+            return userManager.verifyLogin(email, password);
+        }
+        return false;
+    }
+
+    public boolean createAccount(String email, String password, String name, String typeOfUser){
+        if(userManager.checkUserExists(email)){
+            return false; //user already exists
+        }
+        userManager.addUser(name, email, password, typeOfUser);
+        return true;
     }
 }
