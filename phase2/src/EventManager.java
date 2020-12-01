@@ -33,6 +33,7 @@ public class EventManager implements Serializable {
      * @param event_only
      */
     protected void create_event(String name, String desc, LocalTime start, LocalTime end, LocalDate date, int capacity, boolean event_only) throws IOException {
+        // FARHAD or CHEVOY, PLEASE FIX
         Event event = new Event(name, desc, start, end, date,capacity,event_only);
         if(event.getEventId() <= events.size()){
             event.setEventId(events.size()+1);
