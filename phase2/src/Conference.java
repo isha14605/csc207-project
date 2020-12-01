@@ -32,6 +32,7 @@ public class Conference {
         this.eventName = new ArrayList<>();
     }
 
+
     // Getters
 
     /**
@@ -80,26 +81,32 @@ public class Conference {
         return eventIds;
     }
 
+
     // Setters
 
     /**
      * Adds an Event's id to this conference's eventIds list
      * Conference Manager must ensure that two events running at the same time are not added.
-     * @param event an event that is a part of this conference.
+     * @param event an event id that is a part of this conference.
      */
-    protected void addEvent(Event event) { eventIds.add(event.getEventId());}
+    protected void addEvent(Integer event) { eventIds.add(event);}
 
     /**
      * Adds an Event's Name to this conference's eventIds list
      * Conference Manager must ensure that two events running at the same time are not added.
-     * @param event an event that is a part of this conference.
+     * @param event an event name that is a part of this conference.
      */
-    protected void addEventName(Event event) { eventName.add(event.getName());}
+    protected void addEventName(String event) { eventName.add(event);}
 
     /**
      * Removes an Event's id to this conference's eventIds list
-     * @param event an event that is no longer a part of this conference.
+     * @param event the id of the event that is no longer a part of this conference.
      */
-    protected void removeEvent(Event event) { eventIds.remove(event.getEventId());}
+    protected void removeEvent(Integer event) { eventIds.remove(event);}
 
+    /**
+     * Removes name of Event from the events in the conference list
+     * @param event name of the event that is no longer part of this conference
+     */
+    protected  void removeEventName(String event){ eventName.remove(event);}
 }

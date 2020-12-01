@@ -75,7 +75,8 @@ public class EventController implements Serializable{
                 return false;
             }
             else{
-                cm.findConference(conferenceName).addEvent(em.find_event(eventId));
+                cm.findConference(conferenceName).addEvent(eventId);
+                cm.findConference(conferenceName).addEventName(cm.findConference(conferenceName).getName());
                 return true;
             }
         }

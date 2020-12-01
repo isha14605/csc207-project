@@ -98,6 +98,10 @@ public class UserManager{
         return false; //if event not cancelled
     }
 
+    protected boolean signUpConference(Attendee attendee, String name){
+        return true;
+    }
+
 
     /**
      * @param from, the user who wants to send the message.
