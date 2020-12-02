@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Manages Events and their functionality.
@@ -82,16 +81,23 @@ public class EventManager implements Serializable {
     }
 
     /** Checks if speaker can be scheduled for a talk and a certain event.
-     * @param event event that is wanted to checked
-     * @param speaker Speaker that is being checked if they can join
-     @return  boolean - If speaker doesn't have a time conflict */
-    protected boolean can_schedule_speaker(Event event, Speaker speaker){
-        for(Integer scheduled: speaker.getTalksSpeaking()){
-            if(time_conflict(event, find_event(scheduled))){
-                return false;
-            }
-        }
-        return true;
+     * @param talk talk that you want to schedule speaker for
+     * @param speakerEmail email of the speaker you want to schedule
+     * @return  returns a boolean that indicates whether speaker can be scheduled */
+    // Ask question about checking for time_conflict
+    protected boolean can_schedule_speaker(Talk talk, String speakerEmail){
+        return !talk.getSpeakerEmail().equals(speakerEmail);
+//        if (event.eventType().equals("Talk")) {
+//            return !talk.getSpeakerEmail().equals(speakerEmail);
+//        } else if (event.eventType().equals("Panel")) {
+//
+//        }
+//        for(Integer scheduled: speaker.getTalksSpeaking()){
+//            if(time_conflict(event, find_event(scheduled))){
+//                return false;
+//            }
+//        }
+//        return true;
     }
 
 
@@ -125,6 +131,7 @@ public class EventManager implements Serializable {
         return LocalDateTime.of(date, time);
     }
 
+    //Shouldn't all of the methods below in EventManager be inside the EventController?
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
      * @param date the string representation of a date
      @return  the local date of this string*/

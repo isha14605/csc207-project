@@ -1,6 +1,5 @@
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class EventController implements Serializable{
     ConferenceManager cm = new ConferenceManager();
@@ -108,26 +107,27 @@ public class EventController implements Serializable{
      *
      * @return true if Speaker is scheduled successfully
      */
-    public boolean schedule_speaker(String speakerEmail, Integer eventId){
-        Event event = em.find_event(eventId);
-        String eventType = event.eventType();
-        Speaker s = (Speaker) um.findUser(speakerEmail);
-        if(em.can_schedule_speaker(event,s)){
-            s.addTalk(event.getEventId());
-            switch (eventType){
-                case "Panel":
-                    event.setSpeaker(speakerEmail);
-
-                case "Talk":
-                    event.setSpeaker(speakerEmail);
-
-                case "Party":
-
-            }
-            return true;
-        }
-        return false;
-    }
+    // Need to fix - Isha
+//    public boolean schedule_speaker(String speakerEmail, Integer eventId){
+//        Event event = em.find_event(eventId);
+//        String eventType = event.eventType();
+//        Speaker s = (Speaker) um.findUser(speakerEmail);
+//        if(em.can_schedule_speaker(event,s)){
+//            s.addTalk(event.getEventId());
+//            switch (eventType){
+//                case "Panel":
+//                    event.setSpeaker(speakerEmail);
+//
+//                case "Talk":
+//                    event.setSpeaker(speakerEmail);
+//
+//                case "Party":
+//
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
 
 
 }
