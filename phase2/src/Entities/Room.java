@@ -83,15 +83,15 @@ public class Room implements Serializable {
     /**
      * Adds a booking to this room. This method should be called by Entities.Room Manager
      * when a room is added to an Entities.Event after checking availability.
-     * @param event an Entities.Event object for which this room is being booked for.
+     * @param eventId Id of an Entities.Event object for which this room is being booked for.
      * @param startTime a LocalDateTime which specifies start time and event date of booking/event.
      * @param endTime a LocalDateTime which specifies end time and event date of booking/event.
      */
-    public void addBookings(Event event, LocalDateTime startTime, LocalDateTime endTime) {
+    public void addBookings(Integer eventId, LocalDateTime startTime, LocalDateTime endTime) {
         ArrayList<LocalDateTime> time = new ArrayList<LocalDateTime>();
         time.add(startTime);
         time.add(endTime);
-        this.bookings.put(event.getEventId(), time);
+        this.bookings.put(eventId, time);
     }
 
     public void addTechRequirement(String tech){

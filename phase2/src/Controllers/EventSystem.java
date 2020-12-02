@@ -103,7 +103,7 @@ public class EventSystem implements Serializable{
         }
         if(!rm.is_room_booked(room, event) && event.getEventRoom() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
-            room.addBookings(event, em.get_localDateTime(event.getEventDate(),event.getStartTime()),
+            room.addBookings(event.getEventId(), em.get_localDateTime(event.getEventDate(),event.getStartTime()),
                     em.get_localDateTime(event.getEventDate(),event.getEndTime()));
             em.writeToFile("EventSave");
         }else{
