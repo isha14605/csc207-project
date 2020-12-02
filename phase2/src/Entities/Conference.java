@@ -68,8 +68,8 @@ public class Conference {
     public LocalDate getConfDate() {return confDate;}
 
     /**
-     * Returns an arraylist that contains Integer objects that are the names of events in the conference.
-     * @return an arraylist that contains Integer objects that are the names of events in the conference.
+     * Returns an arraylist that contains String objects that are the names of events in the conference.
+     * @return an arraylist that contains String objects that are the names of events in the conference.
      */
     public ArrayList<String> getEventName() {
         return eventName;

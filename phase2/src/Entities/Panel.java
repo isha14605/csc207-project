@@ -50,9 +50,9 @@ public class Panel extends Event {
 
     /**
      * adds the email of a speaker of this panel.
-     * @param speaker a speaker of this panel.
+     * @param email is the email of a speaker of this panel.
      */
-    public void addSpeaker(Speaker speaker) {
-        speakerEmails.add(speaker.getEmail());
+    public void addSpeaker(String email) {
+        speakerEmails.add(email);
     }
 }
