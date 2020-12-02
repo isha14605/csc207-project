@@ -1,3 +1,5 @@
+package Entities;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,13 +18,13 @@ public class Room implements Serializable {
     private int roomCapacity;
     private LocalTime openTime;
     private LocalTime closeTime;
-    /* bookings is a HashMap where each key is an Event object and corresponding value is an ArrayList
+    /* bookings is a HashMap where each key is an Entities.Event object and corresponding value is an ArrayList
      * containing startTime and endTime of the event consecutively.*/
     private HashMap<Integer, ArrayList<LocalDateTime>> bookings;
 
-    // Constructor for Room
+    // Constructor for Entities.Room
     /**
-     * Creates a Room with the specified name, room capacity, room open time and room close time.
+     * Creates a Entities.Room with the specified name, room capacity, room open time and room close time.
      * @param name the name of this room
      * @param roomCapacity the capacity of this room
      * @param openTime the time when the room opens
@@ -71,28 +73,28 @@ public class Room implements Serializable {
     }
 
     /**
-     * Returns all bookings i.e. a HashMap where each key is an Event object and corresponding value is an ArrayList
+     * Returns all bookings i.e. a HashMap where each key is an Entities.Event object and corresponding value is an ArrayList
      * containing startTime and endTime of the event consecutively.
-     * @return A HashMap where each key is an Event object and corresponding value is an ArrayList containing startTime
+     * @return A HashMap where each key is an Entities.Event object and corresponding value is an ArrayList containing startTime
      * and endTime of the event consecutively.
      */
     public HashMap<Integer, ArrayList<LocalDateTime>> getBookings() {return bookings;}
 
     /**
-     * Adds a booking to this room. This method should be called by Room Manager
-     * when a room is added to an Event after checking availability.
-     * @param event an Event object for which this room is being booked for.
+     * Adds a booking to this room. This method should be called by Entities.Room Manager
+     * when a room is added to an Entities.Event after checking availability.
+     * @param event an Entities.Event object for which this room is being booked for.
      * @param startTime a LocalDateTime which specifies start time and event date of booking/event.
      * @param endTime a LocalDateTime which specifies end time and event date of booking/event.
      */
-    protected void addBookings(Event event, LocalDateTime startTime, LocalDateTime endTime) {
+    public void addBookings(Event event, LocalDateTime startTime, LocalDateTime endTime) {
         ArrayList<LocalDateTime> time = new ArrayList<LocalDateTime>();
         time.add(startTime);
         time.add(endTime);
         this.bookings.put(event.getEventId(), time);
     }
 
-    protected void addTechRequirement(String tech){
+    public void addTechRequirement(String tech){
         this.techAvailable.add(tech);
     }
 }

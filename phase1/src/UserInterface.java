@@ -14,10 +14,10 @@ class UserInterface {
             EventManager em = eventController.em;
             RoomManager rm = eventController.rm;
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
-            System.out.println("==============Organizer Interface==================" +
+            System.out.println("==============Entities.Organizer Interface==================" +
                     "\n -Add Event- enter AE-" +
-                    "\n -Create Room- enter CR-" +
-//                  "\n -Create Speaker- enter CS-" +
+                    "\n -Create Entities.Room- enter CR-" +
+//                  "\n -Create Entities.Speaker- enter CS-" +
                     "\n -Event Options- enter EO-" +
                     "\n -View Events- enter VE-" +
                     "\n -View Rooms- enter VR-" +
@@ -44,7 +44,7 @@ class UserInterface {
                     break;
 
                 case "CR":
-                    System.out.println("====Room Creator====");
+                    System.out.println("====Entities.Room Creator====");
 
                     System.out.println("What is the name of the room?");
                     String room_name = userInput.nextLine();
@@ -89,7 +89,7 @@ class UserInterface {
 
                         case "GM":
                             System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
-                                    "\n Enter Attendee for Attendees or Speaker for Speakers");
+                                    "\n Enter Entities.Attendee for Attendees or Entities.Speaker for Speakers");
                             String choice = userInput.next();
                             System.out.println("Enter the event id relevant to this message.");
                             int event = userInput.nextInt();
@@ -184,14 +184,14 @@ class UserInterface {
                     if (eventController.get_events().size() == 0) {
                         System.out.println("no events schedule to do actions! \n");
                     } else {
-                        System.out.println("-Schedule Speaker- SS");
-                        System.out.println("-Schedule Room- SR");
-//                        System.out.println("-Create Talk- enter CT");
-                        System.out.println("-Add Talk- AT");
+                        System.out.println("-Schedule Entities.Speaker- SS");
+                        System.out.println("-Schedule Entities.Room- SR");
+//                        System.out.println("-Create Entities.Talk- enter CT");
+                        System.out.println("-Add Entities.Talk- AT");
                         String event_options = userInput.nextLine();
                         switch (event_options) {
 //                            case "CT":
-//                                System.out.println("====Talk Creator====");
+//                                System.out.println("====Entities.Talk Creator====");
 //                                System.out.println("What Event Would you like to add talk to");
 //                                em.print_events();
 //                                int event_id = userInput.nextInt();
@@ -226,7 +226,7 @@ class UserInterface {
                                                 // Check that speaker can be scheduled
                                                 boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
                                                 if (check) {
-                                                    System.out.println("Speaker has been scheduled!");
+                                                    System.out.println("Entities.Speaker has been scheduled!");
                                                     flag = true;
 
                                                 } else {
@@ -278,9 +278,9 @@ class UserInterface {
                                 System.out.println("When does the talk end?");
                                 end = userInput.next();
                                 if(eventController.add_talk(start,end,event)){
-                                    System.out.println("Talk was added to Event " + event);
+                                    System.out.println("Entities.Talk was added to Event " + event);
                                 }else{
-                                    System.out.println("Talk was not added.");
+                                    System.out.println("Entities.Talk was not added.");
                                 }
                                 break;
                         }
@@ -306,7 +306,7 @@ class UserInterface {
         boolean on_page = true;
         while (on_page) {
             Scanner userInput = new Scanner(System.in);  // Create a Scanner object
-            System.out.println("==============Attendee Interface==================" +
+            System.out.println("==============Entities.Attendee Interface==================" +
                     "\n - Browse all events - type BE" +
                     "\n - Signup for events - type SU" +
                     "\n - View all events you're attending/cancel attendance at an event - type VC" +
@@ -400,7 +400,7 @@ class UserInterface {
                     }
                     break;
                 case "IB":
-                    // Five options for Attendee
+                    // Five options for Entities.Attendee
                     System.out.println("============== Inbox ==================" +
                             "\n - Send a message - SM" +
                             "\n - Add a contact - type AD" +
@@ -420,10 +420,10 @@ class UserInterface {
                                 String message = userInput.next();
                                 // Check to see if the person they want to message exists in the system
                                 if (um.checkUserExists(receiver_email)) {
-                                    // Check to see if they are allowed to message the person based on the type of User,
-                                    // by using the message method from UserManager
+                                    // Check to see if they are allowed to message the person based on the type of Entities.User,
+                                    // by using the message method from UseCase.UserManager
                                     // If the person they want to message is not in their contacts, they are added via
-                                    // the attendeeMessage method inside the message method in UserManager
+                                    // the attendeeMessage method inside the message method in UseCase.UserManager
                                     // The attendeeMessage method also handles appending the sent message to the
                                     // appropriate lists of the sender and receiver
                                     boolean flag = ms.sendAttendeeMessage(attendee, um.findUser(receiver_email), message);
@@ -432,7 +432,7 @@ class UserInterface {
                                     } else {
                                         System.out.println("Error. You do not have permission to message this person.");
                                     }
-                                } else { // Executed when the person that the Attendee wants to message does not exist
+                                } else { // Executed when the person that the Entities.Attendee wants to message does not exist
                                     System.out.println("Error. This person does not exist in our records.");
                                 }
                             }
@@ -454,7 +454,7 @@ class UserInterface {
                                     System.out.println("Error. You do not have permission to add this person or " +
                                             "this person is already in your contacts.");
                                 }
-                            } else { // Executed when the person that the Attendee wants to add does not exist
+                            } else { // Executed when the person that the Entities.Attendee wants to add does not exist
                                 System.out.println("Error. This person does not exist in our records.");
                             }
                             break;
@@ -478,7 +478,7 @@ class UserInterface {
                                 } else {
                                     System.out.println("You have no messages from this person.");
                                 }
-                            } else { // Executed when the person that the Attendee wants to add does not exist
+                            } else { // Executed when the person that the Entities.Attendee wants to add does not exist
                                 System.out.println("Error. This person does not exist in our records or they are not in your contact list.");
                             }
                             break;
@@ -513,7 +513,7 @@ class UserInterface {
 
         while (on_page) {
             Scanner userInput = new Scanner(System.in);  // Scanner
-            System.out.println("==============Speaker Interface==================" +
+            System.out.println("==============Entities.Speaker Interface==================" +
                     "\n -Browse My Talks- type BMT" +
                     "\n -Inbox- type IB" +
                     "\n -Exit- type Exit");
@@ -532,7 +532,7 @@ class UserInterface {
                 case "IB":
                     System.out.println("============== Inbox ==================" +
                             "\n - Send a Message to Attendees - enter SM" +
-                            "\n - View Messaging History and Respond to Individual Attendee- enter VMH" +
+                            "\n - View Messaging History and Respond to Individual Entities.Attendee- enter VMH" +
                             "\n - Exit - enter E");
                     String inboxOption = userInput.next();
                     switch (inboxOption) {
@@ -610,7 +610,7 @@ class UserInterface {
 
                             // Interface to respond to a message after having checked the thread of prior messages
                             if (hasMessagesFromContact) {
-                                System.out.println("Would you like to respond to this Attendee? Yes or No.");
+                                System.out.println("Would you like to respond to this Entities.Attendee? Yes or No.");
                                 String respondDecision = userInput.next();
                                 switch (respondDecision) {
                                     case "Yes":
@@ -666,9 +666,9 @@ class UserInterface {
                     if (usertype == 'O') {
                         System.out.println("-Organiser Options- OO");
                     } else if (usertype == 'A') {
-                        System.out.println("-Attendee Options - AO");
+                        System.out.println("-Entities.Attendee Options - AO");
                     } else if (usertype == 'S') {
-                        System.out.println("-Speaker Options - SO");
+                        System.out.println("-Entities.Speaker Options - SO");
                     }
                     System.out.println("-Log Out- LO");
                     String option = userInput.next();

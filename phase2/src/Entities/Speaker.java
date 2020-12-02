@@ -1,3 +1,5 @@
+package Entities;
+
 import java.util.ArrayList;
 
 /**
@@ -8,7 +10,7 @@ import java.util.ArrayList;
  */
 
 public class Speaker extends User{
-    private ArrayList<Talk> talksSpeaking;
+    private ArrayList<Integer> talksSpeaking;
 
     /**
      * Creates a Entities.Speaker with the provided name, password, and email.
@@ -17,9 +19,9 @@ public class Speaker extends User{
      * @param email the email of this Entities.Speaker.
      */
     // Constructor Method for Entities.Speaker
-    Speaker(String name, String password, String email) {
+    public Speaker(String name, String password, String email) {
         super(name, password, email);
-        this.talksSpeaking = new ArrayList<Talk>();
+        this.talksSpeaking = new ArrayList<Integer>();
     }
 
     /**
@@ -28,7 +30,7 @@ public class Speaker extends User{
      * @see Talk
      */
     // Getter: Retrieves a List of Talks that the Entities.Speaker is talking at.
-    public ArrayList<Talk> getTalksSpeaking(){
+    public ArrayList<Integer> getTalksSpeaking(){
         return this.talksSpeaking;
     }
 
@@ -38,7 +40,7 @@ public class Speaker extends User{
      * @see Talk
      */
     // Setter: Add a talk that this Entities.Speaker is talking at to the list talks_speaking.
-    protected void addTalk(Talk talk){
+    public void addTalk(Integer talk){
         this.talksSpeaking.add(talk);
     }
 
@@ -46,7 +48,7 @@ public class Speaker extends User{
      * Returns a string that represents the type of Entities.User this object is, eg. S for Entities.Speaker.
      * @return a string representing the type of Entities.User this object is
      */
-    protected char userType(){
+    public char userType(){
         return 'S';
     }
 }

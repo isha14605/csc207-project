@@ -35,7 +35,7 @@ public class RoomManager implements Serializable {
 
     /** Finds and returns room by getting the name
      * @param name name of the room
-     * @return returns the Room if it exists returns null if room doesn't exist*/
+     * @return returns the Entities.Room if it exists returns null if room doesn't exist*/
     protected Room find_room(String name){
         for(Room room: rooms){
             if(room.getName().equals(name)){
@@ -80,7 +80,7 @@ public class RoomManager implements Serializable {
      * @param room
      * @return String representation of the room*/
     protected String roomToString(Room room){
-        return "Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
+        return "Entities.Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
                 + room.getCloseTime() + "\n";
     }
 

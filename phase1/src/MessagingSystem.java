@@ -52,9 +52,9 @@ public class MessagingSystem {
 
 
     /**
-     * Sends an Attendee message
-     * @param from the User sending the message
-     * @param to the User receiving the message
+     * Sends an Entities.Attendee message
+     * @param from the Entities.User sending the message
+     * @param to the Entities.User receiving the message
      * @param message content of the message to be sent
      * @return true if the message was sent successfully
      */
@@ -64,8 +64,8 @@ public class MessagingSystem {
 
 
     /**
-     * Sends a Speaker message to all Users signed up for an event
-     * @param from the Speaker sending the message
+     * Sends a Entities.Speaker message to all Users signed up for an event
+     * @param from the Entities.Speaker sending the message
      * @param event_name name of the event whose users are being messaged
      * @param message content of the message to be sent
      */
@@ -77,20 +77,20 @@ public class MessagingSystem {
 
 
     /**
-     * Sends an Organizer message to all the Speakers or all the Attendees signed up for an event
-     * @param from the Organizer sending the message
+     * Sends an Entities.Organizer message to all the Speakers or all the Attendees signed up for an event
+     * @param from the Entities.Organizer sending the message
      * @param to type of the Users receiving the message
      * @param event_id id of the event whose users are being messaged
      * @param message content of the message to be sent
      */
     public void sendMessageOrganizer(Organizer from, String to, int event_id, String message) {
-        if (to.equals("Attendee")){
+        if (to.equals("Entities.Attendee")){
             Event event = em.find_event(event_id);
             for(Attendee a: event.getAttendees()){
                 um.message(from, a, message);
             }
 
-        } else if (to.equals("Speaker")) {
+        } else if (to.equals("Entities.Speaker")) {
             Event event = em.find_event(event_id);
             ArrayList<Talk> talks = new ArrayList<Talk>();
             for (Talk t: event.getTalks()){

@@ -25,7 +25,7 @@ public class Event implements Serializable {
     // Constructor for Event
     /**
      * Creates an Event with the specified name, description, start time, end time and date of event.
-     * @param name the name of the specified User
+     * @param name the name of the specified Entities.User
      * @param eventDescription the description of the event
      * @param startTime the time when the event starts
      * @param endTime the time when the event ends
@@ -89,20 +89,20 @@ public class Event implements Serializable {
     public LocalDate getEventDate() {return eventDate;}
 
     /**
-     * Returns an ArrayList of Attendee objects who are attending this event.
-     * @return an ArrayList of Attendee objects who are attending this event.
+     * Returns an ArrayList of Entities.Attendee objects who are attending this event.
+     * @return an ArrayList of Entities.Attendee objects who are attending this event.
      */
     public ArrayList<Attendee> getAttendees() {return attendees;}
 
     /**
-     * Returns an ArrayList of Organizer objects who are organizing this event.
-     * @return an ArrayList of Organizer objects who are organizing this event.
+     * Returns an ArrayList of Entities.Organizer objects who are organizing this event.
+     * @return an ArrayList of Entities.Organizer objects who are organizing this event.
      */
     public ArrayList<Organizer> getOrganizers() {return organizers;}
 
     /**
-     * Returns an ArrayList of Talk objects that are included in this event.
-     * @return an ArrayList of Talk objects that are included in this event.
+     * Returns an ArrayList of Entities.Talk objects that are included in this event.
+     * @return an ArrayList of Entities.Talk objects that are included in this event.
      */
     public ArrayList<Talk> getTalks() {return talks;}
 
@@ -113,8 +113,8 @@ public class Event implements Serializable {
     public Room getEventRoom() {return eventRoom;}
 
     /**
-     * Returns an ArrayList of Speaker objects that are speaking in talks of this event.
-     * @return an ArrayList of Speaker objects that are speaking in talks of this event.
+     * Returns an ArrayList of Entities.Speaker objects that are speaking in talks of this event.
+     * @return an ArrayList of Entities.Speaker objects that are speaking in talks of this event.
      */
     public ArrayList<Speaker> getSpeakers() {
         ArrayList<Speaker> x = new ArrayList<Speaker>();
@@ -128,14 +128,14 @@ public class Event implements Serializable {
 
     /**
      * sets the designated room for this event.
-     * Should be called by RoomManager. RoomManager will be responsible for checking room availability and booking
+     * Should be called by UseCase.RoomManager. UseCase.RoomManager will be responsible for checking room availability and booking
      * the room for required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
      * @param room the room for this event.
      */
     protected void setEventRoom(Room room) {this.eventRoom = room;}
 
     /**
-     * Adds an Attendee object to this event
+     * Adds an Entities.Attendee object to this event
      * @param attendee an attendee that will attend this event.
      */
     protected void addAttendee(Attendee attendee) {
@@ -143,7 +143,7 @@ public class Event implements Serializable {
     }
 
     /**
-     * Removes an Attendee object from this event
+     * Removes an Entities.Attendee object from this event
      * @param attendee an attendee that will no longer attend this event.
      */
     protected void removeAttendee(Attendee attendee) {
@@ -151,15 +151,15 @@ public class Event implements Serializable {
     }
 
     /**
-     * Adds an Organizer object to this event
-     * @param organizer an Organizer that will organize this event.
+     * Adds an Entities.Organizer object to this event
+     * @param organizer an Entities.Organizer that will organize this event.
      */
     protected void addOrganizer(Organizer organizer) {
         organizers.add(organizer);
     }
 
     /**
-     * Adds a Talk object to this event
+     * Adds a Entities.Talk object to this event
      * @param talk a talk that will be included in this event.
      */
     protected void addTalk(Talk talk) {

@@ -1,3 +1,5 @@
+package Entities;
+
 import java.util.ArrayList;
 
 /**
@@ -8,8 +10,8 @@ import java.util.ArrayList;
  * @see User
  */
 
-public class Organizer extends Attendee {
-    protected ArrayList<Event> eventsOrganizing;
+public class Organizer extends User {
+    private ArrayList<Integer> eventsOrganizing;
 
     // Constructor method for Entities.Organizer
     /**
@@ -19,9 +21,9 @@ public class Organizer extends Attendee {
      * @param email the email of the Entities.Organizer
      * @param password the password of the Entities.Organizer
      */
-    Organizer(String name, String password, String email) {
+    public Organizer(String name, String password, String email) {
         super(name, password, email);
-        this.eventsOrganizing = new ArrayList<Event>();
+        this.eventsOrganizing = new ArrayList<Integer>();
     }
 
     // Getters
@@ -29,7 +31,7 @@ public class Organizer extends Attendee {
      * Returns a string that represents the type of Entities.User this object is, eg. O for Entities.Organizer.
      * @return a string representing the type of Entities.User this object is
      */
-    protected char userType(){
+    public char userType(){
         return 'O';
     }
 
@@ -38,7 +40,7 @@ public class Organizer extends Attendee {
      * @return a list of all Events that the Entities.Organizer is organizing.
      * @see Event
      */
-    public ArrayList<Event> getEventsOrganizing() {
+    public ArrayList<Integer> getEventsOrganizing() {
         return eventsOrganizing;
     }
 
@@ -48,7 +50,7 @@ public class Organizer extends Attendee {
      * @param event the Event that the Entities.Organizer is to be organizing.
      * @see Event
      */
-    protected void addEvent(Event event) {
+    public void addEvent(Integer event) {
         this.eventsOrganizing.add(event);
     }
 

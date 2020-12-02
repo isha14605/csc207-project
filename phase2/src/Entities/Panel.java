@@ -1,21 +1,23 @@
+package Entities;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Panel extends Event{
+public class Panel extends Event {
     private ArrayList<String> speakerEmails;
 
     /**
-     * Creates a Panel event with the specified name, description, start time, end time, date of event, event capacity
-     * and indicator if the event is VIP only. A Panel can have multiple speakers.
+     * Creates a Entities.Panel event with the specified name, description, start time, end time, date of event, event capacity
+     * and indicator if the event is Entities.VIP only. A Entities.Panel can have multiple speakers.
      *
-     * @param name             the name of the specified User
+     * @param name             the name of the specified Entities.User
      * @param eventDescription the description of the event
      * @param startTime        the time when the event starts
      * @param endTime          the time when the event ends
      * @param eventDate        the date when the event is happening
      * @param attendeeCapacity the maximum number of attendees that can participate in the event
-     * @param vipOnly          indicates if  the event is only for VIP attendees or not
+     * @param vipOnly          indicates if  the event is only for Entities.VIP attendees or not
      */
     public Panel(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate,
                  int attendeeCapacity, boolean vipOnly) {
@@ -24,12 +26,12 @@ public class Panel extends Event{
     }
 
     @Override
-    protected String eventType() {
-        return "Panel";
+    public String eventType() {
+        return "Entities.Panel";
     }
 
     @Override
-    protected void setSpeaker(String  speakerEmail) {
+    public void setSpeaker(String  speakerEmail) {
         if(this.speakerEmails.contains(speakerEmail)) {
             this.speakerEmails.add(speakerEmail);
         }

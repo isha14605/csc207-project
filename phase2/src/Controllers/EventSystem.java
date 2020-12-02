@@ -1,7 +1,16 @@
+package Controllers;
+
+import Entities.Event;
+import Entities.Room;
+import UseCase.ConferenceManager;
+import UseCase.EventManager;
+import UseCase.RoomManager;
+import UseCase.UserManager;
+
 import java.io.IOException;
 import java.io.Serializable;
 
-public class EventController implements Serializable{
+public class EventSystem implements Serializable{
     ConferenceManager cm = new ConferenceManager();
     EventManager em = new EventManager();
     RoomManager rm = new RoomManager(em);
@@ -10,7 +19,7 @@ public class EventController implements Serializable{
     /**
      * EventController Constructor
      */
-    public EventController() throws ClassNotFoundException, IOException {
+    public EventSystem() throws ClassNotFoundException, IOException {
         rm = rm.readFile("RoomSave.ser");
 
     }
@@ -24,7 +33,7 @@ public class EventController implements Serializable{
     }
 
     /**
-     * Adds Event according to given parameters
+     * Adds Entities.Event according to given parameters
      * @param name the name of the event
      * @param description description of the event
      * @param start start time of the event
@@ -64,7 +73,7 @@ public class EventController implements Serializable{
 
 
     /**
-     * Adds Talk to an existing Event
+     * Adds Entities.Talk to an existing Entities.Event
      *
      * @return true if talk is added successfully
      */
@@ -83,13 +92,13 @@ public class EventController implements Serializable{
     }
 
     /**
-     * Schedules a Room for an existing Event
+     * Schedules a Entities.Room for an existing Entities.Event
      */
     public void schedule_room(String room_name, Integer eventId) throws IOException {
         Event event = em.find_event(eventId);
         Room room = rm.find_room(room_name);
         if(room == null){
-            System.out.println("Room doesn't exit");
+            System.out.println("Entities.Room doesn't exit");
             return;
         }
         if(!rm.is_room_booked(room, event) && event.getEventRoom() == null && rm.can_fit_event(event,room)){
@@ -98,36 +107,36 @@ public class EventController implements Serializable{
                     em.get_localDateTime(event.getEventDate(),event.getEndTime()));
             em.writeToFile("EventSave");
         }else{
-            System.out.println("Room not scheduled due to time conflict");
+            System.out.println("Entities.Room not scheduled due to time conflict");
         }
     }
 
     /**
-     * Schedules a Speaker for an existing Event
+     * Schedules a Entities.Speaker for an existing Entities.Event
      *
-     * @return true if Speaker is scheduled successfully
+     * @return true if Entities.Speaker is scheduled successfully
      */
     // Need to fix - Isha
-//    public boolean schedule_speaker(String speakerEmail, Integer eventId){
-//        Event event = em.find_event(eventId);
-//        String eventType = event.eventType();
-//        Speaker s = (Speaker) um.findUser(speakerEmail);
-//        if(em.can_schedule_speaker(event,s)){
-//            s.addTalk(event.getEventId());
-//            switch (eventType){
-//                case "Panel":
-//                    event.setSpeaker(speakerEmail);
-//
-//                case "Talk":
-//                    event.setSpeaker(speakerEmail);
-//
-//                case "Party":
-//
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
+    public boolean schedule_speaker(String speakerEmail, Integer eventId){
+        Entities.Event event = em.find_event(eventId);
+        String eventType = event.eventType();
+        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
+        if(em.can_schedule_speaker(event,speakerEmail)){
+            s.addTalk(event.getEventId());
+            switch (eventType){
+                case "Entities.Panel":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Talk":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Party":
+
+            }
+            return true;
+        }
+        return false;
+    }
 
 
 }

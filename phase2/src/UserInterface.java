@@ -5,20 +5,20 @@
 //
 //class UserInterface {
 //
-//    public static void OrganizerInterface(EventController eventController, UserManager um,
-//                                          MessagingSystem ms, String email) throws IOException {
-//        Organizer organizer = (Organizer) um.findUser(email);
+//    public static void OrganizerInterface(EventController eventController, UseCase.UserManager um,
+//                                          Controllers.MessagingSystem ms, String email) throws IOException {
+//        Entities.Organizer organizer = (Entities.Organizer) um.findUser(email);
 //
 //        boolean on_page = true;
 //        while (on_page) {
-//            EventManager em = eventController.em;
-//            RoomManager rm = eventController.rm;
+//            UseCase.EventManager em = eventController.em;
+//            UseCase.RoomManager rm = eventController.rm;
 //            Scanner userInput = new Scanner(System.in);  // Create a Scanner object
-//            System.out.println("==============Organizer Interface==================" +
-//                    "\n -Add Event- enter AE-" +
-//                    "\n -Create Room- enter CR-" +
-////                  "\n -Create Speaker- enter CS-" +
-//                    "\n -Event Options- enter EO-" +
+//            System.out.println("==============Entities.Organizer Interface==================" +
+//                    "\n -Add Entities.Event- enter AE-" +
+//                    "\n -Create Entities.Room- enter CR-" +
+////                  "\n -Create Entities.Speaker- enter CS-" +
+//                    "\n -Entities.Event Options- enter EO-" +
 //                    "\n -View Events- enter VE-" +
 //                    "\n -View Rooms- enter VR-" +
 //                    "\n -Inbox- enter IB" +
@@ -28,7 +28,7 @@
 //            switch (option) {
 //
 //                case "AE":
-//                    System.out.println("====Event Creator====");
+//                    System.out.println("====Entities.Event Creator====");
 //                    System.out.println("What is the name of the event?");
 //                    String name = userInput.nextLine();
 //                    System.out.println("What is the description?");
@@ -44,7 +44,7 @@
 //                    break;
 //
 //                case "CR":
-//                    System.out.println("====Room Creator====");
+//                    System.out.println("====Entities.Room Creator====");
 //
 //                    System.out.println("What is the name of the room?");
 //                    String room_name = userInput.nextLine();
@@ -89,7 +89,7 @@
 //
 //                        case "GM":
 //                            System.out.println("Would you like to send a message to all Attendees or to all Speakers?" +
-//                                    "\n Enter Attendee for Attendees or Speaker for Speakers");
+//                                    "\n Enter Entities.Attendee for Attendees or Entities.Speaker for Speakers");
 //                            String choice = userInput.next();
 //                            System.out.println("Enter the event id relevant to this message.");
 //                            int event = userInput.nextInt();
@@ -147,7 +147,7 @@
 //                        case "CO":
 //                            if (!(organizer.contacts.size() == 0)) {
 //                                System.out.println("====Contacts====");
-//                                for (User c: organizer.contacts) {
+//                                for (Entities.User c: organizer.contacts) {
 //                                    System.out.println(c.name);
 //                                }
 //                            } else {
@@ -170,8 +170,8 @@
 //                    }
 //                    break;
 //                case "VR":
-//                    RoomManager roomManager = new RoomManager();
-//                    for (Room room : eventController.get_rooms()) {
+//                    UseCase.RoomManager roomManager = new UseCase.RoomManager();
+//                    for (Entities.Room room : eventController.get_rooms()) {
 //                        System.out.println(roomManager.roomToString(room));
 //                    }
 //                    if (eventController.get_rooms().size() == 0) {
@@ -180,23 +180,23 @@
 //                    break;
 //
 //                case "EO":
-//                    System.out.println("====Event Options====");
+//                    System.out.println("====Entities.Event Options====");
 //                    if (eventController.get_events().size() == 0) {
 //                        System.out.println("no events schedule to do actions! \n");
 //                    } else {
-//                        System.out.println("-Schedule Speaker- SS");
-//                        System.out.println("-Schedule Room- SR");
-////                        System.out.println("-Create Talk- enter CT");
-//                        System.out.println("-Add Talk- AT");
+//                        System.out.println("-Schedule Entities.Speaker- SS");
+//                        System.out.println("-Schedule Entities.Room- SR");
+////                        System.out.println("-Create Entities.Talk- enter CT");
+//                        System.out.println("-Add Entities.Talk- AT");
 //                        String event_options = userInput.nextLine();
 //                        switch (event_options) {
 ////                            case "CT":
-////                                System.out.println("====Talk Creator====");
-////                                System.out.println("What Event Would you like to add talk to");
+////                                System.out.println("====Entities.Talk Creator====");
+////                                System.out.println("What Entities.Event Would you like to add talk to");
 ////                                em.print_events();
 ////                                int event_id = userInput.nextInt();
 ////                                if (em.find_event(event_id).getEventRoom() == null) {
-////                                    System.out.println("Event needs to be scheduled a room before" +
+////                                    System.out.println("Entities.Event needs to be scheduled a room before" +
 ////                                            "talks can be added");
 ////                                } else {
 ////                                    System.out.println("When does the talk start");
@@ -221,12 +221,12 @@
 //                                    System.out.println("No such speaker found!");
 //                                } else{
 //                                    if (!(em.find_event(eventID).getTalks().size() == 0)) {
-//                                        for (Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
+//                                        for (Entities.Talk talk: em.find_event(eventID).getTalks()) { // Check that event has talk
 //                                            if (talk.getId() == talkID && um.checkUserExists(speaker)) {
 //                                                // Check that speaker can be scheduled
-//                                                boolean check = eventController.schedule_speaker((Speaker) um.findUser(speaker), talk, em.find_event(eventID));
+//                                                boolean check = eventController.schedule_speaker((Entities.Speaker) um.findUser(speaker), talk, em.find_event(eventID));
 //                                                if (check) {
-//                                                    System.out.println("Speaker has been scheduled!");
+//                                                    System.out.println("Entities.Speaker has been scheduled!");
 //                                                    flag = true;
 //
 //                                                } else {
@@ -257,14 +257,14 @@
 //                                    int id = userInput.nextInt();
 //                                    if(em.event_exist(id)){
 //                                        System.out.println("What room what do you want to schedule?");
-//                                        for (Room room : eventController.get_rooms()) {
+//                                        for (Entities.Room room : eventController.get_rooms()) {
 //                                            System.out.println(rm.roomToString(room));
 //                                        }
 //                                        room_name = userInput.next();
 //
 //                                        eventController.schedule_room(room_name, id);
 //                                    }else{
-//                                        System.out.println("Event does not exist.");
+//                                        System.out.println("Entities.Event does not exist.");
 //                                    }
 //                                }
 //                                break;
@@ -278,9 +278,9 @@
 //                                System.out.println("When does the talk end?");
 //                                end = userInput.next();
 //                                if(eventController.add_talk(start,end,event)){
-//                                    System.out.println("Talk was added to Event " + event);
+//                                    System.out.println("Entities.Talk was added to Entities.Event " + event);
 //                                }else{
-//                                    System.out.println("Talk was not added.");
+//                                    System.out.println("Entities.Talk was not added.");
 //                                }
 //                                break;
 //                        }
@@ -299,14 +299,14 @@
 //    }
 //
 //
-//    public static void AttendeeInterface(SignUpSystem signUpSystem, EventManager eventManager, EventController ec,
-//                                         UserManager um, MessagingSystem ms, String email) {
-//        Attendee attendee = (Attendee) um.findUser(email);
+//    public static void AttendeeInterface(Controllers.SignUpSystem signUpSystem, UseCase.EventManager eventManager, EventController ec,
+//                                         UseCase.UserManager um, Controllers.MessagingSystem ms, String email) {
+//        Entities.Attendee attendee = (Entities.Attendee) um.findUser(email);
 //
 //        boolean on_page = true;
 //        while (on_page) {
 //            Scanner userInput = new Scanner(System.in);  // Create a Scanner object
-//            System.out.println("==============Attendee Interface==================" +
+//            System.out.println("==============Entities.Attendee Interface==================" +
 //                    "\n - Browse all events - type BE" +
 //                    "\n - Signup for events - type SU" +
 //                    "\n - View all events you're attending/cancel attendance at an event - type VC" +
@@ -316,10 +316,10 @@
 //            switch (option) {
 //                case "BE":
 //                    if (ec.get_events().size() == 0) {
-//                        System.out.println("===== Event Browser =====" +
+//                        System.out.println("===== Entities.Event Browser =====" +
 //                                "\nNo events have been scheduled. Cannot perform this action.");
 //                    } else {
-//                        System.out.println("===== Event Browser =====");
+//                        System.out.println("===== Entities.Event Browser =====");
 //                        System.out.println("Which date would you like to see events for?");
 //                        String date = userInput.next();
 //                        LocalDate dateF = eventManager.date_formatting_date(date);
@@ -330,8 +330,8 @@
 ////                        String end = userInput.next();
 ////                      System.out.println("And end time");
 ////                        LocalTime endF = eventManager.date_formatting_time(end);
-//                        ArrayList<Event> browsed = signUpSystem.browseEvents(ec.em, dateF);
-//                        for (Event event : browsed) {
+//                        ArrayList<Entities.Event> browsed = signUpSystem.browseEvents(ec.em, dateF);
+//                        for (Entities.Event event : browsed) {
 //                            System.out.println(eventManager.eventToString(event));
 //                        }
 //                    }
@@ -339,12 +339,12 @@
 //
 //                case "SU":
 //                    if (ec.get_events().size() == 0) {
-//                        System.out.println("===== Event Browser =====" +
+//                        System.out.println("===== Entities.Event Browser =====" +
 //                                "\nNo events have been scheduled. Cannot perform this action.");
 //                    } else {
-//                        System.out.println("===== Event Sign Up =====");
+//                        System.out.println("===== Entities.Event Sign Up =====");
 //
-//                        for (Event scheduled : ec.get_events()) {
+//                        for (Entities.Event scheduled : ec.get_events()) {
 //                            System.out.println(eventManager.eventToString(scheduled));
 //                        }
 //                        System.out.println("Enter the event id of the event you want to join.");
@@ -354,7 +354,7 @@
 //                            System.out.println("Invalid id! Please try again.");
 //                            event_id = userInput.nextInt();
 //                        }
-//                        Event event = ec.em.find_event(event_id);
+//                        Entities.Event event = ec.em.find_event(event_id);
 //                        if(event.getEventRoom() == null){
 //                            System.out.println("Sorry, the event hasn't been assigned a room. Unable to join.\n");
 //                            break;
@@ -373,8 +373,8 @@
 //                        System.out.println("You are not signed up for any events.");
 //                    } else {
 //                        System.out.println("Here is a list of events you are signed up for:");
-//                        for (Event attending: attendee.getEventsAttending()) {
-//                            System.out.println("Event Name: " + attending.getName() + " Event ID: " + attending.getEventId());
+//                        for (Entities.Event attending: attendee.getEventsAttending()) {
+//                            System.out.println("Entities.Event Name: " + attending.getName() + " Entities.Event ID: " + attending.getEventId());
 //                        }
 //                        System.out.println("Would you like to cancel attendance at an event? Type Yes or No.");
 //                        String toCancel = userInput.next();
@@ -382,8 +382,8 @@
 //                        if (toCancel.equals("Yes")) {
 //                            System.out.println("What event would you like to cancel attendance for? Type the ID.");
 //                            String eventID = userInput.next();
-//                            ArrayList<Event> attending_copy = new ArrayList<Event>(attendee.getEventsAttending());
-//                            for (Event attending: attending_copy){
+//                            ArrayList<Entities.Event> attending_copy = new ArrayList<Entities.Event>(attendee.getEventsAttending());
+//                            for (Entities.Event attending: attending_copy){
 //                                if (attending.getEventId() == Integer.parseInt(eventID)) {
 //                                    um.cancelRegistration(attendee, attending);
 //                                    cancelled = true;
@@ -400,7 +400,7 @@
 //                    }
 //                    break;
 //                case "IB":
-//                    // Five options for Attendee
+//                    // Five options for Entities.Attendee
 //                    System.out.println("============== Inbox ==================" +
 //                            "\n - Send a message - SM" +
 //                            "\n - Add a contact - type AD" +
@@ -420,10 +420,10 @@
 //                                String message = userInput.next();
 //                                // Check to see if the person they want to message exists in the system
 //                                if (um.checkUserExists(receiver_email)) {
-//                                    // Check to see if they are allowed to message the person based on the type of User,
-//                                    // by using the message method from UserManager
+//                                    // Check to see if they are allowed to message the person based on the type of Entities.User,
+//                                    // by using the message method from UseCase.UserManager
 //                                    // If the person they want to message is not in their contacts, they are added via
-//                                    // the attendeeMessage method inside the message method in UserManager
+//                                    // the attendeeMessage method inside the message method in UseCase.UserManager
 //                                    // The attendeeMessage method also handles appending the sent message to the
 //                                    // appropriate lists of the sender and receiver
 //                                    boolean flag = ms.sendAttendeeMessage(attendee, um.findUser(receiver_email), message);
@@ -432,7 +432,7 @@
 //                                    } else {
 //                                        System.out.println("Error. You do not have permission to message this person.");
 //                                    }
-//                                } else { // Executed when the person that the Attendee wants to message does not exist
+//                                } else { // Executed when the person that the Entities.Attendee wants to message does not exist
 //                                    System.out.println("Error. This person does not exist in our records.");
 //                                }
 //                            }
@@ -454,7 +454,7 @@
 //                                    System.out.println("Error. You do not have permission to add this person or " +
 //                                            "this person is already in your contacts.");
 //                                }
-//                            } else { // Executed when the person that the Attendee wants to add does not exist
+//                            } else { // Executed when the person that the Entities.Attendee wants to add does not exist
 //                                System.out.println("Error. This person does not exist in our records.");
 //                            }
 //                            break;
@@ -478,7 +478,7 @@
 //                                } else {
 //                                    System.out.println("You have no messages from this person.");
 //                                }
-//                            } else { // Executed when the person that the Attendee wants to add does not exist
+//                            } else { // Executed when the person that the Entities.Attendee wants to add does not exist
 //                                System.out.println("Error. This person does not exist in our records or they are not in your contact list.");
 //                            }
 //                            break;
@@ -487,7 +487,7 @@
 //                            if (!(attendee.contacts.size() == 0)) {
 //                                System.out.println("============== Your Contacts ==================");
 //                                // Loop through their contacts list and print out the names of each of their contacts
-//                                for (User c: attendee.contacts) {
+//                                for (Entities.User c: attendee.contacts) {
 //                                    System.out.println(c.name);
 //                                }
 //                            } else {
@@ -504,16 +504,16 @@
 //        }
 //    }
 //
-//    public static void SpeakerInterface(SignUpSystem signUpSystem, EventManager eventManager, TalkManager tm, EventController ec,
-//                                        UserManager um, MessagingSystem ms, String email) {
-//        UserManager userManager = new UserManager();
+//    public static void SpeakerInterface(Controllers.SignUpSystem signUpSystem, UseCase.EventManager eventManager, TalkManager tm, EventController ec,
+//                                        UseCase.UserManager um, Controllers.MessagingSystem ms, String email) {
+//        UseCase.UserManager userManager = new UseCase.UserManager();
 //
-//        Speaker speaker = (Speaker) um.findUser(email);
+//        Entities.Speaker speaker = (Entities.Speaker) um.findUser(email);
 //        boolean on_page = true;
 //
 //        while (on_page) {
 //            Scanner userInput = new Scanner(System.in);  // Scanner
-//            System.out.println("==============Speaker Interface==================" +
+//            System.out.println("==============Entities.Speaker Interface==================" +
 //                    "\n -Browse My Talks- type BMT" +
 //                    "\n -Inbox- type IB" +
 //                    "\n -Exit- type Exit");
@@ -532,7 +532,7 @@
 //                case "IB":
 //                    System.out.println("============== Inbox ==================" +
 //                            "\n - Send a Message to Attendees - enter SM" +
-//                            "\n - View Messaging History and Respond to Individual Attendee- enter VMH" +
+//                            "\n - View Messaging History and Respond to Individual Entities.Attendee- enter VMH" +
 //                            "\n - Exit - enter E");
 //                    String inboxOption = userInput.next();
 //                    switch (inboxOption) {
@@ -548,7 +548,7 @@
 //
 //                            if (numberOfTalks > 0) {
 //                                ArrayList<Integer> speakersEvents = new ArrayList<>();
-//                                for (Talk speakerTalk: speaker.getTalksSpeaking()) {
+//                                for (Entities.Talk speakerTalk: speaker.getTalksSpeaking()) {
 //                                    speakersEvents.add(speakerTalk.getEvent().getEventId());
 //                                    tm.toString(speakerTalk);
 //                                }
@@ -610,7 +610,7 @@
 //
 //                            // Interface to respond to a message after having checked the thread of prior messages
 //                            if (hasMessagesFromContact) {
-//                                System.out.println("Would you like to respond to this Attendee? Yes or No.");
+//                                System.out.println("Would you like to respond to this Entities.Attendee? Yes or No.");
 //                                String respondDecision = userInput.next();
 //                                switch (respondDecision) {
 //                                    case "Yes":
@@ -636,13 +636,13 @@
 //
 //    public static void LoginInterface() throws ClassNotFoundException, IOException {
 //
-//        UserManager userManager = new UserManager();
+//        UseCase.UserManager userManager = new UseCase.UserManager();
 //        LoginController loginSystem = new LoginController();
 //        EventController ec = new EventController();
-//        SignUpSystem su = new SignUpSystem();
-//        MessagingSystem ms = new MessagingSystem();
+//        Controllers.SignUpSystem su = new Controllers.SignUpSystem();
+//        Controllers.MessagingSystem ms = new Controllers.MessagingSystem();
 //        Scanner userInput = new Scanner(System.in);
-//        EventManager em = new EventManager();
+//        UseCase.EventManager em = new UseCase.EventManager();
 //        TalkManager tm = new TalkManager();
 //        boolean signed_in = false;
 //
@@ -666,9 +666,9 @@
 //                    if (usertype == 'O') {
 //                        System.out.println("-Organiser Options- OO");
 //                    } else if (usertype == 'A') {
-//                        System.out.println("-Attendee Options - AO");
+//                        System.out.println("-Entities.Attendee Options - AO");
 //                    } else if (usertype == 'S') {
-//                        System.out.println("-Speaker Options - SO");
+//                        System.out.println("-Entities.Speaker Options - SO");
 //                    }
 //                    System.out.println("-Log Out- LO");
 //                    String option = userInput.next();

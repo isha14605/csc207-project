@@ -47,7 +47,7 @@ public class ConferenceServer {
         try {
             while (true) {
                 Socket socket = serverSocket.accept();
-                System.out.println("User establishes connection!");
+                System.out.println("Entities.User establishes connection!");
 
                 UserThread userThread = new UserThread(socket);
                 userThread.start();

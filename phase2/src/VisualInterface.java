@@ -1,3 +1,5 @@
+import Controllers.EventSystem;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -19,11 +21,11 @@ class Test {
             Border border = BorderFactory.createLineBorder(Color.darkGray, 2);
 
             //Window set up
-            f.setTitle("Event Interface System 1.0");
+            f.setTitle("Entities.Event Interface System 1.0");
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             f.setResizable(true);
             f.setSize(500, 140);
-            JLabel l = new JLabel("Welcome to the Event Systems");
+            JLabel l = new JLabel("Welcome to the Entities.Event Systems");
             f.setLayout(null);
 
             //title setup
@@ -36,7 +38,7 @@ class Test {
             //--------Login in----------------
 
             //user text in box
-            JLabel userNameT = new JLabel("User Name:");
+            JLabel userNameT = new JLabel("Entities.User Name:");
             userNameT.setBounds(25, 25, 100, 25);
             f.add(userNameT);
 
@@ -68,7 +70,7 @@ class Test {
             if (e.getSource() == loginButton) {
                 System.out.println(userNameI.getText());
                 System.out.println(passwordI.getPassword());
-                LoginSystem ls = new LoginSystem(new UserManager());
+                // Controllers.LoginSystem ls = new Controllers.LoginSystem(new UseCase.UserManager());
                 f.setVisible(false);
                 new OrganizerScreen();
             }
@@ -84,11 +86,11 @@ class Test {
 
 
             //Window set up
-            f.setTitle("Event Interface System 1.0");
+            f.setTitle("Entities.Event Interface System 1.0");
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             f.setResizable(true);
             f.setSize(500, 380);
-            JLabel l = new JLabel("Event Control Systems");
+            JLabel l = new JLabel("Entities.Event Control Systems");
             f.setLayout(null);
 
             //title setup
@@ -97,10 +99,10 @@ class Test {
             f.add(l);
             l.setBounds(0, 0, 500, 300);
 
-            aeButton = new JButton("Add Event");
-            crButton = new JButton("Create Room");
-            csButton = new JButton("Create Speaker");
-            eoButton = new JButton("Event Options");
+            aeButton = new JButton("Add Entities.Event");
+            crButton = new JButton("Create Entities.Room");
+            csButton = new JButton("Create Entities.Speaker");
+            eoButton = new JButton("Entities.Event Options");
             veButton = new JButton("View Events");
             vrButton = new JButton("View Rooms");
             ibButton = new JButton("Inbox");
@@ -182,11 +184,11 @@ class Test {
 
         AddEvent(OrganizerScreen organizerScreen) {
             os = organizerScreen;
-            ae.setTitle("Event Interface System 1.0");
+            ae.setTitle("Entities.Event Interface System 1.0");
             ae.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             ae.setResizable(true);
             ae.setSize(500, 380);
-            JLabel l = new JLabel("Event Creator");
+            JLabel l = new JLabel("Entities.Event Creator");
             ae.setLayout(null);
 
             l.setHorizontalAlignment(JLabel.CENTER);
@@ -194,9 +196,9 @@ class Test {
             ae.add(l);
             l.setBounds(0, 0, 500, 300);
 
-            JLabel eventName = new JLabel("Event Name");
+            JLabel eventName = new JLabel("Entities.Event Name");
             ae.add(eventName);
-            JLabel eventDescription = new JLabel("Event Description");
+            JLabel eventDescription = new JLabel("Entities.Event Description");
             ae.add(eventDescription);
             JLabel timeT = new JLabel("Time (HH:mm)");
             ae.add(timeT);
@@ -245,22 +247,23 @@ class Test {
 
             }
             if(e.getSource()==submit){
-                EventController ec = null;
+                EventSystem ec = null;
                 try {
-                    ec = new EventController();
+                    ec = new EventSystem();
                 } catch (ClassNotFoundException | IOException classNotFoundException) {
                     classNotFoundException.printStackTrace();
                 }
                 try {
                     assert ec != null;
-                    if(ec.add_event(enI.getName(), edI.getText(),timeS.getText(),
+                    // I don't know if this input is right for add_event, please check @Chevoy
+                    if(ec.add_event(enI.getName(), enI.getName(), edI.getText(),timeS.getText(),
                             timeE.getText(),dateI.getText(),2,false)){
-                        JOptionPane.showMessageDialog(null,"Event was added");
+                        JOptionPane.showMessageDialog(null,"Entities.Event was added");
                         ae.setVisible(false);
                         os.f.setVisible(true);
                     }
                     else{
-                        JOptionPane.showMessageDialog(null, "Event was not added due to" +
+                        JOptionPane.showMessageDialog(null, "Entities.Event was not added due to" +
                                 "input error");
                     }
                 } catch (IOException ioException) {
@@ -281,11 +284,11 @@ class Test {
 
         CreateRoom(OrganizerScreen organizerScreen) {
             os = organizerScreen;
-            cr.setTitle("Event Interface System 1.0");
+            cr.setTitle("Entities.Event Interface System 1.0");
             cr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             cr.setResizable(true);
             cr.setSize(500, 380);
-            JLabel l = new JLabel("Room Creator");
+            JLabel l = new JLabel("Entities.Room Creator");
             cr.setLayout(null);
 
             l.setHorizontalAlignment(JLabel.CENTER);
@@ -293,7 +296,7 @@ class Test {
             cr.add(l);
             l.setBounds(0, 0, 500, 300);
 
-            JLabel eventName = new JLabel("Room Name");
+            JLabel eventName = new JLabel("Entities.Room Name");
             cr.add(eventName);
             JLabel capacity = new JLabel("Capacity");
             cr.add(capacity);
@@ -338,9 +341,9 @@ class Test {
                 os.f.setVisible(true);
             }
             if (e.getSource() == submit) {
-                EventController ec = null;
+                EventSystem ec = null;
                 try {
-                    ec = new EventController();
+                    ec = new EventSystem();
                 } catch (ClassNotFoundException | IOException classNotFoundException) {
                     classNotFoundException.printStackTrace();
                 }
@@ -352,7 +355,7 @@ class Test {
                         cr.setVisible(false);
                         os.f.setVisible(true);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Room was not added due to" +
+                        JOptionPane.showMessageDialog(null, "Entities.Room was not added due to" +
                                 " input error");
                     }
                 } catch (IOException ioException) {

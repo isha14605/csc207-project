@@ -11,7 +11,7 @@ public class UserManager{
     protected static ArrayList<String> email = new ArrayList<String>();
 
     /**
-     * UserManager Constructor
+     * UseCase.UserManager Constructor
      */
     protected UserManager(){
         this.addUser("s1", "s1", "s1", "speaker");
@@ -49,10 +49,10 @@ public class UserManager{
     }
 
     /**
-     * Allows an Attendee to sign up for an Event. Checks to see if the Room where the Event is held is not at full
-     * capacity and that the Attendee has not already signed up for the Event, before signing up the specified Attendee
+     * Allows an Entities.Attendee to sign up for an Event. Checks to see if the Entities.Room where the Event is held is not at full
+     * capacity and that the Entities.Attendee has not already signed up for the Event, before signing up the specified Entities.Attendee
      * for the specified Event.
-     * @param attendee the Attendee who wants to sign up for an event
+     * @param attendee the Entities.Attendee who wants to sign up for an event
      * @param event the Event that the attendee would like to attend
      * @see Attendee#getEventsAttending() 
      * @see Attendee#attendEvent(Event) 
@@ -72,9 +72,9 @@ public class UserManager{
     }
 
     /**
-     * Cancels Attendee's registration for an Event. Checks to see that the specified Attendee is actually signed up
-     * for the specified Event, before removing the Attendee from the Event.
-     * @param attendee the Attendee who wants to cancel registration for an event
+     * Cancels Entities.Attendee's registration for an Event. Checks to see that the specified Entities.Attendee is actually signed up
+     * for the specified Event, before removing the Entities.Attendee from the Event.
+     * @param attendee the Entities.Attendee who wants to cancel registration for an event
      * @param event the Event that the attendee would no longer like to attend
      * @see Attendee#getEventsAttending() 
      * @see Attendee#removeEvent(Event)
@@ -127,9 +127,9 @@ public class UserManager{
     }
 
     /**
-     * Sends an Organizer message
-     * @param from the Organizer sending the message
-     * @param to the User receiving the message
+     * Sends an Entities.Organizer message
+     * @param from the Entities.Organizer sending the message
+     * @param to the Entities.User receiving the message
      * @param message content of message to be sent
      * @return true if the message was sent successfully
      */
@@ -145,7 +145,7 @@ public class UserManager{
 
 
     /**
-     * Sends a Speaker message
+     * Sends a Entities.Speaker message
      *
      * @return true if the message was sent successfully
      */
@@ -164,7 +164,7 @@ public class UserManager{
     }
 
     /**
-     * Sends an Attendee message
+     * Sends an Entities.Attendee message
      *
      * @return true if the message was sent successfully
      */
@@ -181,9 +181,9 @@ public class UserManager{
     }
 
     /**
-     * Identifies the User from the provided email address
+     * Identifies the Entities.User from the provided email address
      *
-     * @return User associated with provided email address
+     * @return Entities.User associated with provided email address
      */
     protected User findUser(String email){
         int i;
@@ -193,9 +193,9 @@ public class UserManager{
     }
 
     /**
-     * Verifies if there is a User stored who is associated with the provided email address
+     * Verifies if there is a Entities.User stored who is associated with the provided email address
      *
-     * @return true if the User exists
+     * @return true if the Entities.User exists
      */
     protected boolean checkUserExists(String email) {
         return UserManager.email.contains(email);

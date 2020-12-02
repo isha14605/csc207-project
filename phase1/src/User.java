@@ -3,7 +3,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents a User who can be an Attendee or an Organizer.
+ * Represents a Entities.User who can be an Entities.Attendee or an Entities.Organizer.
  * @author Tanya Thaker
  * @version 1.0
  */
@@ -18,12 +18,12 @@ public class User {
     /*For messages_received, The key is the user who sent them a message, value is the message*/
     protected ArrayList<User> contacts;
 
-    // Constructor for User
+    // Constructor for Entities.User
     /**
-     * Creates an User with the specified name, email, and password.
-     * @param name the name of the specified User
-     * @param email the email of the specified User
-     * @param password the password of the specified User
+     * Creates an Entities.User with the specified name, email, and password.
+     * @param name the name of the specified Entities.User
+     * @param email the email of the specified Entities.User
+     * @param password the password of the specified Entities.User
      */
 
     User(String name, String password, String email){
@@ -35,7 +35,7 @@ public class User {
         this.contacts = new ArrayList<User>();
     }
 
-    // Getters for User
+    // Getters for Entities.User
     /**
      * Returns an String that is the name of this user.
      * @return a string which is the name of this user.
@@ -61,8 +61,8 @@ public class User {
     }
 
     /**
-     * Returns an ArrayList of User objects who are in present in this users contacts.
-     * @return an ArrayList of User objects who are in present in this users contacts.
+     * Returns an ArrayList of Entities.User objects who are in present in this users contacts.
+     * @return an ArrayList of Entities.User objects who are in present in this users contacts.
      */
     public ArrayList<User> getContacts(){return this.contacts;}
 

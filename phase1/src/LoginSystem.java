@@ -6,16 +6,16 @@ public class LoginSystem {
     private UserManager userManager;
 
     /**
-     * LoginSystem Constructor
+     * Controllers.LoginSystem Constructor
      */
     public LoginSystem(UserManager usermanager){
         this.userManager = usermanager;
     }
 
     /**
-     * Verifies User login information
-     * @param email email of the User
-     * @param password password of the User
+     * Verifies Entities.User login information
+     * @param email email of the Entities.User
+     * @param password password of the Entities.User
      * @return true if login successful
      */
     public boolean checkLogIn(String email, String password) throws

@@ -8,18 +8,18 @@ import java.util.ArrayList;
  */
 public class SignUpSystem {
 
-    UserManager uM = new UserManager(); // New instance of UserManager
-    EventManager eM = new EventManager(); // New instance of EventManager
+    UserManager uM = new UserManager(); // New instance of UseCase.UserManager
+    EventManager eM = new EventManager(); // New instance of UseCase.EventManager
 
     /**
-     * Returns a list of events that an Attendee can attend, based on a specified date, start time, and end time. Checks
+     * Returns a list of events that an Entities.Attendee can attend, based on a specified date, start time, and end time. Checks
      * to see that there are events occurring on the specified date between the times provided.
-     * @param date the date that the Attendee is interested in viewing events for
-     * @param startTime the start time that the Attendee is interested in viewing events for
-     * @param endTime the end time that the Attendee is interested in viewing events for
-     * @return a list containing potential events that the Attendee is interested in attending for further perusal
+     * @param date the date that the Entities.Attendee is interested in viewing events for
+     * @param startTime the start time that the Entities.Attendee is interested in viewing events for
+     * @param endTime the end time that the Entities.Attendee is interested in viewing events for
+     * @return a list containing potential events that the Entities.Attendee is interested in attending for further perusal
      */
-    // Allows the Attendee to browse the events and decide which ones they want to see based on date and time
+    // Allows the Entities.Attendee to browse the events and decide which ones they want to see based on date and time
     public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){
 //        ArrayList<Event> interestList = new ArrayList<>();
 //        ArrayList<Event> allEventsList = eM.getEvents();
@@ -31,18 +31,18 @@ public class SignUpSystem {
 //                interestList.add(event);
 //            }
 //        }
-        return eM.get_events_on(date); // Return the list of events so the Attendee can browse
+        return eM.get_events_on(date); // Return the list of events so the Entities.Attendee can browse
     }
 
     /**
-     * Allows an Attendee to sign up for an Event.
-     * @param a the Attendee that wants to sign up for an an Event.
-     * @param e the Event that the Attendee wants to be signed up for.
+     * Allows an Entities.Attendee to sign up for an Event.
+     * @param a the Entities.Attendee that wants to sign up for an an Event.
+     * @param e the Event that the Entities.Attendee wants to be signed up for.
      * @see UserManager#signUp(Attendee, Event)
      */
-    // Method to sign up an Attendee for an Event
+    // Method to sign up an Entities.Attendee for an Event
     public boolean signUpEvent(Attendee a, Event e){
-        // Sign the Attendee up for the Event
+        // Sign the Entities.Attendee up for the Event
         return uM.signUp(a,e);
     }
 

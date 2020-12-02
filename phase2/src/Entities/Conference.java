@@ -1,3 +1,5 @@
+package Entities;
+
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,9 +13,9 @@ public class Conference {
     private ArrayList<Integer> eventIds;
     private ArrayList<String> eventName;
 
-    // Constructor for Conference
+    // Constructor for Entities.Conference
     /**
-     * Creates a Conference with the specified name, description, start time, end time, date of Conference and an
+     * Creates a Entities.Conference with the specified name, description, start time, end time, date of Entities.Conference and an
      * empty list of event ids.
      * @param name the name of the specified conference
      * @param confDescription the description of the conference
@@ -85,28 +87,28 @@ public class Conference {
     // Setters
 
     /**
-     * Adds an Event's id to this conference's eventIds list
-     * Conference Manager must ensure that two events running at the same time are not added.
+     * Adds an Entities.Event's id to this conference's eventIds list
+     * Entities.Conference Manager must ensure that two events running at the same time are not added.
      * @param event an event id that is a part of this conference.
      */
-    protected void addEvent(Integer event) { eventIds.add(event);}
+    public void addEvent(Integer event) { eventIds.add(event);}
 
     /**
-     * Adds an Event's Name to this conference's eventIds list
-     * Conference Manager must ensure that two events running at the same time are not added.
+     * Adds an Entities.Event's Name to this conference's eventIds list
+     * Entities.Conference Manager must ensure that two events running at the same time are not added.
      * @param event an event name that is a part of this conference.
      */
-    protected void addEventName(String event) { eventName.add(event);}
+    public void addEventName(String event) { eventName.add(event);}
 
     /**
-     * Removes an Event's id to this conference's eventIds list
+     * Removes an Entities.Event's id to this conference's eventIds list
      * @param event the id of the event that is no longer a part of this conference.
      */
-    protected void removeEvent(Integer event) { eventIds.remove(event);}
+    public void removeEvent(Integer event) { eventIds.remove(event);}
 
     /**
-     * Removes name of Event from the events in the conference list
+     * Removes name of Entities.Event from the events in the conference list
      * @param event name of the event that is no longer part of this conference
      */
-    protected  void removeEventName(String event){ eventName.remove(event);}
+    public  void removeEventName(String event){ eventName.remove(event);}
 }

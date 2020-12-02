@@ -1,3 +1,6 @@
+package Controllers;
+
+import UseCase.UserManager;
 
 /**
  * This class is the controller class responsible for the login function
@@ -5,7 +8,7 @@
  * @author Hao Liu
  * @version 1.0
  */
-public class LoginController {
+public class LoginSystem {
     /**
      * Responsible for managing users
      */
@@ -14,7 +17,7 @@ public class LoginController {
     /**
      * Constructor
      */
-    public LoginController(){
+    public LoginSystem(){
         this.userManager = new UserManager();
     }
 

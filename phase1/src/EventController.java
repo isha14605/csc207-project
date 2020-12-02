@@ -61,7 +61,7 @@ public class EventController implements Serializable{
         }else {
             rm.create_room(name, capacity, rm.date_formatting_time(start), rm.date_formatting_time(end));
             rm.writeToFile("RoomSave.ser");
-            System.out.println("Room was added");
+            System.out.println("Entities.Room was added");
         }
     }
 
@@ -73,7 +73,7 @@ public class EventController implements Serializable{
     public ArrayList<Room> get_rooms(){return rm.getRooms();}
 
     /**
-     * Adds Talk to an existing Event
+     * Adds Entities.Talk to an existing Event
      *
      * @return true if talk is added successfully
      */
@@ -98,36 +98,36 @@ public class EventController implements Serializable{
             return true;
 
         } else {
-            System.out.println("Talk was not added due to time conflict");
+            System.out.println("Entities.Talk was not added due to time conflict");
             return false;
         }
     }
 
     /**
-     * Schedules a Room for an existing Event
+     * Schedules a Entities.Room for an existing Event
      */
     public void schedule_room(String room_name, Integer event_id) throws IOException {
         Event event = em.find_event(event_id);
         Room room = rm.find_room(room_name);
         if(room == null){
-            System.out.println("Room doesn't exit");
+            System.out.println("Entities.Room doesn't exit");
             return;
         }
         if(!rm.is_room_booked(room, event) && event.getEventRoom() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
             room.addBookings(event, em.get_localDateTime(event.getEventDate(),event.getStartTime()),
                     em.get_localDateTime(event.getEventDate(),event.getEndTime()));
-            System.out.println("Room has been booked for event");
+            System.out.println("Entities.Room has been booked for event");
             em.writeToFile("EventSave");
         }else{
-            System.out.println("Room not scheduled due to time conflict");
+            System.out.println("Entities.Room not scheduled due to time conflict");
         }
     }
 
     /**
-     * Schedules a Speaker for an existing Event
+     * Schedules a Entities.Speaker for an existing Event
      *
-     * @return true if Speaker is scheduled successfully
+     * @return true if Entities.Speaker is scheduled successfully
      */
     public boolean schedule_speaker(Speaker speaker, Talk talk, Event event){
         if(em.can_schedule_speaker(event,talk,speaker) && tm.speaker_can_be_scheduled(talk)){

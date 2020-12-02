@@ -99,8 +99,8 @@ public class EventManager implements Serializable {
 
     /** Checks if speaker can be scheduled for a talk and a certain event.
      * @param event event that is wanted to checked
-     * @param speaker Speaker that is being checked if they can join
-     * @param talk Talk that speaker is be scheduled to.
+     * @param speaker Entities.Speaker that is being checked if they can join
+     * @param talk Entities.Talk that speaker is be scheduled to.
      @return  boolean - If speaker doesn't have a time conflict */
     protected boolean can_schedule_speaker(Event event, Talk talk, Speaker speaker){
         ArrayList<Event> events_on_day = get_events_on(event.getEventDate());
@@ -131,7 +131,7 @@ public class EventManager implements Serializable {
             room = event.getEventRoom().getName();
         }
         return "Event id: " + event.getEventId() + " | Event name: " + event.getName() +
-                " | Room: " + room + "\nEvent Starts from " + event.getStartTime() + " to " +
+                " | Entities.Room: " + room + "\nEvent Starts from " + event.getStartTime() + " to " +
                 event.getEndTime() + " on " + event.getEventDate() + " Talks " + talks + "\n";
     }
 

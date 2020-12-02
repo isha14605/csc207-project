@@ -19,9 +19,9 @@ public class Room implements Serializable {
      * containing startTime and endTime of the event consecutively.*/
     private HashMap<Event, ArrayList<LocalDateTime>> bookings;
 
-    // Constructor for Room
+    // Constructor for Entities.Room
     /**
-     * Creates a Room with the specified name, room capacity, room open time and room close time.
+     * Creates a Entities.Room with the specified name, room capacity, room open time and room close time.
      * @param name the name of this room
      * @param roomCapacity the capacity of this room
      * @param openTime the time when the room opens
@@ -69,7 +69,7 @@ public class Room implements Serializable {
     public HashMap<Event, ArrayList<LocalDateTime>> getBookings() {return bookings;}
 
     /**
-     * Adds a booking to this room. This method should be called by Room Manager
+     * Adds a booking to this room. This method should be called by Entities.Room Manager
      * when a room is added to an Event after checking availability.
      * @param event an Event object for which this room is being booked for.
      * @param startTime a LocalDateTime which specifies start time and event date of booking/event.

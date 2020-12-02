@@ -1,3 +1,7 @@
+package UseCase;
+
+import Entities.*;
+
 import java.util.ArrayList;
 
 /**
@@ -7,15 +11,15 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class UserManager{
-    protected static ArrayList<User> users = new ArrayList<User>();
-    protected static ArrayList<String> email = new ArrayList<String>();
-    protected EventManager em = new EventManager(); // can we do this?
+    public static ArrayList<User> users = new ArrayList<User>();
+    public static ArrayList<String> email = new ArrayList<String>();
+    public EventManager em = new EventManager(); // can we do this?
 
 
     /**
-     * UserManager Constructor
+     * UseCase.UserManager Constructor
      */
-    protected UserManager(){}
+    public UserManager(){}
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
      * @param name the name of the user.
@@ -44,7 +48,7 @@ public class UserManager{
      * @see User#getEmail()
      * @see User#getPassword()
      */
-    protected boolean verifyLogin(String email, String password){
+    public boolean verifyLogin(String email, String password){
         if (UserManager.email.contains(email)){
             for( User u: users){
                 if (u.getEmail().equals(email) && u.getPassword().equals(password)){
@@ -56,11 +60,11 @@ public class UserManager{
     }
 
     /**
-     * Allows an Attendee to sign up for an Event. Checks to see if the Room where the Event is held is not at full
-     * capacity and that the Attendee has not already signed up for the Event, before signing up the specified Attendee
-     * for the specified Event.
-     * @param attendee the Attendee who wants to sign up for an event
-     * @param event the Event that the attendee would like to attend
+     * Allows an Entities.Attendee to sign up for an Entities.Event. Checks to see if the Entities.Room where the Entities.Event is held is not at full
+     * capacity and that the Entities.Attendee has not already signed up for the Entities.Event, before signing up the specified Entities.Attendee
+     * for the specified Entities.Event.
+     * @param attendee the Entities.Attendee who wants to sign up for an event
+     * @param event the Entities.Event that the attendee would like to attend
      * @see Event#getAttendeeCapacity()
      * @see Event#getAttendeeEmails()
      * @see Event#getEventId()
@@ -68,7 +72,7 @@ public class UserManager{
      * @see Attendee#attendEvent(Integer)
      * @see Attendee#getEmail()
      */
-    protected boolean signUpEvent(Attendee attendee, Event event){
+    public boolean signUpEvent(Attendee attendee, Event event){
         if ((event.getAttendeeCapacity()> event.getAttendeeEmails().size()) &&
                 !attendee.getEventsAttending().contains(event.getEventId())) {
             attendee.attendEvent(event.getEventId());
@@ -79,17 +83,17 @@ public class UserManager{
     }
 
     /**
-     * Cancels Attendee's registration for an Event. Checks to see that the specified Attendee is actually signed up
-     * for the specified Event, before removing the Attendee from the Event.
-     * @param attendee the Attendee who wants to cancel registration for an event
-     * @param event the Event that the attendee would no longer like to attend
-     * @see Attendee#getEventsAttending() 
+     * Cancels Entities.Attendee's registration for an Entities.Event. Checks to see that the specified Entities.Attendee is actually signed up
+     * for the specified Entities.Event, before removing the Entities.Attendee from the Entities.Event.
+     * @param attendee the Entities.Attendee who wants to cancel registration for an event
+     * @param event the Entities.Event that the attendee would no longer like to attend
+     * @see Attendee#getEventsAttending()
      * @see Attendee#removeEvent(Integer)
      * @see Attendee#getEmail()
      * @see Event#removeAttendee(String)
      * @see EventManager#find_event(Integer)
      */
-    protected boolean cancelRegistrationEvent(Attendee attendee, Integer event){
+    public boolean cancelRegistrationEvent(Attendee attendee, Integer event){
         if (attendee.getEventsAttending().contains(event)) {
             attendee.removeEvent(event);
             em.find_event(event).removeAttendee(attendee.getEmail());
@@ -98,7 +102,7 @@ public class UserManager{
         return false; //if event not cancelled
     }
 
-    protected boolean signUpConference(Attendee attendee, String name){
+    public boolean signUpConference(Attendee attendee, String name){
         return true;
     }
 
@@ -108,7 +112,7 @@ public class UserManager{
      * @param to list of Users/ events that the sender wants to send the messages to
      * @param message the content of the message.
      */
-    protected void message(String from, ArrayList<String> to, String message){
+    public void message(String from, ArrayList<String> to, String message){
         //WHEN CALLING THIS NEED TO CHECK IF USERS EXISTS
 
         if (findUser(from).userType() == 'S'){
@@ -168,7 +172,7 @@ public class UserManager{
     }
 
 
-    protected ArrayList<User> findUsers(ArrayList<String> emails){
+    public ArrayList<User> findUsers(ArrayList<String> emails){
         ArrayList<User> user_obj = new ArrayList<User>();
         for(String i : emails){
             user_obj.add(this.findUser(i));
@@ -177,22 +181,22 @@ public class UserManager{
     }
 
     /**
-     * Identifies the User from the provided email address
+     * Identifies the Entities.User from the provided email address
      * @param  email the email of the user whose object location we want
-     * @return User associated with provided email address
+     * @return Entities.User associated with provided email address
      */
-    protected User findUser(String email){
+    public User findUser(String email){
         int i;
         i = UserManager.email.indexOf(email);
         return UserManager.users.get(i);
     }
 
     /**
-     * Verifies if there is a User stored who is associated with the provided email address
+     * Verifies if there is a Entities.User stored who is associated with the provided email address
      * @param email the email of the user whom we wish to know exists or not
-     * @return true if the User exists
+     * @return true if the Entities.User exists
      */
-    protected boolean checkUserExists(String email) {
+    public boolean checkUserExists(String email) {
         return UserManager.email.contains(email);
     }
 
@@ -201,7 +205,7 @@ public class UserManager{
      * @param from is the Arraylist of emails whose existence we wish to check
      * @return
      */
-    protected ArrayList<String> checkUsers(ArrayList<String> from){
+    public ArrayList<String> checkUsers(ArrayList<String> from){
         ArrayList<String> u = new ArrayList<String>();
         for(String i: from){
             if (checkUserExists(i)){
@@ -211,13 +215,11 @@ public class UserManager{
         return u;
     }
 
-    private boolean inContact(String current, String email){
+    private void inContact(String current, String email){
         ArrayList<String> u = findUser(current).getContacts();
         if (u.contains(email)){
             findUser(current).addContact(email);
             findUser(email).addContact(current);
-            return false;
         }
-        return true;
     }
 }

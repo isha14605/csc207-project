@@ -1,3 +1,8 @@
+package UseCase;
+
+import Entities.Event;
+import Entities.Room;
+
 import java.io.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -25,7 +30,7 @@ public class RoomManager implements Serializable {
  * @param open_time Time the room is open in LocalTime
  * @param close_time Time the room closes in LocalTime
  * */
-    protected void create_room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time){
+    public void create_room(String name, Integer room_capacity, LocalTime open_time, LocalTime close_time){
         Room r = new Room(name, room_capacity, open_time, close_time);
         rooms.add(r);
     }
@@ -34,14 +39,14 @@ public class RoomManager implements Serializable {
      * @param room room entity
      * @param event event entity
      * */
-    protected void schedule_room(Room room, Event event){
+    public void schedule_room(Room room, Event event){
         event.setEventRoom(room);
     }
 
     /** Finds and returns room by getting the name
      * @param name name of the room
-     * @return returns the Room if it exists returns null if room doesn't exist*/
-    protected Room find_room(String name){
+     * @return returns the Entities.Room if it exists returns null if room doesn't exist*/
+    public Room find_room(String name){
         for(Room room: rooms){
             if(room.getName().equals(name)){
                 return room;
@@ -54,7 +59,7 @@ public class RoomManager implements Serializable {
      * @param room room entity
      * @param unbooked Unbooked room Entity
      * */
-    protected boolean is_room_booked(Room room, Event unbooked){
+    public boolean is_room_booked(Room room, Event unbooked){
         for(Integer booked: room.getBookings().keySet()){
             if(em.find_event(booked).getEventDate().equals(unbooked.getEventDate()))
                 if(time_conflict(unbooked, em.find_event(booked))){
@@ -68,7 +73,7 @@ public class RoomManager implements Serializable {
      * @param event event that room is be scheduled to.
      * @param room room that is being scheduled.
      * @return a list of all the rooms that have been saved*/
-    protected boolean can_fit_event(Event event, Room room){
+    public boolean can_fit_event(Event event, Room room){
         if(event.getStartTime().isBefore(room.getOpenTime())){
             return false;
         }
@@ -77,15 +82,15 @@ public class RoomManager implements Serializable {
 
     /** Gets a list of rooms that user has access to.
      * @return a list of all the rooms that have been saved*/
-    protected ArrayList<Room> getRooms(){
+    public ArrayList<Room> getRooms(){
         return rooms;
     }
 
     /** Takes a room and converts it into readable strings
      * @param room
      * @return String representation of the room*/
-    protected String roomToString(Room room){
-        return "Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
+    public String roomToString(Room room){
+        return "Entities.Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
                 + room.getCloseTime() + "\n";
     }
 
@@ -93,7 +98,7 @@ public class RoomManager implements Serializable {
      * @param event1 the talk the is being scheduled
      * @param event2 the event the talk wants to be added to.
      * @return true if there is a time conflict within events*/
-    protected boolean time_conflict(Event event1, Event event2) {
+    public boolean time_conflict(Event event1, Event event2) {
         if (event1.getStartTime().equals((event2.getStartTime()))) {
             System.out.println("time conflict");
             return true;
@@ -107,7 +112,7 @@ public class RoomManager implements Serializable {
     /** Filters user input by checking and converting input into a readable LocalTime
      * @param date the string representation of a time
      @return  the local time of this string representation  */
-    protected LocalTime date_formatting_time(String date){
+    public LocalTime date_formatting_time(String date){
         int len = date.length();
         if(len == 5){
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
@@ -116,15 +121,15 @@ public class RoomManager implements Serializable {
         return null;
     }
 
-    protected void addTechOptions(String tech){
+    public void addTechOptions(String tech){
         techOptions.add(tech);
     }
 
-    protected ArrayList<String> getTechOptions(){
+    public ArrayList<String> getTechOptions(){
         return techOptions;
     }
 
-    protected boolean meetsRequirements(String roomName,Integer eventId){
+    public boolean meetsRequirements(String roomName,Integer eventId){
         return find_room(roomName).getTechAvailable().containsAll(em.find_event(eventId).getTechRequirements());
     }
 

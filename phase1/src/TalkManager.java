@@ -31,9 +31,9 @@ public class TalkManager implements Serializable{
     }
 
     /**
-     * Adds a given Talk to the list of scheduled talks in Event
-     * @param talk the Talk that needs to be added to the Event.
-     * @param event the Event to which the Talk is being added.
+     * Adds a given Entities.Talk to the list of scheduled talks in Event
+     * @param talk the Entities.Talk that needs to be added to the Event.
+     * @param event the Event to which the Entities.Talk is being added.
      * @see Talk#getStartTime()
      * @see Event#getTalks()
      */
@@ -49,7 +49,7 @@ public class TalkManager implements Serializable{
     /**
      * Schedules speaker to event
      *@param talk talk that speaker is being scheduled to.
-     *@param speaker Speaker that is being scheduled
+     *@param speaker Entities.Speaker that is being scheduled
      *@see Speaker#addTalk(Talk)
      * @see Talk#setSpeaker(Speaker)
      */
@@ -72,7 +72,7 @@ public class TalkManager implements Serializable{
      * Obtains and returns a list of Talks from an Event that start at the same time.
      * @param time the time that the talks at the event should start
      * @param event the event from which the talks are being obtained based on their start time
-     * @return an ArrayList of Talk objects that contain talks at the Event that start at the desired time smae_time.
+     * @return an ArrayList of Entities.Talk objects that contain talks at the Event that start at the desired time smae_time.
      * @see Event#getTalks()
      */
     protected ArrayList<Talk> get_talks_at(LocalDateTime time, Event event){
@@ -95,7 +95,7 @@ public class TalkManager implements Serializable{
     }
 
     /**
-     * Prints a String interpretation of this Talk
+     * Prints a String interpretation of this Entities.Talk
      * @param talk talk converted
      * @see Talk
      * @see Speaker
@@ -109,7 +109,7 @@ public class TalkManager implements Serializable{
         }else {
             speakerN = speaker.getName();
         }
-        System.out.println("Talk id: " + talk.getId() +" Speaker : " +
+        System.out.println("Entities.Talk id: " + talk.getId() +" Entities.Speaker : " +
                 speakerN + " at " + talk.getStartTime()
                 + " to " + talk.getEndTime() +"Event it is part of: " + talk.getEvent());
     }
@@ -125,9 +125,9 @@ public class TalkManager implements Serializable{
     }
 
     /**
-     * Retrieves the Talk that is associated with the provided talkId
+     * Retrieves the Entities.Talk that is associated with the provided talkId
      * @param talkId
-     * @return the Talk object associated with talkId
+     * @return the Entities.Talk object associated with talkId
      */
     protected Talk getTalk(int talkId){
         for(Talk talk: talks){
@@ -135,7 +135,7 @@ public class TalkManager implements Serializable{
                 return talk;
             }
         }
-        System.out.println("Talk Not Found");
+        System.out.println("Entities.Talk Not Found");
         return null;
     }
 
@@ -192,9 +192,9 @@ public class TalkManager implements Serializable{
     }
 
     /**
-     * Finds and returns the Talk object that has the provided id
-     * @param talk the id of the Talk that is desired
-     * @return a Talk that has the id provided
+     * Finds and returns the Entities.Talk object that has the provided id
+     * @param talk the id of the Entities.Talk that is desired
+     * @return a Entities.Talk that has the id provided
      */
     public Talk findTalk(int talk){
         for(Talk t: talks){

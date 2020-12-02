@@ -1,3 +1,5 @@
+package Entities;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -5,12 +7,12 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Represents an Event.
+ * Represents an Entities.Event.
  * @author Farhad Siddique
  * @version 1.0
  */
 
-abstract class Event implements Serializable {
+public abstract class Event implements Serializable {
     private static AtomicInteger numOfEvents = new AtomicInteger(0);
     private Integer eventId;
     private String name;
@@ -26,17 +28,17 @@ abstract class Event implements Serializable {
     private String themes;
     private ArrayList<String> techRequirements;
 
-    // Constructor for Event
+    // Constructor for Entities.Event
     /**
-     * Creates an Event with the specified name, description, start time, end time, date of event, event capacity
-     * and indicator if the event is VIP only.
-     * @param name the name of the specified User
+     * Creates an Entities.Event with the specified name, description, start time, end time, date of event, event capacity
+     * and indicator if the event is Entities.VIP only.
+     * @param name the name of the specified Entities.User
      * @param eventDescription the description of the event
      * @param startTime the time when the event starts
      * @param endTime the time when the event ends
      * @param eventDate the date when the event is happening
      * @param attendeeCapacity the maximum number of attendees that can participate in the event
-     * @param vipOnly indicates if  the event is only for VIP attendees or not
+     * @param vipOnly indicates if  the event is only for Entities.VIP attendees or not
      */
     public Event(String name, String eventDescription, LocalTime startTime, LocalTime endTime, LocalDate eventDate,
                  int attendeeCapacity, boolean vipOnly){
@@ -56,9 +58,9 @@ abstract class Event implements Serializable {
         this.themes = null;
         this.techRequirements = new ArrayList<>();
     }
-    abstract String eventType();
+    public abstract String eventType();
 
-    abstract void setSpeaker(String speakerEmail);
+    public abstract void setSpeaker(String speakerEmail);
 
     // Getters
 
@@ -99,14 +101,14 @@ abstract class Event implements Serializable {
     public LocalDate getEventDate() {return eventDate;}
 
     /**
-     * Returns a int that is the maximum Attendee Capacity of this event.
-     * @return a int that is the maximum Attendee Capacity of this event.
+     * Returns a int that is the maximum Entities.Attendee Capacity of this event.
+     * @return a int that is the maximum Entities.Attendee Capacity of this event.
      */
     public int getAttendeeCapacity() {return attendeeCapacity;}
 
     /**
-     * Returns a boolean, that if True indicates event is for VIP attendees only, else event is open to all attendees.
-     * @return a boolean that if True indicates event is for VIP attendees only, else event is open to all attendees.
+     * Returns a boolean, that if True indicates event is for Entities.VIP attendees only, else event is open to all attendees.
+     * @return a boolean that if True indicates event is for Entities.VIP attendees only, else event is open to all attendees.
      */
     public boolean isVipOnly() {return vipOnly;}
 
@@ -136,43 +138,43 @@ abstract class Event implements Serializable {
 
     /**
      * sets the designated room for this event.
-     * Should be called by RoomManager. RoomManager will be responsible for checking room availability, ensuring that
+     * Should be called by UseCase.RoomManager. UseCase.RoomManager will be responsible for checking room availability, ensuring that
      * room capacity is more than or equal to attendeeCapacity of event and booking the room for
      * required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
      * @param room the room for this event.
      */
-    protected void setEventRoom(Room room) {this.eventRoom = room;}
+    public void setEventRoom(Room room) {this.eventRoom = room;}
 
     /**
-     * Adds an Attendee's email to this event
-     * UserManager must ensure that only VIP attendees can sign up for VIP events.
-     * @param attendee an attendee that will attend this event.
+     * Adds an Entities.Attendee's email to this event
+     * UseCase.UserManager must ensure that only Entities.VIP attendees can sign up for Entities.VIP events.
+     * @param email an attendee that will attend this event.
      */
-    protected void addAttendee(String email) {
+    public void addAttendee(String email) {
         attendeeEmails.add(email);
     }
 
     /**
-     * Removes an Attendee's email from this event
-     * @param attendee an attendee that will no longer attend this event.
+     * Removes an Entities.Attendee's email from this event
+     * @param email an attendee that will no longer attend this event.
      */
-    protected void removeAttendee(String email) {
+    public void removeAttendee(String email) {
         attendeeEmails.remove(email);
     }
 
     /**
-     * Adds an Organizer's email to this event
-     * @param organizer an Organizer that will organize this event.
+     * Adds an Entities.Organizer's email to this event
+     * @param email an Entities.Organizer that will organize this event.
      */
-    protected void addOrganizer(String email) {
+    public void addOrganizer(String email) {
         organizerEmails.add(email);
     }
 
     /**
-     * Resets the Attendee Capacity of the event. Should be called by an Organizer of the event.
-     * Organizer must ensure that attendeeCapacity is less than or equal to RoomCapacity of the room
+     * Resets the Entities.Attendee Capacity of the event. Should be called by an Entities.Organizer of the event.
+     * Entities.Organizer must ensure that attendeeCapacity is less than or equal to RoomCapacity of the room
      * assigned to this event, before calling this method.
-     * @param attendeeCapacity a int that is the maximum Attendee Capacity of this event.
+     * @param attendeeCapacity a int that is the maximum Entities.Attendee Capacity of this event.
      */
-    protected void setAttendeeCapacity(int attendeeCapacity) {this.attendeeCapacity = attendeeCapacity;}
+    public void setAttendeeCapacity(int attendeeCapacity) {this.attendeeCapacity = attendeeCapacity;}
 }
