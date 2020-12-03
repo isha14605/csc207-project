@@ -26,7 +26,7 @@ public class EventManager implements Serializable {
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
-     * @param name      the nam e of the user.
+     * @param name      the name of the user.
      * @param desc      description of the event.
      * @param start     start of the event in localtime.
      * @param end       end of the event in localtime.
@@ -34,8 +34,8 @@ public class EventManager implements Serializable {
      * @param capacity  the amount of people allowed in event
      * @param event_only if the event only allows events
      */
-    public boolean create_event(String eventType, String name, String desc, LocalTime start, LocalTime end,
-                                   LocalDate date, int capacity, boolean event_only) {
+    public boolean createEvent(String eventType, String name, String desc, LocalTime start, LocalTime end,
+                               LocalDate date, int capacity, boolean event_only) {
         for(Event booked: events){
             if(booked.getName().equals(name)){
                 return false;
@@ -62,7 +62,7 @@ public class EventManager implements Serializable {
     /** Finds the event with the event id .
      * @param event_id a integer that is connected to a event.
      @return  returns the event that has the event_id value if event doesn't exist returns null */
-    public Event find_event(Integer event_id){
+    public Event findEvent(Integer event_id){
         for(Event event: events){
             if(event_id.equals(event.getEventId())){
                 return event;
@@ -74,7 +74,7 @@ public class EventManager implements Serializable {
     /** Gets all event on a certain date.
      * @param date date of the event of event in local time.
      @return  event */
-    public ArrayList<Event> get_events_on(LocalDate date){
+    public ArrayList<Event> getEventsOn(LocalDate date){
         ArrayList<Event> on_same_day = new ArrayList<>();
         for(Event scheduled: events){
             if(scheduled.getEventDate().equals(date)){
@@ -88,7 +88,7 @@ public class EventManager implements Serializable {
      * @param event talk that you want to schedule speaker for
      * @param speakerEmail email of the speaker you want to schedule
      * @return  returns a boolean that indicates whether speaker can be scheduled */
-    public boolean can_schedule_speaker(Event event, String speakerEmail){
+    public boolean canScheduleSpeaker(Event event, String speakerEmail){
         if (event.eventType().equals("Entities.Talk")) {
             Talk t = (Talk) event;
             return !t.getSpeakerEmail().equals(speakerEmail);
@@ -111,7 +111,7 @@ public class EventManager implements Serializable {
      * @param event1 date of the event of event in local time.
      * @param event2 date of the event of event in local time.
      @return  return true if there is a time conflict */
-    public boolean time_conflict(Event event1, Event event2) {
+    public boolean timeConflict(Event event1, Event event2) {
         if (event1.getStartTime().equals((event2.getStartTime()))) {
             return true;
         } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
@@ -124,7 +124,7 @@ public class EventManager implements Serializable {
     /** Checks if a value was in valid format
      * @param check check can be anything making sure the value isn't null,
      @return  event */
-    public boolean not_valid_format(Object check){
+    public boolean notValidFormat(Object check){
         return check == null;
     }
 
@@ -132,7 +132,7 @@ public class EventManager implements Serializable {
      *@param date local time of date
      * @param time local time
      @return  the local date time  */
-    public LocalDateTime get_localDateTime(LocalDate date, LocalTime time){
+    public LocalDateTime getLocalDateTime(LocalDate date, LocalTime time){
         return LocalDateTime.of(date, time);
     }
 
@@ -140,7 +140,7 @@ public class EventManager implements Serializable {
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
      * @param date the string representation of a date
      @return  the local date of this string*/
-    public LocalDate date_formatting_date(String date){
+    public LocalDate dateFormattingDate(String date){
         int len = date.length();
         try {
             if (len == 10) {
@@ -156,7 +156,7 @@ public class EventManager implements Serializable {
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
      * @param date the string representation of a time
      @return  the local time of this string representation  */
-    public LocalTime date_formatting_time(String date){
+    public LocalTime dateFormattingTime(String date){
         int len = date.length();
         try {
             if (len == 5) {

@@ -26,19 +26,20 @@ public class SignUpSystem {
      */
     // Allows the Entities.Attendee to browse the events and decide which ones they want to see based on date and time
     public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){ // need to discuss
-        return eM.get_events_on(date); // Return the list of events so the Entities.Attendee can browse
+        return eM.getEventsOn(date); // Return the list of events so the Entities.Attendee can browse
     }
 
     /**
      * Allows an Entities.Attendee to sign up for an Entities.Event.
      * @param email the Entities.Attendee that wants to sign up for an an Entities.Event.
      * @param event the Entities.Event that the Entities.Attendee wants to be signed up for.
-     * @see UserManager#signUpEvent(Attendee, Event)
+     * @see UserManager#signUpEvent(Attendee, Integer)
+     * @see UserManager#findUser(String)
      */
     // Method to sign up an Entities.Attendee for an Entities.Event
     public boolean signUpEvent(String email, Integer event){
         // Sign the Entities.Attendee up for the Entities.Event
-        return uM.signUpEvent((Attendee) uM.findUser(email), eM.find_event(event));
+        return uM.signUpEvent((Attendee) uM.findUser(email),event);
     }
 
     /**
