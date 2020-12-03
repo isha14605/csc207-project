@@ -40,7 +40,7 @@ public class RoomManager implements Serializable {
      * @param event event entity
      * */
     public void schedule_room(Room room, Event event){
-        event.setEventRoom(room);
+        event.setRoomName(room.getName());
     }
 
     /** Finds and returns room by getting the name
@@ -61,8 +61,8 @@ public class RoomManager implements Serializable {
      * */
     public boolean is_room_booked(Room room, Event unbooked){
         for(Integer booked: room.getBookings().keySet()){
-            if(em.find_event(booked).getEventDate().equals(unbooked.getEventDate()))
-                if(time_conflict(unbooked, em.find_event(booked))){
+            if(em.findEvent(booked).getEventDate().equals(unbooked.getEventDate()))
+                if(time_conflict(unbooked, em.findEvent(booked))){
                     return true;
                 }
         }
@@ -130,7 +130,7 @@ public class RoomManager implements Serializable {
     }
 
     public boolean meetsRequirements(String roomName,Integer eventId){
-        return find_room(roomName).getTechAvailable().containsAll(em.find_event(eventId).getTechRequirements());
+        return find_room(roomName).getTechAvailable().containsAll(em.findEvent(eventId).getTechRequirements());
     }
 
 

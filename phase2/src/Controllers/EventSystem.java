@@ -45,12 +45,12 @@ public class EventSystem implements Serializable{
      */
     public boolean add_event(String type, String name, String description, String start, String end, String date,
                              int capacity, boolean event_only) throws IOException {
-        if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))
-        || em.not_valid_format(em.date_formatting_date(date))) {
+        if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
+        || em.notValidFormat(em.dateFormattingDate(date))) {
             return false;
         }else {
-            em.create_event(type, name, description, em.date_formatting_time(start),
-                    em.date_formatting_time(end), em.date_formatting_date(date), capacity, event_only);
+            em.createEvent(type, name, description, em.dateFormattingTime(start),
+                    em.dateFormattingTime(end), em.dateFormattingDate(date), capacity, event_only);
             em.writeToFile("EventSave.ser");
             return true;
         }
@@ -62,7 +62,7 @@ public class EventSystem implements Serializable{
      * @return ArrayList of Events
      */
     public boolean add_room(String name, Integer capacity, String start, String end) throws IOException {
-        if(em.not_valid_format(em.date_formatting_time(start))|| em.not_valid_format(em.date_formatting_time(end))) {
+        if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))) {
             return false;
         }else {
             rm.create_room(name, capacity, rm.date_formatting_time(start), rm.date_formatting_time(end));
@@ -73,38 +73,47 @@ public class EventSystem implements Serializable{
 
 
     /**
-     * Adds Entities.Talk to an existing Entities.Event
-     *
-     * @return true if talk is added successfully
+     * Returns true if the event was added to the conference
+     * @param conferenceName the name of the conference
+     * @param eventId the id of the event  to be added to the conference
+     * @return true if event was added to conference
+     * @throws IOException
      */
     public boolean addEventToConference(String conferenceName,Integer eventId) throws IOException {
-        for(Integer schedule: cm.findConference(conferenceName).getEventIds()){
-            if(em.time_conflict(em.find_event(schedule), em.find_event(eventId))){
-                return false;
-            }
-            else{
-                cm.findConference(conferenceName).addEvent(eventId);
-                cm.findConference(conferenceName).addEventName(cm.findConference(conferenceName).getName());
-                return true;
-            }
+        if (cm.conferenceExists(conferenceName) && em.findEvent(eventId) == null){
+            return false;
         }
-        return false;
+        return cm.addEvent(cm.findConference(conferenceName),eventId);
+    }
+
+    /**
+     * Returns true if event was successfully cancelled from the conference
+     * @param conferenceName the name of the conference
+     * @param eventId the id of the event
+     * @return true if event was successfully cancelled
+     * @throws IOException
+     */
+    public boolean cancelEventInConference(String conferenceName,Integer eventId) throws IOException{
+        if (cm.conferenceExists(conferenceName) && em.findEvent(eventId) == null){
+            return false;
+        }
+        return cm.cancelEvent(cm.findConference(conferenceName),eventId);
     }
 
     /**
      * Schedules a Entities.Room for an existing Entities.Event
      */
     public void schedule_room(String room_name, Integer eventId) throws IOException {
-        Event event = em.find_event(eventId);
+        Event event = em.findEvent(eventId);
         Room room = rm.find_room(room_name);
         if(room == null){
             System.out.println("Entities.Room doesn't exit");
             return;
         }
-        if(!rm.is_room_booked(room, event) && event.getEventRoom() == null && rm.can_fit_event(event,room)){
+        if(!rm.is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
-            room.addBookings(event.getEventId(), em.get_localDateTime(event.getEventDate(),event.getStartTime()),
-                    em.get_localDateTime(event.getEventDate(),event.getEndTime()));
+            room.addBookings(event.getEventId(), em.getLocalDateTime(event.getEventDate(),event.getStartTime()),
+                    em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
             em.writeToFile("EventSave");
         }else{
             System.out.println("Entities.Room not scheduled due to time conflict");
@@ -118,10 +127,10 @@ public class EventSystem implements Serializable{
      */
     // Need to fix - Isha
     public boolean schedule_speaker(String speakerEmail, Integer eventId){
-        Entities.Event event = em.find_event(eventId);
+        Entities.Event event = em.findEvent(eventId);
         String eventType = event.eventType();
         Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
-        if(em.can_schedule_speaker(event,speakerEmail)){
+        if(em.canScheduleSpeaker(event,speakerEmail)){
             s.addTalk(event.getEventId());
             switch (eventType){
                 case "Entities.Panel":

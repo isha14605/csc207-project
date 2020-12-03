@@ -14,6 +14,7 @@ public class UserManager{
     public static ArrayList<User> users = new ArrayList<User>();
     public static ArrayList<String> email = new ArrayList<String>();
     public EventManager em = new EventManager(); // can we do this?
+    public ConferenceManager cm = new ConferenceManager();
 
 
     /**
@@ -60,28 +61,37 @@ public class UserManager{
     }
 
     /**
-     * Allows an Entities.Attendee to sign up for an Entities.Event. Checks to see if the Entities.Room where the Entities.Event is held is not at full
-     * capacity and that the Entities.Attendee has not already signed up for the Entities.Event, before signing up the specified Entities.Attendee
-     * for the specified Entities.Event.
+     * Allows an Entities.Attendee to sign up for an Entities.Event.
      * @param attendee the Entities.Attendee who wants to sign up for an event
      * @param event the Entities.Event that the attendee would like to attend
      * @see Event#getAttendeeCapacity()
      * @see Event#getAttendeeEmails()
      * @see Event#getEventId()
      * @see Attendee#attendEvent(Integer)
+     * @see Attendee#getEventsAttending()
      * @see Attendee#attendEvent(Integer)
      * @see Attendee#getEmail()
+     * @see Attendee#attendConference(String)
+     * @see ConferenceManager#addAttendeesToConference(Conference, String)
+     * @see ConferenceManager#eventInConference(Integer)
+     * @see EventManager#findEvent(Integer)
      */
-    public boolean signUpEvent(Attendee attendee, Event event){
-        if ((event.getAttendeeCapacity()> event.getAttendeeEmails().size()) &&
-                !attendee.getEventsAttending().contains(event.getEventId())) {
-            attendee.attendEvent(event.getEventId());
-            event.addAttendee(attendee.getEmail());
-            return true; //successfully signed up
+    public boolean signUpEvent(Attendee attendee, Integer event){
+        Event e = em.findEvent(event);
+        if(!(cm.eventInConference(event) == null) && !attendee.getEventsAttending().contains(event)){
+            cm.addAttendeesToConference(cm.eventInConference(event), attendee.getEmail());
+            attendee.attendConference(cm.eventInConference(event).getName());
+            return true; // signed up in a conference
+        } else if (cm.eventInConference(event) == null && !attendee.getEventsAttending().contains(event) &&
+                e.getAttendeeCapacity() < e.getAttendeeEmails().size()){
+            attendee.attendEvent(e.getEventId());
+            e.addAttendee(attendee.getEmail());
+            return true; //signed up
         }
         return false; //cannot be signed up
     }
 
+    // NEED TO FIX - Tanya
     /**
      * Cancels Entities.Attendee's registration for an Entities.Event. Checks to see that the specified Entities.Attendee is actually signed up
      * for the specified Entities.Event, before removing the Entities.Attendee from the Entities.Event.
@@ -91,21 +101,48 @@ public class UserManager{
      * @see Attendee#removeEvent(Integer)
      * @see Attendee#getEmail()
      * @see Event#removeAttendee(String)
-     * @see EventManager#find_event(Integer)
+     * @see EventManager#findEvent(Integer)
      */
     public boolean cancelRegistrationEvent(Attendee attendee, Integer event){
-        if (attendee.getEventsAttending().contains(event)) {
-            attendee.removeEvent(event);
-            em.find_event(event).removeAttendee(attendee.getEmail());
-            return true; //if event cancelled
+        Conference c = cm.eventInConference(event);
+        int ctr = 0;
+        if (!(c== null)){
+            for(int e: c.getEventIds()){
+                if (em.findEvent(e).getAttendeeEmails().contains(attendee.getEmail())){ctr = ctr +1;}
+                // counts if attendee is part of more than 1
+            }
         }
-        return false; //if event not cancelled
+        if(attendee.getEventsAttending().contains(event)){
+            attendee.removeEvent(event);
+            em.findEvent(event).removeAttendee(attendee.getEmail());
+            if (ctr == 1){attendee.removeConference(c.getName());} // if part of only this event, remove conference
+            return true; //cancelled reg in event
+        }
+        return false;
     }
 
-    public boolean signUpConference(Attendee attendee, String name){
-        return true;
+
+    /**
+     * Signs up Entities.Attendee for the conference
+     * @param attendee the attendee who wishes to sign up for a conference
+     * @param name the name of the conference
+     */
+    public void signUpConference(Attendee attendee, String name){
+        Conference c = cm.findConference(name);
+        cm.addAttendeesToConference(c, attendee.getEmail());
+        attendee.attendConference(name);
     }
 
+    /**
+     * Signs up Entities.Attendee for the conference
+     * @param attendee the attendee who wishes to cancel registration  for a conference
+     * @param name the name of the conference
+     */
+    public void cancelRegistrationConference(Attendee attendee, String name){
+        Conference c = cm.findConference(name);
+        cm.removeAttendeeConference(c,attendee.getEmail());
+        attendee.removeConference(c.getName());
+    }
 
     /**
      * @param from, the user who wants to send the message.
@@ -146,8 +183,8 @@ public class UserManager{
     private void speakerMessage(String from, ArrayList<String> to, String message){
         ArrayList<String> a = new ArrayList<String>();
         for(String i : to){
-            if (em.find_event(Integer.parseInt(i)) != null){
-                a.addAll(em.find_event(Integer.parseInt(i)).getAttendeeEmails());
+            if (em.findEvent(Integer.parseInt(i)) != null){
+                a.addAll(em.findEvent(Integer.parseInt(i)).getAttendeeEmails());
             }
         }
         ArrayList<User> u = findUsers(a);
