@@ -106,7 +106,6 @@ public class EventManager implements Serializable {
     }
 
 
-
     /** Checks if there is a time conflict between two events
      * @param event1 date of the event of event in local time.
      * @param event2 date of the event of event in local time.

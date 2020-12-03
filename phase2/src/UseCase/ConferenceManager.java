@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class ConferenceManager {
     public static ArrayList<Conference> conferences;
     EventManager em = new EventManager();
+    UserManager um = new UserManager();
 
     /** constructor*/
     public ConferenceManager(){
@@ -125,12 +126,86 @@ public class ConferenceManager {
      * @return true if event in conference
      */
 
-    public boolean eventInConference(Integer event){
+    public Conference eventInConference(Integer event){
         for (Conference c: conferences){
             if (c.getEventIds().contains(event)){
-                return true;
+                return c;
             }
         }
-        return false;
+        return null;
     }
+
+    public ArrayList<Event> nonVipEvents(Conference c){
+        ArrayList<Event> events = new ArrayList<Event>();
+        for(int e: c.getEventIds()){
+            if (!(em.findEvent(e).isVipOnly())){
+                events.add(em.findEvent(e));
+            }
+        }
+        return events;
+    }
+
+    public ArrayList<Event> vipEvents(Conference c){
+        ArrayList<Event> events = new ArrayList<Event>();
+        for(int e: c.getEventIds()){
+            if (em.findEvent(e).isVipOnly()){
+                events.add(em.findEvent(e));
+            }
+        }
+        return events;
+    }
+
+    // NEED TO FIX - Tanya
+    public boolean addAttendeesToConference(Conference c, String name){
+        Entities.Attendee u = (Entities.Attendee) um.findUser(name);
+        ArrayList<Event> vip = vipEvents(c);
+        ArrayList<Event> nonvip = nonVipEvents(c);
+        boolean flag = false;
+        for(Event e: nonvip) {
+            if (e.getAttendeeCapacity() < e.getAttendeeEmails().size()) {
+                u.attendEvent(e.getEventId());
+                e.addAttendee(u.getEmail());
+                flag = true;
+            }
+        }
+        if (u.userType() == 'V'){
+            for(Event event: vip){
+                if(event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
+                    Entities.VIP v = (Entities.VIP) u;
+                    v.attendVipEvent(event.getEventId());
+                    event.addAttendee(u.getEmail());
+                    flag = true;
+                }
+            }
+
+        }
+        return flag;
+    }
+
+    // NEED TO FIX - Tanya
+    public  boolean removeAttendeeConference(Conference c, String name){
+        Entities.Attendee u = (Entities.Attendee) um.findUser(name);
+        ArrayList<Event> vip = vipEvents(c);
+        ArrayList<Event> nonvip = nonVipEvents(c);
+        boolean flag = false;
+        for(Event e: nonvip) {
+            if (u.getEventsAttending().contains(e.getEventId())) {
+                u.removeEvent(e.getEventId());
+                e.removeAttendee(u.getEmail());
+                flag = true;
+            }
+        }
+        if (u.userType() == 'V'){
+            for(Event event: vip){
+                if(u.getEventsAttending().contains(event.getEventId())){
+                    Entities.VIP v = (Entities.VIP) u;
+                    v.removeVipEvent(event.getEventId());
+                    event.removeAttendee(u.getEmail());
+                    flag = true;
+                }
+            }
+        }
+        return flag;
+    }
+
 }

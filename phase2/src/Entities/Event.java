@@ -147,7 +147,7 @@ public abstract class Event implements Serializable {
      * required time as per start_time ,end_time and eventDate. An event can only be assigned to 1 room.
      * @param roomName the room for this event.
      */
-    protected void setRoomName(String roomName) {
+    public void setRoomName(String roomName) {
         this.roomName = roomName;
     }
 

@@ -62,6 +62,12 @@ public class Attendee extends User {
     }
 
     /**
+     * Adds a conference to an Entities.Attendee's list of conferences that they are attending.
+     * @param conference the conference that the Entities.Attendee would like to attend.
+     */
+    public void attendConference(String conference){this.conferenceAttending.add(conference);}
+
+    /**
      * Removes an Event from an Entities.Attendee's list of events that they are attending.
      * @param event the event that the Entities.Attendee would no longer like to attend
      */
