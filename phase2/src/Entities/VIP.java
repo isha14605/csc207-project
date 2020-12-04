@@ -11,6 +11,8 @@ import java.util.ArrayList;
  */
 public class VIP extends Attendee{
     private ArrayList<Integer> vipEventsAttending;
+    private String memberStatus; // Determines the member's fame based on points (events attended)
+    private int memberPoints; // Stores a cumalative count of the VIP's points, updates each time new event attended
 
     /**
      * Creates a Entities.VIP with the provided name, password, and email.
@@ -22,6 +24,8 @@ public class VIP extends Attendee{
     public VIP(String name, String password, String email) {
         super(name, password, email);
         this.vipEventsAttending = new ArrayList<Integer>();
+        this.memberPoints = 0;
+        this.memberStatus = 'Bronze';
     }
 
     /**
@@ -46,6 +50,32 @@ public class VIP extends Attendee{
      */
     public void removeVipEvent(Integer event) {
         this.vipEventsAttending.remove(event);
+    }
+
+    public int getMemberPoints(){
+        return this.memberPoints;
+    }
+
+    public void addPoints(int newPoints){
+        this.memberPoints += newPoints
+    }
+
+    public String getMemberStatus(){
+        return this.memberStatus;
+    }
+
+    // Double check on where to implement this method <- member determination with points
+    public void setMemberStatus(int memberPoints){
+        if (memberPoints >= 1000){
+            this.memberStatus = "Platinum";
+        } else if (memberPoints < 1000 && points >= 500){
+            this.memberStatus = "Gold";
+        } else if (memberPoints < 500 && points >= 100){
+            this.memberStatus = "Silver";
+        } else if (memberPoints < 100){
+            // Just in case we implement a method that requires us to deduct points from a VIP user
+            this.memberStatus = "Bronze";
+        }
     }
 
     public char userType(){
