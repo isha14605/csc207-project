@@ -185,4 +185,11 @@ public abstract class Event implements Serializable {
     public void setAttendeeCapacity(int attendeeCapacity) {
         this.attendeeCapacity = attendeeCapacity;
     }
+
+    /**
+     * Adds a tech requirement to the event
+     * The requirement should be one from the list of requirements. Event Manager should ensure this.
+     * @param requirement a string representing a tech requirement of this event
+     */
+    public void addTechRequirements(String requirement) {this.techRequirements.add(requirement);}
 }
