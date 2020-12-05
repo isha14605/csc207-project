@@ -59,7 +59,7 @@ public class EventManager implements Serializable {
     }
 
 
-    /** Finds the event with the event id .
+    /** Finds the event with the event id.
      * @param event_id a integer that is connected to a event.
      @return  returns the event that has the event_id value if event doesn't exist returns null */
     public Event findEvent(Integer event_id){
@@ -180,5 +180,13 @@ public class EventManager implements Serializable {
             eventNames.add("Event Id: " + booked.getEventId() + " - " + booked.getName());
         }
         return eventNames;
+    }
+
+    public ArrayList<String> getAllEmails(ArrayList<Event> events) {
+        ArrayList<String> attendees = new ArrayList<String>();
+        for (Event e: events) {
+            attendees.addAll(e.getAttendeeEmails());
+        }
+        return attendees;
     }
 }

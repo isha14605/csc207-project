@@ -2,6 +2,9 @@ package Controllers;
 
 import Entities.Attendee;
 import Entities.Event;
+import Gateway.ConferenceSave;
+import Gateway.EventSave;
+import Gateway.UserSave;
 import UseCase.ConferenceManager;
 import UseCase.EventManager;
 import UseCase.UserManager;
@@ -16,9 +19,15 @@ import java.util.ArrayList;
  */
 public class SignUpSystem {
 
-    UserManager uM = new UserManager(); // New instance of UseCase.UserManager
-    EventManager eM = new EventManager(); // New instance of UseCase.EventManager
-    ConferenceManager cM = new ConferenceManager(); // New instance of UseCase.ConferenceManager
+    private UserManager uM;
+    private EventManager eM;
+    private ConferenceManager cM;
+
+    public SignUpSystem() {
+        this.uM = new UserSave().read();
+        this.eM = new EventSave().read();
+        this.cM = new ConferenceSave().read();
+    }
 
     /**
      * Returns a list of events that an Entities.Attendee can attend, based on a specified date, start time, and end time. Checks

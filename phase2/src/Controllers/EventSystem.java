@@ -12,22 +12,21 @@ import UseCase.RoomManager;
 import UseCase.UserManager;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 public class EventSystem{
-    ConferenceManager cm;
-    EventManager em;
-    RoomManager rm;
-    UserManager um;
+    private ConferenceManager cm;
+    private EventManager em;
+    private RoomManager rm;
+    private UserManager um;
 
     /**
      * EventController Constructor
      */
     public EventSystem() throws ClassNotFoundException, IOException {
-        ConferenceManager cm = new ConferenceSave().read();
-        EventManager em = new EventSave().read();
-        RoomManager rm = new RoomSave().read();
-        UserManager um = new UserSave().read();
+        this.cm = new ConferenceSave().read();
+        this.em = new EventSave().read();
+        this.rm = new RoomSave().read();
+        this.um = new UserSave().read();
 
     }
 

@@ -2,8 +2,6 @@ package UseCase;
 
 import Entities.Conference;
 import Entities.Event;
-import Gateway.EventSave;
-import Gateway.UserSave;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,8 +15,8 @@ import java.util.ArrayList;
  */
 public class ConferenceManager implements Serializable {
     public static ArrayList<Conference> conferences;
-    EventManager em;
-    UserManager um;
+    EventManager em; // ask about this being private since the code complains
+    UserManager um; // ask about this being private since the code complains
 
     /** constructor*/
     public ConferenceManager(){
