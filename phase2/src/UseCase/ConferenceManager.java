@@ -222,4 +222,11 @@ public class ConferenceManager implements Serializable {
         }
         return conferenceNames;
     }
+
+
+    //need to discuss
+    public ArrayList<Integer> getEvents(Conference c){
+        return c.getEventIds();
+        }
 }
+
