@@ -114,4 +114,14 @@ public abstract class User{
      */
     public abstract char userType();
 
+    /**
+     *
+     * @param who the email of the user who this user can no longer message.
+     */
+    public void removeContact(String who){
+        this.contacts.remove(who);
+        this.messagesReceived.remove(who);
+        this.messagesSent.remove(who);
+    }
+
 }
