@@ -264,4 +264,20 @@ public class UserManager implements Serializable {
             findUser(email).addContact(current);
         }
     }
+
+    // Method used for VIP users only, updates VIP's status depedning on current level of total points
+    // Method to be called when signing a VIP up for a event or cancelling thier spot in an event
+    public void updateMemberStatus(VIP vip){
+        int memberTotalPoints = vip.getMemberPoints;
+        if (memberTotalPoints >= 1000){
+            vip.memberStatus = "Platinum";
+        } else if (memberTotalPoints < 1000 && memberTotalPoints >= 500){
+            vip.memberStatus = "Gold";
+        } else if (memberTotalPoints < 500 && memberTotalPoints >= 100){
+            vip.memberStatus = "Silver";
+        } else if (memberTotalPoints < 100){
+            vip.memberStatus = "Bronze";
+        }
+    }
+
 }
