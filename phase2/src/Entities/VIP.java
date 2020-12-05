@@ -25,7 +25,7 @@ public class VIP extends Attendee{
         super(name, password, email);
         this.vipEventsAttending = new ArrayList<Integer>();
         this.memberPoints = 0;
-        this.memberStatus = 'Bronze';
+        this.memberStatus = "Bronze";
     }
 
     /**
@@ -57,7 +57,7 @@ public class VIP extends Attendee{
     }
 
     public void addPoints(int newPoints){
-        this.memberPoints += newPoints
+        this.memberPoints += newPoints;
     }
 
     public String getMemberStatus(){
@@ -68,9 +68,9 @@ public class VIP extends Attendee{
     public void setMemberStatus(int memberPoints){
         if (memberPoints >= 1000){
             this.memberStatus = "Platinum";
-        } else if (memberPoints < 1000 && points >= 500){
+        } else if (memberPoints < 1000 && memberPoints >= 500){
             this.memberStatus = "Gold";
-        } else if (memberPoints < 500 && points >= 100){
+        } else if (memberPoints < 500 && memberPoints >= 100){
             this.memberStatus = "Silver";
         } else if (memberPoints < 100){
             // Just in case we implement a method that requires us to deduct points from a VIP user

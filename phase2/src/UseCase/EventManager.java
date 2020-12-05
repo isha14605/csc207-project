@@ -98,6 +98,7 @@ public class EventManager implements Serializable {
             for (String s: p.getSpeakerEmails()) {
                 if (s.equals(speakerEmail)) {
                     canAdd = true;
+                    break;
                 }
             }
             return canAdd;
@@ -169,30 +170,15 @@ public class EventManager implements Serializable {
         return null;
     }
 
-    public void writeToFile(String fileName) throws IOException {
-        OutputStream file = new FileOutputStream(fileName);
-        OutputStream buffer = new BufferedOutputStream(file);
-        ObjectOutput output = new ObjectOutputStream(buffer);
-
-        output.writeObject(events);
-        output.close();
-
-    }
-
-    public ArrayList<Event> readFile(String fileName) throws IOException, ClassNotFoundException {
-        try {
-            InputStream file = new FileInputStream(fileName);
-            InputStream buffer = new BufferedInputStream(file);
-            ObjectInput input = new ObjectInputStream(buffer);
-
-            ArrayList<Event> events1 = (ArrayList<Event>) input.readObject();
-            input.close();
-            return events1;
-        } catch (IOException | ClassNotFoundException ignored) {
-            System.out.println("couldn't read file.");
+    public ArrayList<String> getEventString() {
+        ArrayList<String> eventNames = new ArrayList<>();
+        if(events.size()==0){
+            eventNames.add("None");
+            return eventNames;
         }
-        return events;
+        for(Event booked: events){
+            eventNames.add("Event Id: " + booked.getEventId() + " - " + booked.getName());
+        }
+        return eventNames;
     }
-
-
 }

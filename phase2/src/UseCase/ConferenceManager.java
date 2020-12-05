@@ -2,7 +2,10 @@ package UseCase;
 
 import Entities.Conference;
 import Entities.Event;
+import Gateway.EventSave;
+import Gateway.UserSave;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -12,10 +15,10 @@ import java.util.ArrayList;
  * @author Chevoy Ingram & Tanya Thaker
  * @version 1.0
  */
-public class ConferenceManager {
+public class ConferenceManager implements Serializable {
     public static ArrayList<Conference> conferences;
-    EventManager em = new EventManager();
-    UserManager um = new UserManager();
+    EventManager em;
+    UserManager um;
 
     /** constructor*/
     public ConferenceManager(){
@@ -208,4 +211,15 @@ public class ConferenceManager {
         return flag;
     }
 
+    public ArrayList<String> getConferenceList() {
+        ArrayList<String> conferenceNames = new ArrayList<>();
+        if(conferences.size()==0){
+            conferenceNames.add("None");
+            return conferenceNames;
+        }
+        for(Conference booked: conferences){
+            conferenceNames.add(booked.getName());
+        }
+        return conferenceNames;
+    }
 }

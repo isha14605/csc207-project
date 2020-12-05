@@ -1,5 +1,6 @@
 package Controllers;
 
+import Gateway.UserSave;
 import UseCase.UserManager;
 
 /**
@@ -18,7 +19,7 @@ public class LoginSystem {
      * Constructor
      */
     public LoginSystem(){
-        this.userManager = new UserManager();
+        this.userManager = new UserSave().read();
     }
 
     /**
@@ -29,6 +30,7 @@ public class LoginSystem {
      * @return boolean true if login details are correct.
      * @see UserManager#verifyLogin(String email, String password)
      */
+
     public boolean checkLogIn(String email, String password) {
         if(userManager.checkUserExists(email)){
             return userManager.verifyLogin(email, password);

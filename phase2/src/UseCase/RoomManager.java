@@ -1,7 +1,9 @@
 package UseCase;
 
+import Entities.Conference;
 import Entities.Event;
 import Entities.Room;
+import Gateway.EventSave;
 
 import java.io.*;
 import java.time.LocalTime;
@@ -17,10 +19,11 @@ import java.util.ArrayList;
 
 public class RoomManager implements Serializable {
     private final ArrayList<Room> rooms = new ArrayList<>();
-    EventManager em = null;
+    EventManager em;
     private ArrayList<String> techOptions;
 
     public RoomManager(EventManager em){
+
         this.em = em;
     }
 
@@ -133,29 +136,15 @@ public class RoomManager implements Serializable {
         return find_room(roomName).getTechAvailable().containsAll(em.findEvent(eventId).getTechRequirements());
     }
 
-
-    public void writeToFile(String fileName) throws IOException {
-        OutputStream file = new FileOutputStream(fileName);
-        OutputStream buffer = new BufferedOutputStream(file);
-        ObjectOutput output = new ObjectOutputStream(buffer);
-
-        output.writeObject(this);
-        output.close();
-
-    }
-
-    public RoomManager readFile(String fileName) throws IOException, ClassNotFoundException {
-        try {
-            InputStream file = new FileInputStream(fileName);
-            InputStream buffer = new BufferedInputStream(file);
-            ObjectInput input = new ObjectInputStream(buffer);
-
-            RoomManager rm = (RoomManager) input.readObject();
-            input.close();
-            return rm;
-        } catch (IOException | ClassNotFoundException ignored) {
-            System.out.println("couldn't read room file.");
+    public ArrayList<String> getRoomsString() {
+        ArrayList<String> conferenceNames = new ArrayList<>();
+        if(rooms.size()==0){
+            conferenceNames.add("None");
+            return conferenceNames;
         }
-        return new RoomManager(em);
+        for(Room booked: rooms){
+            conferenceNames.add(booked.getName());
+        }
+        return conferenceNames;
     }
 }

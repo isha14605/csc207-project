@@ -2,6 +2,7 @@ package UseCase;
 
 import Entities.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,17 +11,21 @@ import java.util.ArrayList;
  * @author Isha Sharma and Tanya Thaker
  * @version 1.0
  */
-public class UserManager{
+public class UserManager implements Serializable {
     public static ArrayList<User> users = new ArrayList<User>();
     public static ArrayList<String> email = new ArrayList<String>();
-    public EventManager em = new EventManager(); // can we do this?
-    public ConferenceManager cm = new ConferenceManager();
+    public EventManager em; // can we do this?
+    public ConferenceManager cm;
 
 
     /**
      * UseCase.UserManager Constructor
      */
-    public UserManager(){}
+    public UserManager(){
+        EventManager em = new EventManager(); // can we do this?
+        ConferenceManager cm = new ConferenceManager();
+        addUser("Chevoy Ingram","c","c","organizer");
+    }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
      * @param name the name of the user.

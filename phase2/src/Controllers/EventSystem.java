@@ -2,6 +2,10 @@ package Controllers;
 
 import Entities.Event;
 import Entities.Room;
+import Gateway.ConferenceSave;
+import Gateway.EventSave;
+import Gateway.RoomSave;
+import Gateway.UserSave;
 import UseCase.ConferenceManager;
 import UseCase.EventManager;
 import UseCase.RoomManager;
@@ -10,26 +14,21 @@ import UseCase.UserManager;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class EventSystem implements Serializable{
-    ConferenceManager cm = new ConferenceManager();
-    EventManager em = new EventManager();
-    RoomManager rm = new RoomManager(em);
-    UserManager um = new UserManager();
+public class EventSystem{
+    ConferenceManager cm;
+    EventManager em;
+    RoomManager rm;
+    UserManager um;
 
     /**
      * EventController Constructor
      */
     public EventSystem() throws ClassNotFoundException, IOException {
-        rm = rm.readFile("RoomSave.ser");
+        ConferenceManager cm = new ConferenceSave().read();
+        EventManager em = new EventSave().read();
+        RoomManager rm = new RoomSave().read();
+        UserManager um = new UserSave().read();
 
-    }
-
-    /**
-     * Saves EventController data to file
-     */
-    public void save() throws IOException {
-        em.writeToFile("EventSave.ser");
-        System.out.println("changes have been saved");
     }
 
     /**
@@ -51,7 +50,6 @@ public class EventSystem implements Serializable{
         }else {
             em.createEvent(type, name, description, em.dateFormattingTime(start),
                     em.dateFormattingTime(end), em.dateFormattingDate(date), capacity, event_only);
-            em.writeToFile("EventSave.ser");
             return true;
         }
     }
@@ -66,7 +64,6 @@ public class EventSystem implements Serializable{
             return false;
         }else {
             rm.create_room(name, capacity, rm.date_formatting_time(start), rm.date_formatting_time(end));
-            rm.writeToFile("RoomSave.ser");
             return true;
         }
     }
@@ -114,7 +111,6 @@ public class EventSystem implements Serializable{
             rm.schedule_room(room, event);
             room.addBookings(event.getEventId(), em.getLocalDateTime(event.getEventDate(),event.getStartTime()),
                     em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
-            em.writeToFile("EventSave");
         }else{
             System.out.println("Entities.Room not scheduled due to time conflict");
         }
