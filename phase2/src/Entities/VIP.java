@@ -2,6 +2,9 @@ package Entities;
 
 import java.util.ArrayList;
 
+// Note: the member status and points system is only applicable to VIP users. This feature is not available to
+// regular attendees. VIP is essentially like a members-only club.
+
 /**
  * Represents a Entities.VIP user. This is a subclass of the Entities.Attendee class.
  * @author Anushka Saini
@@ -20,12 +23,11 @@ public class VIP extends Attendee{
      * @param password the password of this Entities.VIP.
      * @param email the email of this Entities.VIP.
      */
-    // Constructor for Entities.VIP
     public VIP(String name, String password, String email) {
         super(name, password, email);
         this.vipEventsAttending = new ArrayList<Integer>();
         this.memberPoints = 0;
-        this.memberStatus = "Bronze";
+        this.memberStatus = "Bronze"; // Every VIP starts at the Bronze Level
     }
 
     /**
@@ -56,28 +58,28 @@ public class VIP extends Attendee{
         return this.memberPoints;
     }
 
-    public void addPoints(int newPoints){
-        this.memberPoints += newPoints;
+    // Use this method to add points when a VIP adds an event to attend
+    public void addPoints(int pointsToAdd){
+        this.memberPoints += pointsToAdd;
     }
 
+    // Use this method to deduct points when a VIP cancels an event to attend
+    public void removePoints(in pointsToRemove){
+        this.memberPoints -= pointsToRemove;
+    }
+
+    /**
+     *
+     * @return the VIP's current status level, either 'Bronze', 'Silver', 'Gold', or 'Platinum'
+     */
     public String getMemberStatus(){
         return this.memberStatus;
     }
 
-    // Double check on where to implement this method <- member determination with points
-    public void setMemberStatus(int memberPoints){
-        if (memberPoints >= 1000){
-            this.memberStatus = "Platinum";
-        } else if (memberPoints < 1000 && memberPoints >= 500){
-            this.memberStatus = "Gold";
-        } else if (memberPoints < 500 && memberPoints >= 100){
-            this.memberStatus = "Silver";
-        } else if (memberPoints < 100){
-            // Just in case we implement a method that requires us to deduct points from a VIP user
-            this.memberStatus = "Bronze";
-        }
-    }
-
+    /**
+     * Returns a string that represents the type of Entities.User this object is, eg. V for Entities.VIP.
+     * @return a string representing the type of Entities.User this object is
+     */
     public char userType(){
         return 'V';
     }
