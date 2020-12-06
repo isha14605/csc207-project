@@ -1,7 +1,9 @@
 package Controllers;
 
+import Entities.Conference;
 import Entities.Event;
 import Entities.Room;
+import Entities.User;
 import Gateway.ConferenceSave;
 import Gateway.EventSave;
 import Gateway.RoomSave;
@@ -12,6 +14,7 @@ import UseCase.RoomManager;
 import UseCase.UserManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class EventSystem{
     private ConferenceManager cm;
@@ -51,6 +54,35 @@ public class EventSystem{
                     em.dateFormattingTime(end), em.dateFormattingDate(date), capacity, event_only);
             return true;
         }
+    }
+
+    public boolean cancel_event(Integer id) { //NOT FULLY IMPLEMENTED
+
+        Event e = em.findEvent(id);
+
+        if(e == null) {
+            return false;
+        }
+
+        Conference c = cm.eventInConference(id);
+
+        // cancel all attendee registrations
+        ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
+        for(User a : attendees) {
+            um.cancelRegistrationEvent(a, e, c);
+        }
+
+        // cancel all organizers
+
+        // cancel all speakers
+
+        // delete from any conference if applicable
+        if(!cm.cancelEvent(c, id)) {
+            return false;
+        }
+
+        // delete from em
+        return em.deleteEvent(id);
     }
 
     /**

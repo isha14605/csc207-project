@@ -58,6 +58,9 @@ public class EventManager implements Serializable {
         return false;
     }
 
+    public boolean deleteEvent(Integer id) {
+        return events.remove(findEvent(id));
+    }
 
     /** Finds the event with the event id.
      * @param event_id a integer that is connected to a event.

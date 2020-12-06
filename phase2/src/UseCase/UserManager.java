@@ -123,7 +123,7 @@ public class UserManager implements Serializable {
      */
     public boolean cancelRegistrationEvent(Attendee attendee, Event event, Conference c){
         int ctr = 0;
-        if (attendee.getEventsAttending().contains(event.getEventId()) &&
+        if (attendee.getEventsAttending().contains(event.getEventId()) ||
                 event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
             return false;
         }
