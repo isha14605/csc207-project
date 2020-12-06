@@ -64,9 +64,11 @@ public class VIP extends Attendee{
     }
 
     // Use this method to deduct points when a VIP cancels an event to attend
-    public void removePoints(in pointsToRemove){
+    public void removePoints(int pointsToRemove){
         this.memberPoints -= pointsToRemove;
     }
+
+    public void setMemberStatus(String newStatus){this.memberStatus = newStatus;}
 
     /**
      *

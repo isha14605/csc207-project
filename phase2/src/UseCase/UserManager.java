@@ -81,20 +81,12 @@ public class UserManager implements Serializable {
     public boolean signUpEvent(Attendee attendee, Event event, Conference c){
         if(c== null && !(attendee.getEventsAttending().contains(event.getEventId()))
                 && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            if(event.isVipOnly() && attendee.userType() == 'V'){
-                //points system to be implemented
-                //append vip events to VIP.vipEvents as well
-            }
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
             return true;
         } else if ( c!= null && !(attendee.getEventsAttending().contains(event.getEventId()))
                 && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            if(event.isVipOnly() && attendee.userType() == 'V'){
-                //points system to be implemented
-                //append vip events to VIP.vipEvents as well
-            }
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             attendee.addContact(c.getName());
@@ -102,6 +94,34 @@ public class UserManager implements Serializable {
             return true;
         }
         return false;
+    }
+
+    public void signUpVip(VIP v, Event event, Conference c){
+        boolean flag = signUpEvent(v, event, c);
+        if (flag){
+            if(event.isVipOnly()){
+                v.attendVipEvent(event.getEventId());
+                v.addPoints(50);
+                updateMemberStatus(v);
+            } else if(!event.isVipOnly()){
+                v.addPoints(10);
+                updateMemberStatus(v);
+            }
+        }
+    }
+
+    public void cancelVip(VIP v, Event event, Conference c){
+        boolean flag = cancelRegistrationEvent(v, event, c);
+        if (flag){
+            if(event.isVipOnly()){
+                v.removeVipEvent(event.getEventId());
+                v.removePoints(50);
+                updateMemberStatus(v);
+            } else if(!event.isVipOnly()){
+                v.removePoints(10);
+                updateMemberStatus(v);
+            }
+        }
     }
 
     /**
@@ -141,7 +161,6 @@ public class UserManager implements Serializable {
         removeListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
         return true;
     }
-
 
     /**
      * Signs up Entities.Attendee for the conference
@@ -318,4 +337,17 @@ public class UserManager implements Serializable {
             }
         }
     }
+
+    public void updateMemberStatus(VIP vip){
+        int totalPoints = vip.getMemberPoints();
+        if (totalPoints >= 1000){
+            vip.setMemberStatus("Platinum");
+        } else if (totalPoints < 1000 && totalPoints >= 500){
+            vip.setMemberStatus("Gold");
+        } else if (totalPoints < 500 && totalPoints >= 100){
+            vip.setMemberStatus("Silver");
+        } else if (totalPoints < 100)
+            vip.setMemberStatus("Bronze");
+    }
+
 }

@@ -168,6 +168,11 @@ public class ConferenceManager implements Serializable {
                 e.addAttendee(u.getEmail());
                 flag = true;
             }
+            if (u.userType() == 'V'){
+                Entities.VIP v = (Entities.VIP) u;
+                v.addPoints(10);
+            }
+
         }
         if (u.userType() == 'V'){
             for(Event event: vip){
@@ -175,6 +180,7 @@ public class ConferenceManager implements Serializable {
                     Entities.VIP v = (Entities.VIP) u;
                     v.attendVipEvent(event.getEventId());
                     event.addAttendee(u.getEmail());
+                    v.addPoints(50);
                     flag = true;
                 }
             }
@@ -195,6 +201,10 @@ public class ConferenceManager implements Serializable {
                 e.removeAttendee(u.getEmail());
                 flag = true;
             }
+            if (u.userType() == 'V'){
+                Entities.VIP v = (Entities.VIP) u;
+                v.removePoints(10);
+            }
         }
         if (u.userType() == 'V'){
             for(Event event: vip){
@@ -202,6 +212,7 @@ public class ConferenceManager implements Serializable {
                     Entities.VIP v = (Entities.VIP) u;
                     v.removeVipEvent(event.getEventId());
                     event.removeAttendee(u.getEmail());
+                    v.removePoints(50);
                     flag = true;
                 }
             }

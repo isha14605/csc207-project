@@ -52,7 +52,12 @@ public class SignUpSystem {
 //     Method to sign up an Entities.Attendee for an Entities.Event
     public boolean signUpEvent(String email, Integer event){
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
-            return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+            if (uM.findUser(email).userType() == 'V'){
+                uM.signUpVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+                return true;
+            } else {
+                return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+            }
         }
         return false;
     }
@@ -69,8 +74,13 @@ public class SignUpSystem {
      */
     public boolean cancelRegEvent(String email, Integer event){
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
-            return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
-                    cM.eventInConference(event));
+            if (uM.findUser(email).userType() == 'V'){
+                uM.cancelVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+                return true;
+            } else {
+                return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
+                        cM.eventInConference(event));
+            }
         }
         return false;
     }
