@@ -126,8 +126,9 @@ public class EventSystem{
         String eventType = event.eventType();
         Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
         if(em.canScheduleSpeaker(event,speakerEmail)){
-            s.addTalk(event.getEventId());
+            s.addEvent(event.getEventId()); // fix calling method on entity
             switch (eventType){
+                // fix this
                 case "Entities.Panel":
                     event.setSpeaker(speakerEmail);
 

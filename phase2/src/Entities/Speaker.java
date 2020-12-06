@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 
 public class Speaker extends User{
-    private ArrayList<Integer> talksSpeaking;
+    private ArrayList<Integer> eventsSpeaking;
 
     /**
      * Creates a Entities.Speaker with the provided name, password, and email.
@@ -21,7 +21,7 @@ public class Speaker extends User{
     // Constructor Method for Entities.Speaker
     public Speaker(String name, String password, String email) {
         super(name, password, email);
-        this.talksSpeaking = new ArrayList<Integer>();
+        this.eventsSpeaking = new ArrayList<Integer>();
     }
 
     /**
@@ -31,17 +31,17 @@ public class Speaker extends User{
      */
     // Getter: Retrieves a List of Talks that the Entities.Speaker is talking at.
     public ArrayList<Integer> getTalksSpeaking(){
-        return this.talksSpeaking;
+        return this.eventsSpeaking;
     }
 
     /**
      * Adds a Entities.Talk to the Entities.Speaker's list of Talks that they are talking at.
-     * @param talk the Entities.Talk that the Entities.Speaker would like to speak at.
+     * @param event the Entities.Talk that the Entities.Speaker would like to speak at.
      * @see Talk
      */
     // Setter: Add a talk that this Entities.Speaker is talking at to the list talks_speaking.
-    public void addTalk(Integer talk){
-        this.talksSpeaking.add(talk);
+    public void addEvent(Integer event){
+        this.eventsSpeaking.add(event);
     }
 
     /**
