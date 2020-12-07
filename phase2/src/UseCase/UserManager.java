@@ -377,7 +377,7 @@ public class UserManager implements Serializable {
 
     private void removeSpeakerContacts(Attendee attendee, User user){
         Speaker speaker = (Speaker) user;
-        for(Integer i: speaker.getTalksSpeaking()){
+        for(Integer i: speaker.getEventsSpeaking()){
             if (!(attendee.getEventsAttending().contains(i))){
                 attendee.removeContact(speaker.getEmail());
                 speaker.removeContact(attendee.getEmail());
@@ -400,7 +400,5 @@ public class UserManager implements Serializable {
         } else if (totalPoints < 100)
             vip.setMemberStatus("Bronze");
     }
-
-    //Need to commit
 
 }
