@@ -309,6 +309,7 @@ public class UserManager implements Serializable {
         }
     }
 
+    //desperate
     private void removeListContacts(Attendee attendee, ArrayList<String> contacts){
         for(String i: contacts){
             Attendee u = (Attendee) findUser(i);
