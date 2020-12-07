@@ -8,12 +8,12 @@ import java.io.*;
 public class RoomSave implements Gateway {
 
     @Override
-    public void save() throws IOException {
+    public void save(Object rm) throws IOException {
         OutputStream file = new FileOutputStream("RoomSave.ser");
         OutputStream buffer = new BufferedOutputStream(file);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this);
+        output.writeObject(rm);
         output.close();
     }
 

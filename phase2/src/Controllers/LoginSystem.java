@@ -3,6 +3,8 @@ package Controllers;
 import Gateway.UserSave;
 import UseCase.UserManager;
 
+import java.io.IOException;
+
 /**
  * This class is the controller class responsible for the login function
  *
@@ -18,7 +20,7 @@ public class LoginSystem {
     /**
      * Constructor
      */
-    public LoginSystem(){
+    public LoginSystem() throws IOException {
         this.userManager = new UserSave().read();
     }
 

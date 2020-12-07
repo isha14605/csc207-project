@@ -109,6 +109,30 @@ public class EventManager implements Serializable {
         return false;
     }
 
+    public ArrayList<String> eventToStrings(LocalDate time){
+        ArrayList<String> eventList = new ArrayList<>();
+        ArrayList<Event> e = getEventsOn(time);
+        for (Event event: e){
+            eventList.add("Event id: "+ event.getEventId());
+        }
+        if(eventList.isEmpty()){
+            eventList.add("None");
+        }
+        return eventList;
+    }
+
+    public ArrayList<String> eventConferenceList(ArrayList<Integer> eventIds){
+        ArrayList<String> events = new ArrayList<>();
+
+        for(Integer ids: eventIds){
+            events.add("Event id: " + ids);
+        }
+        if(events.isEmpty()){
+            events.add("None");
+        }
+        return events;
+    }
+
 
     /** Checks if there is a time conflict between two events
      * @param event1 date of the event of event in local time.

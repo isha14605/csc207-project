@@ -1,10 +1,11 @@
 package Entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Panel extends Event {
+public class Panel extends Event implements Serializable {
     private ArrayList<String> speakerEmails;
 
     /**
@@ -27,7 +28,7 @@ public class Panel extends Event {
 
     @Override
     public String eventType() {
-        return "Entities.Panel";
+        return "Panel";
     }
 
     @Override

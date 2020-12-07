@@ -1,5 +1,6 @@
 package Entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * @see User
  */
 
-public class Organizer extends User {
+public class Organizer extends User implements Serializable {
     private ArrayList<Integer> eventsOrganizing;
 
     // Constructor method for Entities.Organizer
