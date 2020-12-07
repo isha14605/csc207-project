@@ -26,9 +26,8 @@ public class Speaker extends User{
     }
 
     /**
-     * Returns an ArrayList of Talks that holds all of the Talks that the Entities.Speaker is speaking at.
+     * Returns an ArrayList of Talks that holds all of the Events that the Entities.Speaker is speaking at.
      * @return a list of all Talks that the Entities.Speaker is speaking at.
-     * @see Talk
      */
     // Getter: Retrieves a List of Talks that the Entities.Speaker is talking at.
     public ArrayList<Integer> getTalksSpeaking(){
@@ -36,9 +35,8 @@ public class Speaker extends User{
     }
 
     /**
-     * Adds a Entities.Talk to the Entities.Speaker's list of Talks that they are talking at.
+     * Adds an event to the Entities.Speaker's list of events that they are talking at.
      * @param event the Entities.Talk that the Entities.Speaker would like to speak at.
-     * @see Talk
      */
     // Setter: Add a talk that this Entities.Speaker is talking at to the list talks_speaking.
     public void addEvent(Integer event){

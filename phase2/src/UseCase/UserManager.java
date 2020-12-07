@@ -144,6 +144,45 @@ public class UserManager implements Serializable {
         return true;
     }
 
+    /**
+     * Signs a vip-only event and updates the points associated with a VIP attending an event
+     * @param v the Entities.VIP that is being signed up for an event
+     * @param event the event that the vip is being added to
+     * @param c the conference to which the event belongs
+     */
+    public void signUpVip(VIP v, Event event, Conference c){
+        boolean flag = signUpEvent(v, event, c);
+        if (flag){
+            if(event.isVipOnly()){
+                v.attendVipEvent(event.getEventId());
+                v.addPoints(50);
+                updateMemberStatus(v);
+            } else if(!event.isVipOnly()){
+                v.addPoints(10);
+                updateMemberStatus(v);
+            }
+        }
+    }
+
+    /**
+     * Cancels vip from attending a vip-only event and updates the points associated with cancellation
+     * @param v the Entities.VIP that is being removed from an event
+     * @param event the event that the vip is being removed from
+     * @param c the conference to which the event belongs
+     */
+    public void cancelVip(VIP v, Event event, Conference c){
+        boolean flag = cancelRegistrationEvent(v, event, c);
+        if (flag){
+            if(event.isVipOnly()){
+                v.removeVipEvent(event.getEventId());
+                v.removePoints(50);
+                updateMemberStatus(v);
+            } else if(!event.isVipOnly()){
+                v.removePoints(10);
+                updateMemberStatus(v);
+            }
+        }
+    }
 
     /**
      * Signs up Entities.Attendee for the conference
@@ -323,5 +362,22 @@ public class UserManager implements Serializable {
             }
         }
     }
+
+    /**
+     * Updates the Entities.VIP 's member status depending on the total number of points they currently have
+     * @param vip the Entities.VIP whose points need to be updated
+     */
+    public void updateMemberStatus(VIP vip){
+        int totalPoints = vip.getMemberPoints();
+        if (totalPoints >= 1000){
+            vip.setMemberStatus("Platinum");
+        } else if (totalPoints < 1000 && totalPoints >= 500){
+            vip.setMemberStatus("Gold");
+        } else if (totalPoints < 500 && totalPoints >= 100){
+            vip.setMemberStatus("Silver");
+        } else if (totalPoints < 100)
+            vip.setMemberStatus("Bronze");
+    }
+
 
 }
