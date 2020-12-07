@@ -85,7 +85,7 @@ public class EventSystem{
         // cancel all attendee registrations
         ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
         for(User a : attendees) {
-            um.cancelRegistrationEvent((Attendee) a, id);
+            um.cancelRegistrationEvent((Attendee) a, e, c);
         }
 
         // cancel all organizers

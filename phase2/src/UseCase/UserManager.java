@@ -43,10 +43,11 @@ public class UserManager implements Serializable {
      * @param email the email of this users account.
      */
     public void addUser(String name, String email, String password, String typeOfUser) {
-        this.email.add(email);
         switch (typeOfUser) {
             case "Organizer":
-                users.add(new Organizer(name, password, email));
+                Organizer o = new Organizer(name, password, email);
+                users.add(o);
+                addListContacts(o,this.email);
             case "Speaker":
                 users.add(new Speaker(name, password, email));
             case "Attendee":
@@ -54,6 +55,7 @@ public class UserManager implements Serializable {
             case "vip":
                 users.add(new VIP(name, password, email));
         }
+        this.email.add(email);
     }
 
     /**
@@ -140,9 +142,19 @@ public class UserManager implements Serializable {
         }
         event.removeAttendee(attendee.getEmail());
         attendee.removeEvent(event.getEventId());
-        removeListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
+        removeListContacts(attendee, event.getAttendeeEmails());
+        if(event.eventType().equals("Panel")){
+            Entities.Panel p = (Panel) event;
+            for(String u: p.getSpeakerEmails()){
+                removeSpeakerContacts(attendee, findUser(u));
+            }
+        } else if(event.eventType().equals("Talk")){
+            Entities.Talk t = (Talk) event;
+            removeSpeakerContacts(attendee, findUser(t.getSpeakerEmail()));
+            }
         return true;
     }
+
 
     /**
      * Signs a vip-only event and updates the points associated with a VIP attending an event
@@ -348,7 +360,7 @@ public class UserManager implements Serializable {
         }
     }
 
-    //desperate
+
     private void removeListContacts(Attendee attendee, ArrayList<String> contacts){
         for(String i: contacts){
             Attendee u = (Attendee) findUser(i);
@@ -359,6 +371,16 @@ public class UserManager implements Serializable {
             if (ctr == 1){
                 attendee.removeContact(i);
                 findUser(attendee.getEmail()).removeContact(i);
+            }
+        }
+    }
+
+    private void removeSpeakerContacts(Attendee attendee, User user){
+        Speaker speaker = (Speaker) user;
+        for(Integer i: speaker.getTalksSpeaking()){
+            if (!(attendee.getEventsAttending().contains(i))){
+                attendee.removeContact(speaker.getEmail());
+                speaker.removeContact(attendee.getEmail());
             }
         }
     }
