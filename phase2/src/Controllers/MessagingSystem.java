@@ -1,9 +1,13 @@
 package Controllers;
 
+import Entities.Event;
+import Gateway.EventSave;
+import Gateway.UserSave;
 import UseCase.EventManager;
 import UseCase.UserManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Handles the messaging functionality of Users.
@@ -13,33 +17,35 @@ import java.io.IOException;
 
 public class MessagingSystem {
 
-    UserManager um = new UserManager();
-    EventManager em = new EventManager();
+    private UserManager userManager;
+    private EventManager eventManager;
 
 
-    public MessagingSystem() throws IOException {}
+    public MessagingSystem() throws IOException {
+        this.userManager = new UserSave().read();
+        this.eventManager = new EventSave().read();
+    }
 
-    //Need to fix this method - Isha
-//    public boolean sendMessage(String from, ArrayList<String> to, String message){
-//        if (!(um.checkUserExists(from))){
-//            return false;
-//        }
-//        if (um.findUser(from).userType() == 'A' || um.findUser(from).userType() == 'O' ||
-//                um.findUser(from).userType() == 'V' ){
-//            ArrayList<String> recipients = um.checkUsers(to); // returns array of existing users
-//            um.message(from, recipients, message);
-//            return true;
-//        } else if (um.findUser(from).userType() == 'S'){
-//            ArrayList<Event> e = em.find_event(to); // returns the events they are part of based on input
-//            ArrayList<String> attendees = new ArrayList<String>();
-//            for(Event i: e){
-//                attendees.addAll(i.getAttendeeEmails());
-//            }
-//            um.message(from, attendees, message);
-//            return true;
-//        }
-//        return false;
-//    }
+    public boolean sendMessage(String from, ArrayList<String> to, String message){
+        if (!(userManager.checkUserExists(from))){
+            return false;
+        }
+        if (userManager.findUser(from).userType() == 'A' || userManager.findUser(from).userType() == 'O' ||
+                userManager.findUser(from).userType() == 'V' ){
+            ArrayList<String> recipients = userManager.checkUsers(to); // returns array of existing users
+            userManager.message(from, recipients, message);
+            return true;
+        } else if (userManager.findUser(from).userType() == 'S'){
+            ArrayList<Event> events = new ArrayList<>();
+            for (String s: to) {
+                int eventID = Integer.parseInt(s);
+                events.add(eventManager.findEvent(eventID));
+            }
+            userManager.message(from, eventManager.getAllEmails(events), message);
+            return true;
+        }
+        return false;
+    }
 
 
 }
