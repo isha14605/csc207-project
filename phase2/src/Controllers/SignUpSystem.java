@@ -3,13 +3,11 @@ package Controllers;
 import Entities.Attendee;
 import Entities.Conference;
 import Entities.Event;
-import Gateway.ConferenceSave;
-import Gateway.EventSave;
-import Gateway.UserSave;
 import UseCase.ConferenceManager;
 import UseCase.EventManager;
 import UseCase.UserManager;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -20,14 +18,11 @@ import java.util.ArrayList;
  */
 public class SignUpSystem {
 
-    private UserManager uM;
-    private EventManager eM;
-    private ConferenceManager cM;
+    UserManager uM = new UserManager(); // New instance of UseCase.UserManager
+    EventManager eM = new EventManager(); // New instance of UseCase.EventManager
+    ConferenceManager cM = new ConferenceManager(); // New instance of UseCase.ConferenceManager
 
-    public SignUpSystem() {
-        this.uM = new UserSave().read();
-        this.eM = new EventSave().read();
-        this.cM = new ConferenceSave().read();
+    public SignUpSystem() throws IOException {
     }
 
     /**
@@ -52,7 +47,12 @@ public class SignUpSystem {
 //     Method to sign up an Entities.Attendee for an Entities.Event
     public boolean signUpEvent(String email, Integer event){
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
-            return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+            if (uM.findUser(email).userType() == 'V'){
+                uM.signUpVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+                return true;
+            } else {
+                return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+            }
         }
         return false;
     }
@@ -69,13 +69,16 @@ public class SignUpSystem {
      */
     public boolean cancelRegEvent(String email, Integer event){
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
-            return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
-                    cM.eventInConference(event));
+            if (uM.findUser(email).userType() == 'V'){
+                uM.cancelVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+                return true;
+            } else {
+                return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
+                        cM.eventInConference(event));
+            }
         }
         return false;
     }
-
-
     /**
      * Returns true if the user succesfully signed up for a conference
      * @param conference the name of Entities.conference Entities.Attendee wishes to join
@@ -115,5 +118,6 @@ public class SignUpSystem {
         }
         return false;
     }
+
 
 }

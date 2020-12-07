@@ -1,7 +1,11 @@
 package UseCase;
 
 import Entities.*;
+import Gateway.ConferenceSave;
+import Gateway.EventSave;
+import Gateway.UserSave;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -12,8 +16,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class UserManager implements Serializable {
-    public static ArrayList<User> users = new ArrayList<User>();
-    public static ArrayList<String> email = new ArrayList<String>();
+    private ArrayList<User> users = new ArrayList<User>();
+    private ArrayList<String> email = new ArrayList<String>();
     public EventManager em; // can we do this?
     public ConferenceManager cm;
 
@@ -21,10 +25,16 @@ public class UserManager implements Serializable {
     /**
      * UseCase.UserManager Constructor
      */
-    public UserManager(){
-        EventManager em = new EventManager(); // can we do this?
-        ConferenceManager cm = new ConferenceManager();
-        addUser("Chevoy Ingram","c","c","organizer");
+    public UserManager() throws IOException {
+        EventManager em = new EventSave().read(); // can we do this?
+        ConferenceManager cm = new ConferenceSave().read();
+        users = new ArrayList<>();
+        email = new ArrayList<>();
+
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -33,17 +43,19 @@ public class UserManager implements Serializable {
      * @param email the email of this users account.
      */
     public void addUser(String name, String email, String password, String typeOfUser) {
-        UserManager.email.add(email);
         switch (typeOfUser) {
-            case "organizer":
-                users.add(new Organizer(name, password, email));
-            case "speaker":
+            case "Organizer":
+                Organizer o = new Organizer(name, password, email);
+                users.add(o);
+                addListContacts(o,this.email);
+            case "Speaker":
                 users.add(new Speaker(name, password, email));
-            case "attendee":
+            case "Attendee":
                 users.add(new Attendee(name, password, email));
             case "vip":
                 users.add(new VIP(name, password, email));
         }
+        this.email.add(email);
     }
 
     /**
@@ -55,7 +67,7 @@ public class UserManager implements Serializable {
      * @see User#getPassword()
      */
     public boolean verifyLogin(String email, String password){
-        if (UserManager.email.contains(email)){
+        if (this.email.contains(email)){
             for( User u: users){
                 if (u.getEmail().equals(email) && u.getPassword().equals(password)){
                     return true;
@@ -81,20 +93,12 @@ public class UserManager implements Serializable {
     public boolean signUpEvent(Attendee attendee, Event event, Conference c){
         if(c== null && !(attendee.getEventsAttending().contains(event.getEventId()))
                 && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            if(event.isVipOnly() && attendee.userType() == 'V'){
-                //points system to be implemented
-                //append vip events to VIP.vipEvents as well
-            }
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
             return true;
         } else if ( c!= null && !(attendee.getEventsAttending().contains(event.getEventId()))
                 && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            if(event.isVipOnly() && attendee.userType() == 'V'){
-                //points system to be implemented
-                //append vip events to VIP.vipEvents as well
-            }
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             attendee.addContact(c.getName());
@@ -138,10 +142,59 @@ public class UserManager implements Serializable {
         }
         event.removeAttendee(attendee.getEmail());
         attendee.removeEvent(event.getEventId());
-        removeListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
+        removeListContacts(attendee, event.getAttendeeEmails());
+        if(event.eventType().equals("Panel")){
+            Entities.Panel p = (Panel) event;
+            for(String u: p.getSpeakerEmails()){
+                removeSpeakerContacts(attendee, findUser(u));
+            }
+        } else if(event.eventType().equals("Talk")){
+            Entities.Talk t = (Talk) event;
+            removeSpeakerContacts(attendee, findUser(t.getSpeakerEmail()));
+            }
         return true;
     }
 
+
+    /**
+     * Signs a vip-only event and updates the points associated with a VIP attending an event
+     * @param v the Entities.VIP that is being signed up for an event
+     * @param event the event that the vip is being added to
+     * @param c the conference to which the event belongs
+     */
+    public void signUpVip(VIP v, Event event, Conference c){
+        boolean flag = signUpEvent(v, event, c);
+        if (flag){
+            if(event.isVipOnly()){
+                v.attendVipEvent(event.getEventId());
+                v.addPoints(50);
+                updateMemberStatus(v);
+            } else if(!event.isVipOnly()){
+                v.addPoints(10);
+                updateMemberStatus(v);
+            }
+        }
+    }
+
+    /**
+     * Cancels vip from attending a vip-only event and updates the points associated with cancellation
+     * @param v the Entities.VIP that is being removed from an event
+     * @param event the event that the vip is being removed from
+     * @param c the conference to which the event belongs
+     */
+    public void cancelVip(VIP v, Event event, Conference c){
+        boolean flag = cancelRegistrationEvent(v, event, c);
+        if (flag){
+            if(event.isVipOnly()){
+                v.removeVipEvent(event.getEventId());
+                v.removePoints(50);
+                updateMemberStatus(v);
+            } else if(!event.isVipOnly()){
+                v.removePoints(10);
+                updateMemberStatus(v);
+            }
+        }
+    }
 
     /**
      * Signs up Entities.Attendee for the conference
@@ -239,7 +292,6 @@ public class UserManager implements Serializable {
         }
     }
 
-
     /**
      * Returns a list of user objects
      * @param emails the emails of the user we wish to find
@@ -259,9 +311,12 @@ public class UserManager implements Serializable {
      * @return Entities.User associated with provided email address
      */
     public User findUser(String email){
-        int i;
-        i = UserManager.email.indexOf(email);
-        return UserManager.users.get(i);
+        for(User user: users){
+            if(user.getEmail().equals(email)){
+                return user;
+            }
+        }
+        return null;
     }
 
     /**
@@ -270,7 +325,7 @@ public class UserManager implements Serializable {
      * @return true if the Entities.User exists
      */
     public boolean checkUserExists(String email) {
-        return UserManager.email.contains(email);
+        return this.email.contains(email);
     }
 
     /**
@@ -305,6 +360,7 @@ public class UserManager implements Serializable {
         }
     }
 
+
     private void removeListContacts(Attendee attendee, ArrayList<String> contacts){
         for(String i: contacts){
             Attendee u = (Attendee) findUser(i);
@@ -318,4 +374,33 @@ public class UserManager implements Serializable {
             }
         }
     }
+
+    private void removeSpeakerContacts(Attendee attendee, User user){
+        Speaker speaker = (Speaker) user;
+        for(Integer i: speaker.getTalksSpeaking()){
+            if (!(attendee.getEventsAttending().contains(i))){
+                attendee.removeContact(speaker.getEmail());
+                speaker.removeContact(attendee.getEmail());
+            }
+        }
+    }
+
+    /**
+     * Updates the Entities.VIP 's member status depending on the total number of points they currently have
+     * @param vip the Entities.VIP whose points need to be updated
+     */
+    public void updateMemberStatus(VIP vip){
+        int totalPoints = vip.getMemberPoints();
+        if (totalPoints >= 1000){
+            vip.setMemberStatus("Platinum");
+        } else if (totalPoints < 1000 && totalPoints >= 500){
+            vip.setMemberStatus("Gold");
+        } else if (totalPoints < 500 && totalPoints >= 100){
+            vip.setMemberStatus("Silver");
+        } else if (totalPoints < 100)
+            vip.setMemberStatus("Bronze");
+    }
+
+    //Need to commit
+
 }

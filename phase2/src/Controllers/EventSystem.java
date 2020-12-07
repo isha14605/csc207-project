@@ -1,9 +1,6 @@
 package Controllers;
 
-import Entities.Conference;
-import Entities.Event;
-import Entities.Room;
-import Entities.User;
+import Entities.*;
 import Gateway.ConferenceSave;
 import Gateway.EventSave;
 import Gateway.RoomSave;
@@ -13,7 +10,11 @@ import UseCase.EventManager;
 import UseCase.RoomManager;
 import UseCase.UserManager;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class EventSystem{
@@ -26,11 +27,26 @@ public class EventSystem{
      * EventController Constructor
      */
     public EventSystem() throws ClassNotFoundException, IOException {
-        this.cm = new ConferenceSave().read();
-        this.em = new EventSave().read();
-        this.rm = new RoomSave().read();
-        this.um = new UserSave().read();
+        cm = new ConferenceSave().read();
+        em = new EventSave().read();
+        rm = new RoomSave().read();
+        um = new UserSave().read();
+    }
 
+    public ConferenceManager getCm() {
+        return cm;
+    }
+
+    public EventManager getEm() {
+        return em;
+    }
+
+    public RoomManager getRm() {
+        return rm;
+    }
+
+    public UserManager getUm() {
+        return um;
     }
 
     /**
@@ -44,8 +60,8 @@ public class EventSystem{
      * @param event_only
      * @return
      */
-    public boolean add_event(String type, String name, String description, String start, String end, String date,
-                             int capacity, boolean event_only) throws IOException {
+    public boolean addEvent(String type, String name, String description, String start, String end, String date,
+                            int capacity, boolean event_only) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
         || em.notValidFormat(em.dateFormattingDate(date))) {
             return false;
@@ -69,7 +85,7 @@ public class EventSystem{
         // cancel all attendee registrations
         ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
         for(User a : attendees) {
-            um.cancelRegistrationEvent(a, e, c);
+            um.cancelRegistrationEvent((Attendee) a, e, c);
         }
 
         // cancel all organizers
@@ -85,12 +101,26 @@ public class EventSystem{
         return em.deleteEvent(id);
     }
 
+    public boolean addConference(String name, String confDescription, String startTime, String endTime, String confDate){
+        for(String con: cm.getConferenceList()){
+            if(con.equals(name)){
+                return false;
+            }
+        }
+        if(em.dateFormattingTime(endTime).isBefore(em.dateFormattingTime(startTime))){
+            return false;
+        }
+        cm.addConference(name,confDescription,em.dateFormattingTime(startTime),
+                em.dateFormattingTime(endTime),em.dateFormattingDate(confDate));
+        return true;
+
+    }
     /**
      * Returns existing Events
      *
      * @return ArrayList of Events
      */
-    public boolean add_room(String name, Integer capacity, String start, String end) throws IOException {
+    public boolean addRoom(String name, Integer capacity, String start, String end) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))) {
             return false;
         }else {
@@ -131,19 +161,21 @@ public class EventSystem{
     /**
      * Schedules a Entities.Room for an existing Entities.Event
      */
-    public void schedule_room(String room_name, Integer eventId) throws IOException {
+    public boolean schedule_room(String room_name, Integer eventId) throws IOException {
         Event event = em.findEvent(eventId);
         Room room = rm.find_room(room_name);
         if(room == null){
-            System.out.println("Entities.Room doesn't exit");
-            return;
+//            System.out.println("Entities.Room doesn't exit");
+            return false;
         }
         if(!rm.is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
             room.addBookings(event.getEventId(), em.getLocalDateTime(event.getEventDate(),event.getStartTime()),
                     em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
+            return true;
         }else{
-            System.out.println("Entities.Room not scheduled due to time conflict");
+//            System.out.println("Entities.Room not scheduled due to time conflict");
+            return false;
         }
     }
 
@@ -152,8 +184,26 @@ public class EventSystem{
      *
      * @return true if Entities.Speaker is scheduled successfully
      */
-    public boolean scheduleSpeaker(String speakerEmail, Integer eventId){
-        return em.speakerSchedule(eventId, speakerEmail);
+    // Need to fix - Isha
+    public boolean schedule_speaker(String speakerEmail, Integer eventId){
+        Entities.Event event = em.findEvent(eventId);
+        String eventType = event.eventType();
+        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
+        if(em.canScheduleSpeaker(event,speakerEmail)){
+            s.addEvent(eventId);
+            switch (eventType){
+                case "Entities.Panel":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Talk":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Party":
+
+            }
+            return true;
+        }
+        return false;
     }
 
 

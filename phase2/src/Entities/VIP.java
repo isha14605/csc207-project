@@ -1,5 +1,6 @@
 package Entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // Note: the member status and points system is only applicable to VIP users. This feature is not available to
@@ -12,10 +13,10 @@ import java.util.ArrayList;
  * @see User
  * @see Attendee
  */
-public class VIP extends Attendee{
+public class VIP extends Attendee implements Serializable {
     private ArrayList<Integer> vipEventsAttending;
     private String memberStatus; // Determines the member's fame based on points (events attended)
-    private int memberPoints; // Stores a cumalative count of the VIP's points, updates each time new event attended
+    private int memberPoints; // Stores a cumulative count of the VIP's points, updates each time new event attended
 
     /**
      * Creates a Entities.VIP with the provided name, password, and email.
@@ -31,15 +32,15 @@ public class VIP extends Attendee{
     }
 
     /**
-     *
-     * @return an arraylist of the vip-only events that the Entities.VIP is schedulled to attend
+     * Returns an ArrayList of integers that represent ids of vip-only events that the Entities.VIP is attending.
+     * @return an arraylist of vip-only events' ids that the Entities.VIP is scheduled to attend
      */
     public ArrayList<Integer> getVipEventsAttending(){
         return this.vipEventsAttending;
     }
 
     /**
-     * Adds the particular Entities.VIP event to the list of Entities.VIP events that the user is attending
+     * Adds the vip-only event's id of the event that the Entities.VIP is attending.
      * @param event is the id of the event the Entities.VIP wants to attend
      */
     public void attendVipEvent(Integer event){
@@ -54,23 +55,41 @@ public class VIP extends Attendee{
         this.vipEventsAttending.remove(event);
     }
 
+    /**
+     * Returns number of points that the Entities.VIP has
+     * @return the number of member points the Entities.VIP has currently
+     */
     public int getMemberPoints(){
         return this.memberPoints;
     }
 
+    /**
+     * Increments the Entities.VIP's member points by pointsToAdd
+     * @param pointsToAdd the number of points to add to the Entities.VIP 's member points total
+     */
     // Use this method to add points when a VIP adds an event to attend
     public void addPoints(int pointsToAdd){
         this.memberPoints += pointsToAdd;
     }
 
+    /**
+     * Decrements the Entities.VIP's member points by pointsToRemove
+     * @param pointsToRemove the number of points to remove from the Entities.VIP 's member points total
+     */
     // Use this method to deduct points when a VIP cancels an event to attend
     public void removePoints(int pointsToRemove){
         this.memberPoints -= pointsToRemove;
     }
 
     /**
-     *
-     * @return the VIP's current status level, either 'Bronze', 'Silver', 'Gold', or 'Platinum'
+     * Sets the Entities.VIP 's member status
+     * @param newStatus the status that the Entities.VIP is being changed to
+     */
+    public void setMemberStatus(String newStatus){this.memberStatus = newStatus;}
+
+    /**
+     * Returns the Entities.VIP 's current member status
+     * @return the Entities.VIP 's current status level, either 'Bronze', 'Silver', 'Gold', or 'Platinum'
      */
     public String getMemberStatus(){
         return this.memberStatus;
@@ -83,4 +102,6 @@ public class VIP extends Attendee{
     public char userType(){
         return 'V';
     }
+
+    //Need to commit
 }

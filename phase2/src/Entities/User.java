@@ -1,5 +1,6 @@
 package Entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  * @version 1.0
  */
 
-public abstract class User{
+public abstract class User implements Serializable {
     private String name;
     private String password;
     private String email;

@@ -7,17 +7,17 @@ import java.io.*;
 public class UserSave implements Gateway {
 
     @Override
-    public void save() throws IOException {
+    public void save(Object um) throws IOException {
         OutputStream file = new FileOutputStream("UserSave.ser");
         OutputStream buffer = new BufferedOutputStream(file);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this);
+        output.writeObject(um);
         output.close();
     }
 
     @Override
-    public UserManager read() {
+    public UserManager read() throws IOException {
         try {
             InputStream file = new FileInputStream("UserSave.ser");
             InputStream buffer = new BufferedInputStream(file);

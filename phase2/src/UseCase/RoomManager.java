@@ -5,6 +5,7 @@ import Entities.Event;
 import Entities.Room;
 import Gateway.EventSave;
 
+import javax.swing.border.TitledBorder;
 import java.io.*;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +24,11 @@ public class RoomManager implements Serializable {
     private ArrayList<String> techOptions;
 
     public RoomManager(EventManager em){
-
+        techOptions = new ArrayList<>();
+        techOptions.add("None");
+        techOptions.add("Smart Board");
+        techOptions.add("Projector");
+        techOptions.add("Demo Kits");
         this.em = em;
     }
 
