@@ -1,30 +1,19 @@
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
+import UseCase.EventManager;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
-import javax.swing.border.Border;
-
-import UseCase.EventManager;
 
 /**
  * Event Calendar and its functionality.
@@ -44,7 +33,7 @@ public class EventCalendar extends JFrame implements ItemListener {
 	String months[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September",
 			"October", "November", "December" };
 
-	public EventCalendar(String title) {
+	public EventCalendar(String title) throws IOException {
 		super();
 		eventManager = new EventManager();
 		eventManager.createEvent("panel", "Event for today", "This event will be reoccur eveyday", LocalTime.now(),
@@ -85,7 +74,7 @@ public class EventCalendar extends JFrame implements ItemListener {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 
-	public static void main(String args[]) {
+	public static void main(String args[]) throws IOException {
 		new EventCalendar("Event Calendar");
 	}
 
