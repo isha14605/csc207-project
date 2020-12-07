@@ -2,6 +2,8 @@ package UseCase;
 
 import Entities.Conference;
 import Entities.Event;
+import Gateway.EventSave;
+import Gateway.UserSave;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -15,8 +17,8 @@ import java.util.ArrayList;
  */
 public class ConferenceManager implements Serializable {
     public static ArrayList<Conference> conferences;
-    EventManager em; // ask about this being private since the code complains
-    UserManager um; // ask about this being private since the code complains
+    EventManager em;
+    UserManager um;
 
     /** constructor*/
     public ConferenceManager(){
@@ -168,11 +170,6 @@ public class ConferenceManager implements Serializable {
                 e.addAttendee(u.getEmail());
                 flag = true;
             }
-            if (u.userType() == 'V'){
-                Entities.VIP v = (Entities.VIP) u;
-                v.addPoints(10);
-            }
-
         }
         if (u.userType() == 'V'){
             for(Event event: vip){
@@ -180,7 +177,6 @@ public class ConferenceManager implements Serializable {
                     Entities.VIP v = (Entities.VIP) u;
                     v.attendVipEvent(event.getEventId());
                     event.addAttendee(u.getEmail());
-                    v.addPoints(50);
                     flag = true;
                 }
             }
@@ -201,10 +197,6 @@ public class ConferenceManager implements Serializable {
                 e.removeAttendee(u.getEmail());
                 flag = true;
             }
-            if (u.userType() == 'V'){
-                Entities.VIP v = (Entities.VIP) u;
-                v.removePoints(10);
-            }
         }
         if (u.userType() == 'V'){
             for(Event event: vip){
@@ -212,7 +204,6 @@ public class ConferenceManager implements Serializable {
                     Entities.VIP v = (Entities.VIP) u;
                     v.removeVipEvent(event.getEventId());
                     event.removeAttendee(u.getEmail());
-                    v.removePoints(50);
                     flag = true;
                 }
             }
@@ -231,11 +222,4 @@ public class ConferenceManager implements Serializable {
         }
         return conferenceNames;
     }
-
-
-    //need to discuss
-    public ArrayList<Integer> getEvents(Conference c){
-        return c.getEventIds();
-        }
 }
-

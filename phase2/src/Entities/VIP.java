@@ -1,5 +1,6 @@
 package Entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // Note: the member status and points system is only applicable to VIP users. This feature is not available to
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  * @see User
  * @see Attendee
  */
-public class VIP extends Attendee{
+public class VIP extends Attendee implements Serializable {
     private ArrayList<Integer> vipEventsAttending;
     private String memberStatus; // Determines the member's fame based on points (events attended)
     private int memberPoints; // Stores a cumalative count of the VIP's points, updates each time new event attended

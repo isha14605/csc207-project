@@ -7,12 +7,12 @@ import java.io.*;
 public class EventSave implements Gateway {
 
     @Override
-    public void save() throws IOException {
+    public void save(Object em) throws IOException {
         OutputStream file = new FileOutputStream("EventSave.ser");
         OutputStream buffer = new BufferedOutputStream(file);
         ObjectOutput output = new ObjectOutputStream(buffer);
 
-        output.writeObject(this);
+        output.writeObject(em);
         output.close();
     }
 

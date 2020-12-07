@@ -26,7 +26,7 @@ public class Talk extends Event {
 
     @Override
     public String eventType() {
-        return "Entities.Talk";
+        return "Talk";
     }
 
 

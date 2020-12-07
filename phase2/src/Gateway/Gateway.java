@@ -2,8 +2,8 @@ package Gateway;
 import java.io.*;
 
 public interface Gateway {
-    void save() throws IOException;
+    void save(Object o) throws IOException;
 
-    Object read();
+    Object read() throws IOException;
 }
 

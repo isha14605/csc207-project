@@ -1,5 +1,6 @@
 package Entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @see User
  */
-public class Attendee extends User {
+public class Attendee extends User implements Serializable {
     private ArrayList<Integer> eventsAttending;
     private ArrayList<String> conferenceAttending;
 

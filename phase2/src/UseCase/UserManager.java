@@ -77,121 +77,76 @@ public class UserManager implements Serializable {
      * @see Attendee#attendEvent(Integer)
      * @see Attendee#getEmail()
      * @see Attendee#attendConference(String)
+     * @see ConferenceManager#addAttendeesToConference(Conference, String)
+     * @see ConferenceManager#eventInConference(Integer)
+     * @see EventManager#findEvent(Integer)
      */
-    public boolean signUpEvent(Attendee attendee, Event event, Conference c){
-        if(c== null && !(attendee.getEventsAttending().contains(event.getEventId()))
-                && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            attendee.attendEvent(event.getEventId());
-            event.addAttendee(attendee.getEmail());
-            addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
-            return true;
-        } else if ( c!= null && !(attendee.getEventsAttending().contains(event.getEventId()))
-                && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            attendee.attendEvent(event.getEventId());
-            event.addAttendee(attendee.getEmail());
-            attendee.addContact(c.getName());
-            addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
-            return true;
+    public boolean signUpEvent(Attendee attendee, Integer event){
+        Event e = em.findEvent(event);
+        if(!(cm.eventInConference(event) == null) && !attendee.getEventsAttending().contains(event)){
+            cm.addAttendeesToConference(cm.eventInConference(event), attendee.getEmail());
+            attendee.attendConference(cm.eventInConference(event).getName());
+            return true; // signed up in a conference
+        } else if (cm.eventInConference(event) == null && !attendee.getEventsAttending().contains(event) &&
+                e.getAttendeeCapacity() < e.getAttendeeEmails().size()){
+            attendee.attendEvent(e.getEventId());
+            e.addAttendee(attendee.getEmail());
+            return true; //signed up
         }
-        return false;
+        return false; //cannot be signed up
     }
 
-    public void signUpVip(VIP v, Event event, Conference c){
-        boolean flag = signUpEvent(v, event, c);
-        if (flag){
-            if(event.isVipOnly()){
-                v.attendVipEvent(event.getEventId());
-                v.addPoints(50);
-                updateMemberStatus(v);
-            } else if(!event.isVipOnly()){
-                v.addPoints(10);
-                updateMemberStatus(v);
-            }
-        }
-    }
-
-    public void cancelVip(VIP v, Event event, Conference c){
-        boolean flag = cancelRegistrationEvent(v, event, c);
-        if (flag){
-            if(event.isVipOnly()){
-                v.removeVipEvent(event.getEventId());
-                v.removePoints(50);
-                updateMemberStatus(v);
-            } else if(!event.isVipOnly()){
-                v.removePoints(10);
-                updateMemberStatus(v);
-            }
-        }
-    }
-
+    // NEED TO FIX - Tanya
     /**
-     * Cancels Entities.Attendee's registration for an Entities.Event. Checks to see that the specified
-     * Entities.Attendee is actually signed up
+     * Cancels Entities.Attendee's registration for an Entities.Event. Checks to see that the specified Entities.Attendee is actually signed up
      * for the specified Entities.Event, before removing the Entities.Attendee from the Entities.Event.
      * @param attendee the Entities.Attendee who wants to cancel registration for an event
      * @param event the Entities.Event that the attendee would no longer like to attend
-     * @param c the Entities.Conference that the event is part of
      * @see Attendee#getEventsAttending()
      * @see Attendee#removeEvent(Integer)
      * @see Attendee#getEmail()
-     * @see Attendee#removeConference(String)
      * @see Event#removeAttendee(String)
-     * @see Event#getEventId()
-     * @see Event#getAttendeeEmails()
-     * @see Event#getAttendeeCapacity()
-     * @see Conference#getEventIds()
+     * @see EventManager#findEvent(Integer)
      */
-    public boolean cancelRegistrationEvent(Attendee attendee, Event event, Conference c){
+    public boolean cancelRegistrationEvent(Attendee attendee, Integer event){
+        Conference c = cm.eventInConference(event);
         int ctr = 0;
-        if (attendee.getEventsAttending().contains(event.getEventId()) ||
-                event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
-            return false;
-        }
-        if(!(c== null)){
+        if (!(c== null)){
             for(int e: c.getEventIds()){
                 if (em.findEvent(e).getAttendeeEmails().contains(attendee.getEmail())){ctr = ctr +1;}
                 // counts if attendee is part of more than 1
             }
-            if (ctr == 1){
-                attendee.removeConference(c.getName());
-            }
         }
-        event.removeAttendee(attendee.getEmail());
-        attendee.removeEvent(event.getEventId());
-        removeListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
-        return true;
+        if(attendee.getEventsAttending().contains(event)){
+            attendee.removeEvent(event);
+            em.findEvent(event).removeAttendee(attendee.getEmail());
+            if (ctr == 1){attendee.removeConference(c.getName());} // if part of only this event, remove conference
+            return true; //cancelled reg in event
+        }
+        return false;
     }
+
 
     /**
      * Signs up Entities.Attendee for the conference
      * @param attendee the attendee who wishes to sign up for a conference
-     * @param event the events that are part of the conference
-     * @param c the conference the attendee wishes to attend
-     * @see Attendee#attendConference(String)
-     * @see Event#getAttendeeEmails()
-     * @see Conference#getName()
+     * @param name the name of the conference
      */
-    public void attendConference(Attendee attendee, ArrayList<Event> event, Conference c){
-        attendee.attendConference(c.getName());
-        for(Event e: event){
-            addListContacts(attendee, e.getAttendeeEmails());
-        }
+    public void signUpConference(Attendee attendee, String name){
+        Conference c = cm.findConference(name);
+        cm.addAttendeesToConference(c, attendee.getEmail());
+        attendee.attendConference(name);
     }
 
     /**
-     * Cancels registration of Entities.Attendee for the conference
+     * Signs up Entities.Attendee for the conference
      * @param attendee the attendee who wishes to cancel registration  for a conference
-     * @param event the events that are part of the conference
-     * @param c the conference the attendee wishes to cancel registration for
-     * @see  Attendee#removeConference(String)
-     * @see  Conference#getName()
-     * @see Event#getAttendeeEmails()
+     * @param name the name of the conference
      */
-    public void cancelRegistrationConference(Attendee attendee, ArrayList<Event> event, Conference c){
+    public void cancelRegistrationConference(Attendee attendee, String name){
+        Conference c = cm.findConference(name);
+        cm.removeAttendeeConference(c,attendee.getEmail());
         attendee.removeConference(c.getName());
-        for(Event e: event){
-            addListContacts(attendee, e.getAttendeeEmails());
-        }
     }
 
     /**
@@ -220,7 +175,7 @@ public class UserManager implements Serializable {
         User from_user = findUser(from);
 
         for(User u1: u) {
-//            inContact(from, u1.getEmail());
+            inContact(from, u1.getEmail());
             from_user.sendMessage(u1.getEmail(), message);
             u1.receiveMessage(from, message);
         }
@@ -240,7 +195,7 @@ public class UserManager implements Serializable {
         ArrayList<User> u = findUsers(a);
 //        u = findUsers(a);
         for(User i: u){
-//            inContact(from, i.getEmail());
+            inContact(from, i.getEmail());
             findUser(from).sendMessage(i.getEmail(), message);
             i.receiveMessage(from, message);
         }
@@ -252,18 +207,13 @@ public class UserManager implements Serializable {
         User from_user = findUser(from);
         ArrayList<User> to_user = findUsers(to);
         for(User u : to_user){
-//            inContact(from ,u.getEmail());
+            inContact(from ,u.getEmail());
             u.receiveMessage(from, message);
             from_user.sendMessage(u.getEmail(), message);
         }
     }
 
 
-    /**
-     * Returns a list of user objects
-     * @param emails the emails of the user we wish to find
-     * @return an array list of user objects
-     */
     public ArrayList<User> findUsers(ArrayList<String> emails){
         ArrayList<User> user_obj = new ArrayList<User>();
         for(String i : emails){
@@ -307,47 +257,11 @@ public class UserManager implements Serializable {
         return u;
     }
 
-//    private void inContact(String current, String email){
-//        ArrayList<String> u = findUser(current).getContacts();
-//        if (u.contains(email)){
-//            findUser(current).addContact(email);
-//            findUser(email).addContact(current);
-//        }
-//    }
-
-    private void addListContacts(User attendee, ArrayList<String> contacts){
-        for(String i: contacts){
-            if (!(attendee.getContacts().contains(i))){
-                attendee.addContact(i);
-                findUser(i).addContact(attendee.getEmail());
-            }
+    private void inContact(String current, String email){
+        ArrayList<String> u = findUser(current).getContacts();
+        if (u.contains(email)){
+            findUser(current).addContact(email);
+            findUser(email).addContact(current);
         }
     }
-
-    private void removeListContacts(Attendee attendee, ArrayList<String> contacts){
-        for(String i: contacts){
-            Attendee u = (Attendee) findUser(i);
-            int ctr = 0;
-            for(Integer t: u.getEventsAttending()){
-                if(attendee.getEventsAttending().contains(t)){ctr = ctr +1;}
-            }
-            if (ctr == 1){
-                attendee.removeContact(i);
-                findUser(attendee.getEmail()).removeContact(i);
-            }
-        }
-    }
-
-    public void updateMemberStatus(VIP vip){
-        int totalPoints = vip.getMemberPoints();
-        if (totalPoints >= 1000){
-            vip.setMemberStatus("Platinum");
-        } else if (totalPoints < 1000 && totalPoints >= 500){
-            vip.setMemberStatus("Gold");
-        } else if (totalPoints < 500 && totalPoints >= 100){
-            vip.setMemberStatus("Silver");
-        } else if (totalPoints < 100)
-            vip.setMemberStatus("Bronze");
-    }
-
 }

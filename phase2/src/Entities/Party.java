@@ -1,10 +1,11 @@
 package Entities;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-public class Party extends Event {
+public class Party extends Event implements Serializable {
     private ArrayList<String> activities;
 
     /**
@@ -28,7 +29,7 @@ public class Party extends Event {
 
     @Override
     public String eventType() {
-        return "Entities.Party";
+        return "Party";
     }
 
     @Override

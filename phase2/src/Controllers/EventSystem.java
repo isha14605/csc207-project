@@ -1,6 +1,8 @@
 package Controllers;
 
-import Entities.*;
+import Entities.Conference;
+import Entities.Event;
+import Entities.Room;
 import Gateway.ConferenceSave;
 import Gateway.EventSave;
 import Gateway.RoomSave;
@@ -10,8 +12,11 @@ import UseCase.EventManager;
 import UseCase.RoomManager;
 import UseCase.UserManager;
 
+import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class EventSystem{
     private ConferenceManager cm;
@@ -23,11 +28,26 @@ public class EventSystem{
      * EventController Constructor
      */
     public EventSystem() throws ClassNotFoundException, IOException {
-        this.cm = new ConferenceSave().read();
-        this.em = new EventSave().read();
-        this.rm = new RoomSave().read();
-        this.um = new UserSave().read();
+        cm = new ConferenceSave().read();
+        em = new EventSave().read();
+        rm = new RoomSave().read();
+        um = new UserSave().read();
+    }
 
+    public ConferenceManager getCm() {
+        return cm;
+    }
+
+    public EventManager getEm() {
+        return em;
+    }
+
+    public RoomManager getRm() {
+        return rm;
+    }
+
+    public UserManager getUm() {
+        return um;
     }
 
     /**
@@ -41,9 +61,8 @@ public class EventSystem{
      * @param event_only
      * @return
      */
-    // add parameter for conference
     public boolean add_event(String type, String name, String description, String start, String end, String date,
-                             int capacity, boolean event_only, String c) throws IOException {
+                             int capacity, boolean event_only) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
         || em.notValidFormat(em.dateFormattingDate(date))) {
             return false;
@@ -54,35 +73,20 @@ public class EventSystem{
         }
     }
 
-    public boolean cancel_event(Integer id) { //NOT FULLY IMPLEMENTED
-
-        Event e = em.findEvent(id);
-
-        if(e == null) {
+    public boolean addConference(String name, String confDescription, String startTime, String endTime, String confDate){
+        for(String con: cm.getConferenceList()){
+            if(con.equals(name)){
+                return false;
+            }
+        }
+        if(em.dateFormattingTime(endTime).isBefore(em.dateFormattingTime(startTime))){
             return false;
         }
+        cm.addConference(name,confDescription,em.dateFormattingTime(startTime),
+                em.dateFormattingTime(endTime),em.dateFormattingDate(confDate));
+        return true;
 
-        Conference c = cm.eventInConference(id);
-
-        // cancel all attendee registrations
-        ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
-        for(User a : attendees) {
-            um.cancelRegistrationEvent((Attendee) a, e, c);
-        }
-
-        // cancel all organizers
-
-        // cancel all speakers
-
-        // delete from any conference if applicable
-        if(!cm.cancelEvent(c, id)) {
-            return false;
-        }
-
-        // delete from em
-        return em.deleteEvent(id);
     }
-
     /**
      * Returns existing Events
      *
@@ -156,9 +160,8 @@ public class EventSystem{
         String eventType = event.eventType();
         Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
         if(em.canScheduleSpeaker(event,speakerEmail)){
-            s.addEvent(event.getEventId()); // fix calling method on entity
+            s.addEvent(eventId);
             switch (eventType){
-                // fix this
                 case "Entities.Panel":
                     event.setSpeaker(speakerEmail);
 
