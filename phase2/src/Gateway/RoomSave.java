@@ -18,7 +18,7 @@ public class RoomSave implements Gateway {
     }
 
     @Override
-    public RoomManager read() {
+    public RoomManager read() throws IOException {
         try {
             InputStream file = new FileInputStream("RoomSave.ser");
             InputStream buffer = new BufferedInputStream(file);
