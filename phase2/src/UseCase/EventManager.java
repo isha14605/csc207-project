@@ -226,7 +226,6 @@ public class EventManager implements Serializable {
         if(canScheduleSpeaker(event,speakerEmail)){
             s.addEvent(eventID);
             switch (eventType){
-                // fix this
                 case "Entities.Panel":
                     event.setSpeaker(speakerEmail);
 

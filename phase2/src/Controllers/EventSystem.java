@@ -10,11 +10,7 @@ import UseCase.EventManager;
 import UseCase.RoomManager;
 import UseCase.UserManager;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class EventSystem{
@@ -184,26 +180,8 @@ public class EventSystem{
      *
      * @return true if Entities.Speaker is scheduled successfully
      */
-    // Need to fix - Isha
-    public boolean schedule_speaker(String speakerEmail, Integer eventId){
-        Entities.Event event = em.findEvent(eventId);
-        String eventType = event.eventType();
-        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
-        if(em.canScheduleSpeaker(event,speakerEmail)){
-            s.addEvent(eventId);
-            switch (eventType){
-                case "Entities.Panel":
-                    event.setSpeaker(speakerEmail);
-
-                case "Entities.Talk":
-                    event.setSpeaker(speakerEmail);
-
-                case "Entities.Party":
-
-            }
-            return true;
-        }
-        return false;
+    public boolean scheduleSpeaker(String speakerEmail, Integer eventId){
+        return em.speakerSchedule(eventId, speakerEmail);
     }
 
 

@@ -1,6 +1,5 @@
 package Entities;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -30,7 +29,7 @@ public class Speaker extends User{
      * @return a list of all Talks that the Entities.Speaker is speaking at.
      */
     // Getter: Retrieves a List of Talks that the Entities.Speaker is talking at.
-    public ArrayList<Integer> getTalksSpeaking(){
+    public ArrayList<Integer> getEventsSpeaking(){
         return this.eventsSpeaking;
     }
 

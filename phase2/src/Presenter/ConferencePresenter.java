@@ -70,7 +70,7 @@ public class ConferencePresenter {
     }
 
     public String scheduleSpeaker(String speakerEmail, Integer eventId){
-        if (es.schedule_speaker(speakerEmail, eventId)){
+        if (es.scheduleSpeaker(speakerEmail, eventId)){
             return "Speaker succesfully scheduled for this event!";
         } else{
             return "Speaker can't be schedule";
