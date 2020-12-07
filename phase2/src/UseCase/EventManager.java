@@ -22,7 +22,7 @@ public class EventManager implements Serializable {
     public UserManager um;
 
     /** creates a empty Entities.Event Manager **/
-    public EventManager(){
+    public EventManager() throws IOException {
         events = new ArrayList<>();
         UserManager um = new UserManager();
     }
