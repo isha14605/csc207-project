@@ -236,4 +236,7 @@ public class ConferenceManager implements Serializable {
     public ArrayList<Integer> getEvents(Conference c){
         return c.getEventIds();
     }
+
+    //Need to commit
+
 }

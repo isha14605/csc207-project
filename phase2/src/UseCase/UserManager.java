@@ -379,5 +379,6 @@ public class UserManager implements Serializable {
             vip.setMemberStatus("Bronze");
     }
 
+    //Need to commit
 
 }

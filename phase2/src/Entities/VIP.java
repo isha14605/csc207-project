@@ -102,4 +102,6 @@ public class VIP extends Attendee implements Serializable {
     public char userType(){
         return 'V';
     }
+
+    //Need to commit
 }

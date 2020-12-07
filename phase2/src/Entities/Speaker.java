@@ -50,4 +50,6 @@ public class Speaker extends User{
     public char userType(){
         return 'S';
     }
+
+    //Need to commit
 }
