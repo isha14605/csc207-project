@@ -20,4 +20,28 @@ public class Conference {
         }
 
     }
+
+    public String cancellingEvents(Integer id){
+        if(es.cancel_event(id)){
+            return "Event sucessfully cancelled.";
+        } else {
+            return "Try again! Event couldn't be deleted";
+        }
+    }
+
+    public String addingRoom(String name, Integer capacity, String start, String end) throws IOException {
+        if (es.add_room(name, capacity, start, end)){
+            return "Room successfully added.";
+        } else {
+            return "Room was not added. Try Again!";
+        }
+    }
+
+    public String addingEventToConf(String conferenceName,Integer eventId) throws IOException {
+        if (es.addEventToConference(conferenceName, eventId)){
+            return "Event was successfully added to the conference";
+        } else {
+            return "Event couldn't be added to the conference";
+        }
+    }
 }
