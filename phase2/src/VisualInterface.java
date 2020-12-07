@@ -175,16 +175,8 @@ class Test {
             }
 
             if(e.getSource()==usertype){
-                itemIndex = usertype.getSelectedIndex();
-                System.out.println(itemIndex);
-                switch (itemIndex){
-                    case 1:
-                        type = "attendee";
-                    case 2:
-                        type = "organizer";
-                    case 3:
-                        type = "speaker";
-                }
+                type = usertype.getItemAt(usertype.getSelectedIndex());
+                System.out.println(type);
             }
 
             if(e.getSource()==create){
@@ -192,21 +184,21 @@ class Test {
                     String nameText = name.getText();
                     String emailText = email.getText();
                     String passwordText = password.getText();
-                    if(itemIndex != 0){
-                        if(um.checkUserExists(emailText)){
+
+                    if(um.checkUserExists(emailText)){
                             JOptionPane.showMessageDialog(startScreen, "Email already exist within our " +
                                     "system.");
                         }
-                        if(!um.checkUserExists(emailText)){
+                    if(!um.checkUserExists(emailText)){
                             JOptionPane.showMessageDialog(startScreen, "Approved, Account has been made");
                             um.addUser(nameText, emailText, passwordText, type);
                         }
-                        createAcc.setVisible(false);
+                    System.out.println(type);
+                    createAcc.setVisible(false);
                         try {
                             new StartScreen();
                         } catch (IOException ioException) {
                             ioException.printStackTrace();
-                        }
                     }
                 } catch (HeadlessException headlessException) {
                     headlessException.printStackTrace();
@@ -233,10 +225,10 @@ class Test {
         JPasswordField passwordI;
         JTextField userNameI;
         JFrame f = new JFrame();
+        UserManager um = new UserSave().read();
         LoginSystem ls = new LoginSystem();
 
         LoginScreen() throws IOException {
-
             Border border = BorderFactory.createLineBorder(Color.darkGray, 2);
 
             //Window set up
@@ -287,7 +279,7 @@ class Test {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == loginButton) {
-
+                System.out.println(um.findUser(userNameI.getText()));
                 if(ls.checkLogIn(userNameI.getText(), String.valueOf(passwordI.getPassword()))) {
                     f.setVisible(false);
 

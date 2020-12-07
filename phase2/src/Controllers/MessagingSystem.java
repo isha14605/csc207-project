@@ -3,6 +3,8 @@ package Controllers;
 import UseCase.EventManager;
 import UseCase.UserManager;
 
+import java.io.IOException;
+
 /**
  * Handles the messaging functionality of Users.
  * @author Tanya Thaker
@@ -15,7 +17,7 @@ public class MessagingSystem {
     EventManager em = new EventManager();
 
 
-    public MessagingSystem() {}
+    public MessagingSystem() throws IOException {}
 
     //Need to fix this method - Isha
 //    public boolean sendMessage(String from, ArrayList<String> to, String message){

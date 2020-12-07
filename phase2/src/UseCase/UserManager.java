@@ -1,7 +1,11 @@
 package UseCase;
 
 import Entities.*;
+import Gateway.ConferenceSave;
+import Gateway.EventSave;
+import Gateway.UserSave;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -12,8 +16,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class UserManager implements Serializable {
-    public static ArrayList<User> users = new ArrayList<User>();
-    public static ArrayList<String> email = new ArrayList<String>();
+    private ArrayList<User> users = new ArrayList<User>();
+    private ArrayList<String> email = new ArrayList<String>();
     public EventManager em; // can we do this?
     public ConferenceManager cm;
 
@@ -21,10 +25,16 @@ public class UserManager implements Serializable {
     /**
      * UseCase.UserManager Constructor
      */
-    public UserManager(){
-        EventManager em = new EventManager(); // can we do this?
-        ConferenceManager cm = new ConferenceManager();
-        addUser("Chevoy Ingram","c","c","organizer");
+    public UserManager() throws IOException {
+        EventManager em = new EventSave().read(); // can we do this?
+        ConferenceManager cm = new ConferenceSave().read();
+        users = new ArrayList<>();
+        email = new ArrayList<>();
+
+    }
+
+    public ArrayList<User> getUsers() {
+        return users;
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -33,13 +43,13 @@ public class UserManager implements Serializable {
      * @param email the email of this users account.
      */
     public void addUser(String name, String email, String password, String typeOfUser) {
-        UserManager.email.add(email);
+        this.email.add(email);
         switch (typeOfUser) {
-            case "organizer":
+            case "Organizer":
                 users.add(new Organizer(name, password, email));
-            case "speaker":
+            case "Speaker":
                 users.add(new Speaker(name, password, email));
-            case "attendee":
+            case "Attendee":
                 users.add(new Attendee(name, password, email));
             case "vip":
                 users.add(new VIP(name, password, email));
@@ -55,7 +65,7 @@ public class UserManager implements Serializable {
      * @see User#getPassword()
      */
     public boolean verifyLogin(String email, String password){
-        if (UserManager.email.contains(email)){
+        if (this.email.contains(email)){
             for( User u: users){
                 if (u.getEmail().equals(email) && u.getPassword().equals(password)){
                     return true;
@@ -228,9 +238,12 @@ public class UserManager implements Serializable {
      * @return Entities.User associated with provided email address
      */
     public User findUser(String email){
-        int i;
-        i = UserManager.email.indexOf(email);
-        return UserManager.users.get(i);
+        for(User user: users){
+            if(user.getEmail().equals(email)){
+                return user;
+            }
+        }
+        return null;
     }
 
     /**
@@ -239,7 +252,7 @@ public class UserManager implements Serializable {
      * @return true if the Entities.User exists
      */
     public boolean checkUserExists(String email) {
-        return UserManager.email.contains(email);
+        return this.email.contains(email);
     }
 
     /**
