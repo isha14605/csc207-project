@@ -61,8 +61,8 @@ public class EventSystem{
      * @param event_only
      * @return
      */
-    public boolean add_event(String type, String name, String description, String start, String end, String date,
-                             int capacity, boolean event_only) throws IOException {
+    public boolean addEvent(String type, String name, String description, String start, String end, String date,
+                            int capacity, boolean event_only) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
         || em.notValidFormat(em.dateFormattingDate(date))) {
             return false;
@@ -92,7 +92,7 @@ public class EventSystem{
      *
      * @return ArrayList of Events
      */
-    public boolean add_room(String name, Integer capacity, String start, String end) throws IOException {
+    public boolean addRoom(String name, Integer capacity, String start, String end) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))) {
             return false;
         }else {
@@ -133,19 +133,21 @@ public class EventSystem{
     /**
      * Schedules a Entities.Room for an existing Entities.Event
      */
-    public void schedule_room(String room_name, Integer eventId) throws IOException {
+    public boolean schedule_room(String room_name, Integer eventId) throws IOException {
         Event event = em.findEvent(eventId);
         Room room = rm.find_room(room_name);
         if(room == null){
-            System.out.println("Entities.Room doesn't exit");
-            return;
+//            System.out.println("Entities.Room doesn't exit");
+            return false;
         }
         if(!rm.is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
             room.addBookings(event.getEventId(), em.getLocalDateTime(event.getEventDate(),event.getStartTime()),
                     em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
+            return true;
         }else{
-            System.out.println("Entities.Room not scheduled due to time conflict");
+//            System.out.println("Entities.Room not scheduled due to time conflict");
+            return false;
         }
     }
 
