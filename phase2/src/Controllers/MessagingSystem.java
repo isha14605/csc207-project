@@ -25,7 +25,7 @@ public class MessagingSystem {
         this.eventManager = new EventSave().read();
     }
 
-    //Need to ask a question about the parameters here - Isha
+    // Javadoc needs to be done - Isha
     public boolean sendMessage(String from, ArrayList<String> to, String message){
         if (!(userManager.checkUserExists(from))){
             return false;
@@ -35,19 +35,17 @@ public class MessagingSystem {
             ArrayList<String> recipients = userManager.checkUsers(to); // returns array of existing users
             userManager.message(from, recipients, message);
             return true;
+        } else if (userManager.findUser(from).userType() == 'S'){
+            ArrayList<Event> events = new ArrayList<>();
+            for (String s: to) {
+                int eventID = Integer.parseInt(s);
+                events.add(eventManager.findEvent(eventID));
+            }
+            userManager.message(from, eventManager.getAllEmails(events), message);
+            return true;
         }
         return false;
     }
-
-    public boolean speakerSendMessage(String from, ArrayList<Integer> to, String message) {
-        ArrayList<Event> e = new ArrayList<>();
-        for (Integer eventID : to) {
-            e.add(eventManager.findEvent(eventID));
-        }
-        userManager.message(from, eventManager.getAllEmails(e), message);
-        return true;
-    }
-
 
 }
 

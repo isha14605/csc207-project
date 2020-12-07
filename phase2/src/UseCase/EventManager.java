@@ -19,10 +19,12 @@ import java.util.ArrayList;
 public class EventManager implements Serializable {
 
     public ArrayList<Event> events;
+    public UserManager um;
 
     /** creates a empty Entities.Event Manager **/
     public EventManager(){
         events = new ArrayList<>();
+        UserManager um = new UserManager();
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -191,5 +193,27 @@ public class EventManager implements Serializable {
             attendees.addAll(e.getAttendeeEmails());
         }
         return attendees;
+    }
+
+    public boolean speakerSchedule(Integer eventID, String speakerEmail) {
+        Entities.Event event = findEvent(eventID);
+        String eventType = event.eventType();
+        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
+        if(canScheduleSpeaker(event,speakerEmail)){
+            s.addEvent(eventID);
+            switch (eventType){
+                // fix this
+                case "Entities.Panel":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Talk":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Party":
+                    event.setSpeaker(speakerEmail);
+            }
+            return true;
+        }
+        return false;
     }
 }

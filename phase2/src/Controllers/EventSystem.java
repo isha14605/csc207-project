@@ -152,27 +152,8 @@ public class EventSystem{
      *
      * @return true if Entities.Speaker is scheduled successfully
      */
-    // Need to fix - Isha
-    public boolean schedule_speaker(String speakerEmail, Integer eventId){
-        Entities.Event event = em.findEvent(eventId);
-        String eventType = event.eventType();
-        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
-        if(em.canScheduleSpeaker(event,speakerEmail)){
-            s.addEvent(event.getEventId()); // fix calling method on entity
-            switch (eventType){
-                // fix this
-                case "Entities.Panel":
-                    event.setSpeaker(speakerEmail);
-
-                case "Entities.Talk":
-                    event.setSpeaker(speakerEmail);
-
-                case "Entities.Party":
-
-            }
-            return true;
-        }
-        return false;
+    public boolean scheduleSpeaker(String speakerEmail, Integer eventId){
+        return em.speakerSchedule(eventId, speakerEmail);
     }
 
 
