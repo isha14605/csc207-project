@@ -966,7 +966,7 @@ class Test {
             setFrame(messageEvent, "Message Screen");
             Border raisedetched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 
-            ArrayList<Integer> contacts = speaker.getTalksSpeaking();
+            ArrayList<Integer> contacts = speaker.getEventsSpeaking();
             Integer[] contact = contacts.toArray(new Integer[0]);
             JComboBox<Integer> comboBox = new JComboBox<>(contact);
             comboBox.setBounds(225,50,175,30);
