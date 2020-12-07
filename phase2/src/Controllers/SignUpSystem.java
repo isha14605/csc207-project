@@ -1,6 +1,7 @@
 package Controllers;
 
 import Entities.Attendee;
+import Entities.Conference;
 import Entities.Event;
 import UseCase.ConferenceManager;
 import UseCase.EventManager;
@@ -39,14 +40,19 @@ public class SignUpSystem {
      * Allows an Entities.Attendee to sign up for an Entities.Event.
      * @param email the Entities.Attendee that wants to sign up for an an Entities.Event.
      * @param event the Entities.Event that the Entities.Attendee wants to be signed up for.
-     * @see UserManager#signUpEvent(Attendee, Integer)
+     * @see UserManager#signUpEvent(Attendee, Event, Conference)
      * @see EventManager#findEvent(Integer)
      * @see UserManager#checkUserExists(String)
      */
-    // Method to sign up an Entities.Attendee for an Entities.Event
+//     Method to sign up an Entities.Attendee for an Entities.Event
     public boolean signUpEvent(String email, Integer event){
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
-            return uM.signUpEvent((Attendee) uM.findUser(email),event);
+            if (uM.findUser(email).userType() == 'V'){
+                uM.signUpVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+                return true;
+            } else {
+                return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+            }
         }
         return false;
     }
@@ -56,18 +62,23 @@ public class SignUpSystem {
      * @param email the attendee who wants to cancel Registration for an event
      * @param event the event if that the user wants to cancel registration from
      * @return true if succesfully cancelled
-     * @see UserManager#cancelRegistrationEvent(Attendee, Integer)
+     * @see UserManager#cancelRegistrationEvent(Attendee, Event, Conference)
      * @see EventManager#findEvent(Integer)
      * @see UserManager#checkUserExists(String)
 
      */
     public boolean cancelRegEvent(String email, Integer event){
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
-            return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), event);
+            if (uM.findUser(email).userType() == 'V'){
+                uM.cancelVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+                return true;
+            } else {
+                return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
+                        cM.eventInConference(event));
+            }
         }
         return false;
     }
-
     /**
      * Returns true if the user succesfully signed up for a conference
      * @param conference the name of Entities.conference Entities.Attendee wishes to join
@@ -77,7 +88,12 @@ public class SignUpSystem {
     public boolean attendConf(String conference, String email){
         if(uM.checkUserExists(email) && !(cM.findConference(conference) == null)){
             Attendee a = (Attendee) uM.findUser(email);
-            uM.signUpConference(a, conference);
+            ArrayList<Event> e = new ArrayList<Event>();
+            for(Integer i: cM.getEvents(cM.findConference(conference))){
+                e.add(eM.findEvent(i));
+            }
+            cM.addAttendeesToConference(cM.findConference(conference), a.getEmail());
+            uM.attendConference(a,e, cM.findConference(conference));
             return true;
         }
         return false;
@@ -92,10 +108,16 @@ public class SignUpSystem {
     public  boolean cancelRegConf(String conference, String email){
         if(uM.checkUserExists(email) && !(cM.findConference(conference) == null)){
             Attendee a = (Attendee) uM.findUser(email);
-            uM.cancelRegistrationConference(a, conference);
+            ArrayList<Event> e = new ArrayList<Event>();
+            for(Integer i: cM.getEvents(cM.findConference(conference))){
+                e.add(eM.findEvent(i));
+            }
+            cM.removeAttendeeConference(cM.findConference(conference), a.getEmail());
+            uM.cancelRegistrationConference(a,e, cM.findConference(conference));
             return true;
         }
         return false;
     }
+
 
 }

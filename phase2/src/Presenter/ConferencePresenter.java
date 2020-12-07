@@ -21,13 +21,13 @@ public class ConferencePresenter {
 
     }
 
-//    public String cancellingEvents(Integer id){
-//        if(es.cancel_event(id)){
-//            return "Event sucessfully cancelled.";
-//        } else {
-//            return "Try again! Event couldn't be deleted";
-//        }
-//    }
+    public String cancellingEvents(Integer id){
+        if(es.cancel_event(id)){
+            return "Event sucessfully cancelled.";
+        } else {
+            return "Try again! Event couldn't be deleted";
+        }
+    }
 
     public String addingRoom(String name, Integer capacity, String start, String end) throws IOException {
         if (es.addRoom(name, capacity, start, end)){
