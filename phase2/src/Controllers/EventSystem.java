@@ -1,9 +1,6 @@
 package Controllers;
 
-import Entities.Conference;
-import Entities.Event;
-import Entities.Room;
-import Entities.User;
+import Entities.*;
 import Gateway.ConferenceSave;
 import Gateway.EventSave;
 import Gateway.RoomSave;
@@ -44,8 +41,9 @@ public class EventSystem{
      * @param event_only
      * @return
      */
+    // add parameter for conference
     public boolean add_event(String type, String name, String description, String start, String end, String date,
-                             int capacity, boolean event_only) throws IOException {
+                             int capacity, boolean event_only, String c) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
         || em.notValidFormat(em.dateFormattingDate(date))) {
             return false;
@@ -69,7 +67,7 @@ public class EventSystem{
         // cancel all attendee registrations
         ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
         for(User a : attendees) {
-            um.cancelRegistrationEvent(a, e, c);
+            um.cancelRegistrationEvent((Attendee) a, e, c);
         }
 
         // cancel all organizers
