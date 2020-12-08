@@ -18,21 +18,19 @@ public class LoginSystem {
     private UserManager userManager;
 
     /**
-     * Constructor
+     * Creates a LoginSystem with a UserManager.
      */
     public LoginSystem() throws IOException {
         this.userManager = new UserSave().read();
     }
 
     /**
-     * Verify the credentials entered by the user
-     *
-     * @param email The email name entered by the user when logging in
-     * @param password Password entered by the user when logging in
-     * @return boolean true if login details are correct.
+     * Verifies the credentials entered by the User
+     * @param email the email entered by the User when logging in
+     * @param password the password entered by the User when logging in
+     * @return true if login details are correct, false otherwise
      * @see UserManager#verifyLogin(String email, String password)
      */
-
     public boolean checkLogIn(String email, String password) {
         if(userManager.checkUserExists(email)){
             return userManager.verifyLogin(email, password);

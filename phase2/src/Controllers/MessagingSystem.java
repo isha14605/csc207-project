@@ -20,12 +20,21 @@ public class MessagingSystem {
     private UserManager userManager;
     private EventManager eventManager;
 
-
+    /**
+     * Creates a MessagingSystem with a UserManager and EventManager.
+     */
     public MessagingSystem() throws IOException {
         this.userManager = new UserSave().read();
         this.eventManager = new EventSave().read();
     }
 
+    /**
+     * Allows Users to message other Users, with restrictions based on the type of User that they are.
+     * @param from the email representing the User who is sending the message
+     * @param to a list containing all the Users that someone wants to message or Events, if the User is a Speaker
+     * @param message the message that the User would like to send to someone
+     * @return true or false, depending on whether sending the message was successful or not
+     */
     public boolean sendMessage(String from, ArrayList<String> to, String message){
         if (!(userManager.checkUserExists(from))){
             return false;

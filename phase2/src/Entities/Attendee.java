@@ -29,7 +29,8 @@ public class Attendee extends User implements Serializable {
 
     // Getters
     /**
-     * Returns an ArrayList of Event objects, allowing an Entities.Attendee to view all the events that they are attending.
+     * Returns an ArrayList of Event objects, allowing an Entities.Attendee to view all the events that they are
+     * attending.
      * @return a list containing each Event that the specified Entities.Attendee is attending
      * @see Event
      */
@@ -39,7 +40,7 @@ public class Attendee extends User implements Serializable {
 
     /**
      * Returns an array of String that represents the name of the conference the user is attending
-     * @return an arraylist of string representing the conferences they are attending
+     * @return an arraylist of strings representing the conferences they are attending
      */
     public ArrayList<String> getConferenceAttending(){return this.conferenceAttending;}
 
@@ -50,8 +51,6 @@ public class Attendee extends User implements Serializable {
     public char userType(){
         return 'A';
     }
-
-
 
     // Setters
     /**
@@ -64,7 +63,7 @@ public class Attendee extends User implements Serializable {
 
     /**
      * Adds a conference to an Entities.Attendee's list of conferences that they are attending.
-     * @param conference the conference that the Entities.Attendee would like to attend.
+     * @param conference a string representing the conference that the Entities.Attendee would like to attend
      */
     public void attendConference(String conference){this.conferenceAttending.add(conference);}
 
@@ -78,7 +77,7 @@ public class Attendee extends User implements Serializable {
 
     /**
      * Removes a conference from an Entities.Attendee's list of conferences that they are attending
-     * @param conference a string that represent the conference that the Entities.Attendee no longer wants to attend
+     * @param conference a string representing the conference that the Entities.Attendee no longer wants to attend
      */
     public void removeConference(String conference){this.conferenceAttending.remove(conference);}
 

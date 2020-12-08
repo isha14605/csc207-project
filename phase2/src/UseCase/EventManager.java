@@ -1,9 +1,12 @@
 package UseCase;
 
-import Entities.*;
-import Gateway.UserSave;
+import Entities.Event;
+import Entities.Panel;
+import Entities.Party;
+import Entities.Talk;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -217,6 +220,12 @@ public class EventManager implements Serializable {
         return eventNames;
     }
 
+    /**
+     * Returns the emails of all Attendees attending a list of events
+     * @param events a list containing all the events that someone is interested in viewing attendees for
+     * @return a list containing all the emails of attendees for the input events
+     * @see Event#getAttendeeEmails()
+     */
     public ArrayList<String> getAllEmails(ArrayList<Event> events) {
         ArrayList<String> attendees = new ArrayList<String>();
         for (Event e: events) {

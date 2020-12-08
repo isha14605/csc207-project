@@ -26,10 +26,11 @@ public class SignUpSystem {
     }
 
     /**
-     * Returns a list of events that an Entities.Attendee can attend, based on a specified date, start time, and end time. Checks
-     * to see that there are events occurring on the specified date between the times provided.
+     * Returns a list of events that an Entities.Attendee can attend, based on a specified date, start time, and end
+     * time. Checks to see that there are events occurring on the specified date between the times provided.
      * @param date the date that the Entities.Attendee is interested in viewing events for
-     * @return a list containing potential events that the Entities.Attendee is interested in attending for further perusal
+     * @return a list containing potential events that the Entities.Attendee is interested in attending for further
+     * perusal
      */
     // Allows the Entities.Attendee to browse the events and decide which ones they want to see based on date and time
     public ArrayList<Event> browseEvents(EventManager eM, LocalDate date){ // need to discuss
@@ -80,7 +81,7 @@ public class SignUpSystem {
         return false;
     }
     /**
-     * Returns true if the user succesfully signed up for a conference
+     * Returns true if the user successfully signed up for a conference
      * @param conference the name of Entities.conference Entities.Attendee wishes to join
      * @param email the email of the Entities.Attendee who wishes to join the conference
      * @return true if attendee successfully joined the conference

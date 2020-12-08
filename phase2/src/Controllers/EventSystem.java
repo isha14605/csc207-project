@@ -20,7 +20,7 @@ public class EventSystem{
     private UserManager um;
 
     /**
-     * EventController Constructor
+     * Creates an EventSystem with a ConferenceManager, EventManager, RoomManager, and UserManager.
      */
     public EventSystem() throws ClassNotFoundException, IOException {
         cm = new ConferenceSave().read();
@@ -185,10 +185,10 @@ public class EventSystem{
 
     /**
      * Schedules a Entities.Speaker for an existing Entities.Event
-     *
-     * @return true if Entities.Speaker is scheduled successfully
+     * @param eventID the ID of the event that the Organizer would like to schedule a speaker for
+     * @param speakerEmail the email of the Speaker that the Organizer wants to schedule for the event
+     * @return true if Entities.Speaker is scheduled successfully and false otherwise
      */
-
     public boolean speakerSchedule(Integer eventID, String speakerEmail) {
         Entities.Event event = em.findEvent(eventID);
         String eventType = event.eventType();
