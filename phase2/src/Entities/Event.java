@@ -140,6 +140,11 @@ public abstract class Event implements Serializable {
 
     // Setters
 
+
+    public void setEventId(Integer eventId) {
+        this.eventId = eventId;
+    }
+
     /**
      * sets the designated room for this event.
      * Should be called by UseCase.RoomManager. UseCase.RoomManager will be responsible for checking room availability, ensuring that

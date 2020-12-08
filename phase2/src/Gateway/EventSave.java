@@ -17,7 +17,7 @@ public class EventSave implements Gateway {
     }
 
     @Override
-    public EventManager read() {
+    public EventManager read() throws IOException {
         try {
             InputStream file = new FileInputStream("EventSave.ser");
             InputStream buffer = new BufferedInputStream(file);

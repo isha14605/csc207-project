@@ -1,12 +1,12 @@
 import Controllers.EventSystem;
 import Controllers.LoginSystem;
-import Entities.Conference;
-import Entities.Speaker;
-import Entities.User;
-import Entities.VIP;
+import Entities.*;
+import Entities.Event;
 import Gateway.ConferenceSave;
 import Gateway.EventSave;
+import Gateway.RoomSave;
 import Gateway.UserSave;
+import Presenter.ConferencePresenter;
 import UseCase.ConferenceManager;
 import UseCase.EventManager;
 import UseCase.RoomManager;
@@ -25,6 +25,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 class Test {
@@ -315,95 +316,27 @@ class Test {
         }
     }
 
-    public static class MainScreen implements ActionListener{
-        JButton organizerOptions, userOptions, logOut;
-        JFrame main = new JFrame();
-        User userAccount;
 
-        MainScreen(String user) throws IOException {
-            main.setTitle("Event Interface System 1.0");
-            main.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            main.setResizable(false);
-            main.setSize(500, 380);
-            main.setVisible(true);
-            main.setLayout(null);
-            UserManager um = new UserManager();
-            this.userAccount = um.findUser(user);
-
-            JLabel l = new JLabel("Welcome " + userAccount.getName());
-            l.setBounds(0, 0, 500, 380);
-            l.setHorizontalAlignment(JLabel.CENTER);
-            l.setVerticalAlignment(JLabel.TOP);
-            Font font = new Font(Font.DIALOG_INPUT,Font.BOLD, 20);
-            l.setFont(font);
-            main.add(l);
-
-            int y = 80;
-            userOptions = new JButton("User Options");
-            userOptions.setBounds(150,y,200,30);
-            main.add(userOptions);
-            userOptions.addActionListener(this);
-
-
-            if(userAccount.userType() == 'O'){
-                y = y + 40;
-                organizerOptions = new JButton("Organizer Options");
-                organizerOptions.setBounds(150,y,200,30);
-                main.add(organizerOptions);
-                organizerOptions.addActionListener(this);
-                y = y + 40;
-            }
-
-            logOut = new JButton("Log Out");
-            logOut.setBounds(200,y,100,30);
-            main.add(logOut);
-            logOut.addActionListener(this);
-
-
-
-        }
-
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            if(e.getSource()==organizerOptions){
-                main.setVisible(false);
-                new OrganizerScreen();
-            }
-            if(e.getSource()==userOptions){
-                main.setVisible(false);
-                try {
-                    new AttendeeScreen(userAccount.getName());
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-
-            }
-            if(e.getSource()==logOut){
-                main.setVisible(false);
-                try {
-                    new LoginScreen();
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-            }
-        }
-    }
 
     public static class AttendeeScreen implements ActionListener{
         //Attendant screen
         UserManager um = new UserSave().read();
         EventManager em = new EventSave().read();
+        ConferenceManager cm = new ConferenceSave().read();
         User userAccount;
         JFrame attendeeScreen,signupScreen,cancelScreen,inboxScreen,messageScreen,signUpEvent,signUpCon;
         JButton signUp,cancelRegistration,inbox,back;
         String user;
 
         //sign up buttons
+        JComboBox<String> conferences, conferencesSignUP;
         JButton event,conference, backSU;
+        JTextArea eventViewer = new JTextArea();
+        JTextPane timeInfo = new JTextPane();
 
         //cancel Event button
         JButton select, backCE;
+        JComboBox<Integer> eventsAttending;
 
         //Inbox
         JButton sendMessage, viewMessage, backIB;
@@ -541,17 +474,19 @@ class Test {
             backSU.addActionListener(this);
             backSU.setBounds(75,125,100,25);
 
+
             ArrayList<String> con = em.getEventString();
+            con.add(0,"");
             String[] conference = con.toArray(new String[0]);
-            JComboBox<String> conferences = new JComboBox<>(conference);
+            conferences = new JComboBox<>(conference);
             conferences.setBounds(25,50,200,25);
+            conferences.addActionListener(this);
             signUpEvent.add(conferences);
 
             TitledBorder event = BorderFactory.createTitledBorder(lowerLevel,"Event Info");
             event.setTitleJustification(TitledBorder.LEADING);
 
             //event box set up
-            JTextArea eventViewer = new JTextArea();
             eventViewer.setLineWrap(true);
             eventViewer.setEditable(false);
             eventViewer.setText("No event selected");
@@ -562,7 +497,6 @@ class Test {
             //Time Box set up
             TitledBorder time = BorderFactory.createTitledBorder(lowerLevel,"Time");
             event.setTitleJustification(TitledBorder.LEADING);
-            JTextPane timeInfo = new JTextPane();
             timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
             timeInfo.setBounds(0,190,250,190);
             timeInfo.setEditable(false);
@@ -586,11 +520,12 @@ class Test {
             backSU.addActionListener(this);
             backSU.setBounds(75,125,100,25);
 
-            ArrayList<String> con = em.getEventString();
+            ArrayList<String> con = cm.getConferenceList();
             String[] conference = con.toArray(new String[0]);
-            JComboBox<String> conferences = new JComboBox<>(conference);
-            conferences.setBounds(25,50,200,25);
-            signUpCon.add(conferences);
+            conferencesSignUP = new JComboBox<>(conference);
+            conferencesSignUP.addActionListener(this);
+            conferencesSignUP.setBounds(25,50,200,25);
+            signUpCon.add(conferencesSignUP);
 
             TitledBorder event = BorderFactory.createTitledBorder(lowerLevel,"Conference Info");
             event.setTitleJustification(TitledBorder.LEADING);
@@ -615,7 +550,7 @@ class Test {
             timeInfo.setBorder(time);
         }
 
-        void CancelRegistration(){
+        void CancelRegistration() throws IOException {
             cancelScreen = new JFrame();
             EventManager em = new EventSave().read();
             cancelScreen.setTitle("Event Interface System 1.0");
@@ -643,11 +578,13 @@ class Test {
             backCE.addActionListener(this);
             backCE.setBounds(75,125,100,25);
 
-            ArrayList<String> con = em.getEventString();
-            String[] conference = con.toArray(new String[0]);
-            JComboBox<String> conferences = new JComboBox<>(conference);
-            conferences.setBounds(25,50,200,25);
-            cancelScreen.add(conferences);
+            Attendee a = (Attendee) userAccount;
+            ArrayList<Integer> con = a.getEventsAttending();
+            Integer[] conference = con.toArray(new Integer[0]);
+            eventsAttending = new JComboBox<>(conference);
+            eventsAttending.addActionListener(this);
+            eventsAttending.setBounds(25,50,200,25);
+            cancelScreen.add(eventsAttending);
 
             TitledBorder event = BorderFactory.createTitledBorder(lowerLevel,"Event Info");
             event.setTitleJustification(TitledBorder.LEADING);
@@ -755,9 +692,74 @@ class Test {
                 SignUpConference();
             }
 
+            if(e.getSource()==conferences){
+                System.out.println(conferences.getSelectedItem());
+
+                if(!Objects.equals(conferences.getSelectedItem(), "")) {
+                    Event event = em.findEvent(conferences.getSelectedIndex());
+
+                    timeInfo.setText("\nDate: " + event.getEventDate() +
+                            "\n\nStart Time: " + event.getStartTime() +
+                            "\n\nEnd Time: " + event.getEndTime());
+
+                    eventViewer.setText("Event Name: " + event.getName() +
+                            "\nEvent Id :" + event.getEventId() +
+                            "\n\nDescription : " + event.getEventDescription() +
+                            "\n\nRoom : " + event.getRoomName() +
+                            "\n\nTech Requirements : " + event.getTechRequirements() +
+                            "\n\nCapacity : " + event.getAttendeeCapacity() +
+                            "");
+                }
+                else {
+                    timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+                }
+            }
+
+            if(e.getSource()==eventsAttending){
+                if(!Objects.equals(conferences.getSelectedItem(), "")) {
+                    Event event = em.findEvent(conferences.getSelectedIndex());
+
+                    timeInfo.setText("\nDate: " + event.getEventDate() +
+                            "\n\nStart Time: " + event.getStartTime() +
+                            "\n\nEnd Time: " + event.getEndTime());
+
+                    eventViewer.setText("Event Name: " + event.getName() +
+                            "\nEvent Id :" + event.getEventId() +
+                            "\n\nDescription : " + event.getEventDescription() +
+                            "\n\nRoom : " + event.getRoomName() +
+                            "\n\nTech Requirements : " + event.getTechRequirements() +
+                            "\n\nCapacity : " + event.getAttendeeCapacity() +
+                            "");
+                }
+                else {
+                    timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+                }
+            }
+
+            if(e.getSource()==conferencesSignUP){
+                if(!Objects.equals(conferencesSignUP.getSelectedItem(), "")&&
+                        !Objects.equals(conferencesSignUP.getSelectedItem(), "None")) {
+                    Conference conference = cm.findConference(conferencesSignUP.getSelectedItem().toString());
+                    timeInfo.setText("\nDate: " + conference.getConfDate()+
+                            "\n\nStart Time: " + conference.getStartTime() +
+                            "\n\nEnd Time: " + conference.getEndTime());
+
+                    eventViewer.setText("Event Name: " + conference.getName() +
+                            "\n\nDescription : " + conference.getConfDescription() +
+                            "Events " + conference.getEventIds());
+                }
+                else {
+                    timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+                }
+            }
+
             if(e.getSource()==cancelRegistration){
                 attendeeScreen.setVisible(false);
-                CancelRegistration();
+                try {
+                    CancelRegistration();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
 
             if(e.getSource()==inbox){
@@ -768,15 +770,11 @@ class Test {
             if(e.getSource()==back){
                 attendeeScreen.setVisible(false);
                 try {
-                    if(new UserSave().read().findUser(user).userType() == 'O') {
-                        new MainScreen(user);
-                    }
-                    else{
-                        new LoginScreen();
-                    }
+                    new LoginScreen();
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
+
             }
 
             if(e.getSource()==backSU){
@@ -1162,12 +1160,20 @@ class Test {
 
             if (e.getSource() == crButton) {
                 f.setVisible(false);
-                new EventScreen();
+                try {
+                    new EventScreen();
+                } catch (IOException | ClassNotFoundException ioException) {
+                    ioException.printStackTrace();
+                }
             }
 
             if (e.getSource()==csButton){
                 f.setVisible(false);
-                new RoomScreen(f,rM);
+                try {
+                    new RoomScreen(f,rM);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
             }
 
             if(e.getSource()==eoButton){
@@ -1512,8 +1518,9 @@ class Test {
         JFrame eS = new JFrame(), f, currentFrame;
         String currentPage;
         JButton create, modify, view, back, select;
-        EventManager eM = new EventManager();
-        RoomManager rm = new RoomManager(eM);
+        EventManager eM = new EventSave().read();
+        RoomManager rm = new RoomSave().read();
+        EventSystem eventSystem = new EventSystem();
         //Event info
         JTextField enI, edI, timeS, timeE, dateI;
         //MEO Buttons
@@ -1525,7 +1532,7 @@ class Test {
         JComboBox<String> timeOptionsS, timeOptionE;
         JList<String> list;
 
-        EventScreen(){
+        EventScreen() throws IOException, ClassNotFoundException {
             eS.setTitle("Event Interface System 1.0");
             eS.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             eS.setResizable(true);
@@ -1727,7 +1734,7 @@ class Test {
             ve.add(back);
             back.setBounds(75,125,100,25);
 
-            ArrayList<String> con = eM.getEventString();
+            ArrayList<String> con = eventSystem.getEm().getEventString();
             String[] conference = con.toArray(new String[0]);
             JComboBox<String> conferences = new JComboBox<>(conference);
             conferences.setBounds(25,50,200,25);
@@ -1788,7 +1795,7 @@ class Test {
         public void actionPerformed(ActionEvent e) {
             if(e.getSource()==back||e.getSource()==backMeo){
                 eS.setVisible(false);
-                new EventScreen();
+                new OrganizerScreen();
                 if(!(currentFrame == null)) {
                     currentFrame.setVisible(false);
                 }
@@ -1826,15 +1833,39 @@ class Test {
                         JOptionPane.YES_NO_CANCEL_OPTION);
 
                 if(choice == 0 ||choice == 1){
-                    if(choice == 0){
-                        boolean vip = true;
-                    }else {
-                        boolean vip = false;
-                    }
-                    String[] types = {"Talk","Party","Panel"};
-                     Object type = JOptionPane.showInputDialog(null,"What type of event is this?","Event Type",
+                    boolean vip;
+                    vip = choice == 0;
+                    String[] types = {"talk","party","panel"};
+                    Object type = JOptionPane.showInputDialog(null,
+                             "What type of event is this?","Event Type",
                             JOptionPane.QUESTION_MESSAGE,null,types,0);
-                     System.out.println(type.toString());
+
+                    ConferencePresenter p =  new ConferencePresenter(eventSystem);
+
+                    try {
+                        JOptionPane.showMessageDialog(null,p.addingEvents(type.toString(),
+                                nameText.getText(),descText.getText(),
+                                timeOptionsS.getItemAt(timeOptionsS.getSelectedIndex()),
+                                timeOptionE.getItemAt(timeOptionE.getSelectedIndex()), date.getText(),
+                                Integer.parseInt(capacityText.getText()), vip));
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    try {
+                        eventSystem.addEvent(type.toString(),nameText.getText(),descText.getText(),
+                                timeOptionsS.getItemAt(timeOptionsS.getSelectedIndex()),
+                                timeOptionE.getItemAt(timeOptionE.getSelectedIndex()), date.getText(),
+                                Integer.parseInt(capacityText.getText()), vip);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                    System.out.println(eventSystem.getEm().getEvents());
+                    try {
+                        new EventSave().save(eventSystem.getEm());
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+
                 }
 
             }
@@ -1855,7 +1886,7 @@ class Test {
         //modify room options
         JButton addTech, removeTech, changeCapacity, removeRoom;
 
-        RoomScreen(JFrame f, RoomManager rm) {
+        RoomScreen(JFrame f, RoomManager rm) throws IOException {
             this.f = f;
             rS.setTitle("Event Interface System 1.0");
             rS.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

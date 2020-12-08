@@ -171,7 +171,6 @@ public class EventSystem{
         Event event = em.findEvent(eventId);
         Room room = rm.find_room(room_name);
         if(room == null){
-//            System.out.println("Entities.Room doesn't exit");
             return false;
         }
         if(!rm.is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
@@ -180,7 +179,6 @@ public class EventSystem{
                     em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
             return true;
         }else{
-//            System.out.println("Entities.Room not scheduled due to time conflict");
             return false;
         }
     }
@@ -190,8 +188,26 @@ public class EventSystem{
      *
      * @return true if Entities.Speaker is scheduled successfully
      */
-    public boolean scheduleSpeaker(String speakerEmail, Integer eventId){
-        return em.speakerSchedule(eventId, speakerEmail);
+
+    public boolean speakerSchedule(Integer eventID, String speakerEmail) {
+        Entities.Event event = em.findEvent(eventID);
+        String eventType = event.eventType();
+        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
+        if(em.canScheduleSpeaker(event,speakerEmail)){
+            s.addEvent(eventID);
+            switch (eventType){
+                case "Entities.Panel":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Talk":
+                    event.setSpeaker(speakerEmail);
+
+                case "Entities.Party":
+                    event.setSpeaker(speakerEmail);
+            }
+            return true;
+        }
+        return false;
     }
 
 

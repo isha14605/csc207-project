@@ -21,13 +21,14 @@ public class ConferencePresenter {
 
     }
 
+    /*
     public String cancellingEvents(Integer id){
         if(es.cancel_event(id)){
             return "Event sucessfully cancelled.";
         } else {
             return "Try again! Event couldn't be deleted";
         }
-    }
+    }*/
 
     public String addingRoom(String name, Integer capacity, String start, String end) throws IOException {
         if (es.addRoom(name, capacity, start, end)){
@@ -70,7 +71,7 @@ public class ConferencePresenter {
     }
 
     public String scheduleSpeaker(String speakerEmail, Integer eventId){
-        if (es.scheduleSpeaker(speakerEmail, eventId)){
+        if (es.speakerSchedule(eventId,speakerEmail)){
             return "Speaker succesfully scheduled for this event!";
         } else{
             return "Speaker can't be schedule";

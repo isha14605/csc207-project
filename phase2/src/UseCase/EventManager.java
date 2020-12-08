@@ -1,6 +1,7 @@
 package UseCase;
 
 import Entities.*;
+import Gateway.UserSave;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -18,13 +19,11 @@ import java.util.ArrayList;
 
 public class EventManager implements Serializable {
 
-    public ArrayList<Event> events;
-    public UserManager um;
+    private ArrayList<Event> events;
 
     /** creates a empty Entities.Event Manager **/
     public EventManager() throws IOException {
         events = new ArrayList<>();
-        UserManager um = new UserManager();
     }
 
     /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -46,18 +45,25 @@ public class EventManager implements Serializable {
         switch (eventType){
             case "panel":
                 events.add(new Panel(name,desc,start,end,date,capacity,event_only));
+                events.get(events.size()-1).setEventId(events.size());
                 return true;
 
             case "talk":
                 events.add(new Talk(name,desc,start,end,date,capacity,event_only));
+                events.get(events.size()-1).setEventId(events.size());
                 return true;
 
             case "party":
                 events.add(new Party(name,desc,start,end,date,capacity,event_only));
+                events.get(events.size()-1).setEventId(events.size());
                 return true;
 
         }
         return false;
+    }
+
+    public ArrayList<Event> getEvents() {
+        return events;
     }
 
     public boolean deleteEvent(Integer id) {
@@ -219,24 +225,4 @@ public class EventManager implements Serializable {
         return attendees;
     }
 
-    public boolean speakerSchedule(Integer eventID, String speakerEmail) {
-        Entities.Event event = findEvent(eventID);
-        String eventType = event.eventType();
-        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
-        if(canScheduleSpeaker(event,speakerEmail)){
-            s.addEvent(eventID);
-            switch (eventType){
-                case "Entities.Panel":
-                    event.setSpeaker(speakerEmail);
-
-                case "Entities.Talk":
-                    event.setSpeaker(speakerEmail);
-
-                case "Entities.Party":
-                    event.setSpeaker(speakerEmail);
-            }
-            return true;
-        }
-        return false;
-    }
 }
