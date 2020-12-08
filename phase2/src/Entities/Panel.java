@@ -56,4 +56,11 @@ public class Panel extends Event implements Serializable {
     public void addSpeaker(String email) {
         speakerEmails.add(email);
     }
+
+    /**
+     * removes the email of the speakers of this panel.
+     */
+    public void removeSpeakers() {
+        this.speakerEmails = null;
+    }
 }

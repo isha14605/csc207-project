@@ -155,6 +155,30 @@ public class UserManager implements Serializable {
         return true;
     }
 
+    /**
+     * Cancels Entities.Organizer's registration for an Entities.Event.
+     * @param organizer Entities.Organizer to be removed from Entities.Event.
+     * @param event Entities.Event Entities.Organizer is to be removed from.
+     */
+    public void cancelRegistrationEventOrganizer (Organizer organizer, Event event) {
+        event.removeOrganizer(organizer.getEmail());
+        organizer.removeEvent(event.getEventId());
+    }
+
+    /**
+     * Cancels Entities.Speaker's registration for an Entities.Event.
+     * @param speaker Entities.Speaker to be removed from Entities.Event.
+     * @param event Entities.Event Entities.Speaker is to be removed from.
+     */
+    public void cancelRegistrationEventSpeaker (Speaker speaker, Event event) {
+        if (event instanceof Talk) {
+            ((Talk) event).removeSpeaker();
+        } else if (event instanceof Panel) {
+            ((Panel) event).removeSpeakers();
+        }
+        speaker.removeEvent(event.getEventId());
+    }
+
 
     /**
      * Signs a vip-only event and updates the points associated with a VIP attending an event

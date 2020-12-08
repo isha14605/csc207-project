@@ -52,4 +52,11 @@ public class Talk extends Event {
         this.speakerEmail = speakerName;
     }
 
+    /**
+     * removes the email of the speaker of this talk.
+     */
+    public void removeSpeaker() {
+        this.speakerEmail = null;
+    }
+
 }

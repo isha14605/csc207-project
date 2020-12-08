@@ -177,6 +177,14 @@ public abstract class Event implements Serializable {
     }
 
     /**
+     * Removes an Entities.Organizer's email from this event
+     * @param email the email of an organizer that will no longer organize this event.
+     */
+    public void removeOrganizer(String email) {
+        organizerEmails.remove(email);
+    }
+
+    /**
      * Resets the Entities.Attendee Capacity of the event. Should be called by an Entities.Organizer of the event.
      * Entities.Organizer must ensure that attendeeCapacity is less than or equal to RoomCapacity of the room
      * assigned to this event, before calling this method.

@@ -43,6 +43,14 @@ public class Speaker extends User{
     }
 
     /**
+     * Removes an Event from an Entities.Speakers' list of events that they are talking at.
+     * @param event the event that the Entities.Speaker would no longer be talking at.
+     */
+    public void removeEvent(Integer event) {
+        this.eventsSpeaking.remove(event);
+    }
+
+    /**
      * Returns a string that represents the type of Entities.User this object is, eg. S for Entities.Speaker.
      * @return a string representing the type of Entities.User this object is
      */

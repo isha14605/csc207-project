@@ -55,4 +55,12 @@ public class Organizer extends User implements Serializable {
         this.eventsOrganizing.add(event);
     }
 
+    /**
+     * Removes an Event from an Entities.Organizer's list of events that they are organizing.
+     * @param event the event that the Entities.Organizer would no longer be organizing.
+     */
+    public void removeEvent(Integer event) {
+        this.eventsOrganizing.remove(event);
+    }
+
 }

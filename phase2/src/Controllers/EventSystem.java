@@ -68,31 +68,41 @@ public class EventSystem{
         }
     }
 
+    /**
+     * Cancels Entities.Event
+     * @param id the id of the Entities.Event to be cancelled
+     * @return true if successful
+     */
     public boolean cancel_event(Integer id) { //NOT FULLY IMPLEMENTED
-
         Event e = em.findEvent(id);
-
         if(e == null) {
             return false;
         }
-
         Conference c = cm.eventInConference(id);
-
         // cancel all attendee registrations
         ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
         for(User a : attendees) {
             um.cancelRegistrationEvent((Attendee) a, e, c);
         }
-
         // cancel all organizers
-
+        ArrayList<User> organizers = um.findUsers(e.getOrganizerEmails());
+        for(User o : organizers) {
+            um.cancelRegistrationEventOrganizer((Organizer) o, e);
+        }
         // cancel all speakers
-
+        if (e instanceof Talk) {
+            Speaker speaker = (Speaker) um.findUser(((Talk) e).getSpeakerEmail());
+            um.cancelRegistrationEventSpeaker(speaker, e);
+        } else if (e instanceof Panel) {
+            ArrayList<User> speakers = um.findUsers(((Panel) e).getSpeakerEmails());
+            for(User s : speakers) {
+                um.cancelRegistrationEventSpeaker((Speaker) s, e);
+            }
+        }
         // delete from any conference if applicable
         if(!cm.cancelEvent(c, id)) {
             return false;
         }
-
         // delete from em
         return em.deleteEvent(id);
     }
