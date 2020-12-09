@@ -109,21 +109,6 @@ public class ConferenceManager implements Serializable {
     }
 
     /**
-     * Returns true if the conference has a VIP event
-     * @param c the conference
-     * @return true if the conference has a VIP event
-     */
-
-    public boolean isVIP(Conference c){
-        for(Integer id: c.getEventIds()){
-            if (em.findEvent(id).isVipOnly()){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * returns true if event is in the conference
      * @param event id of the event we wish to verify is in a conference
      * @return true if event in conference
@@ -138,6 +123,11 @@ public class ConferenceManager implements Serializable {
         return null;
     }
 
+    /**
+     * returns a list of non-VIP events in the conference
+     * @param c the conference object
+     * @return a list of non-VIP events in the conference c
+     */
     public ArrayList<Event> nonVipEvents(Conference c){
         ArrayList<Event> events = new ArrayList<Event>();
         for(int e: c.getEventIds()){
@@ -148,6 +138,11 @@ public class ConferenceManager implements Serializable {
         return events;
     }
 
+    /**
+     * returns a list of VIP events in the conference
+     * @param c the conference object
+     * @return a list of VIP events in the conference c
+     */
     public ArrayList<Event> vipEvents(Conference c){
         ArrayList<Event> events = new ArrayList<Event>();
         for(int e: c.getEventIds()){
@@ -158,7 +153,12 @@ public class ConferenceManager implements Serializable {
         return events;
     }
 
-    // NEED TO FIX - Tanya
+    /**
+     * Adds attendees to all the events in the conference
+     * @param c the confernce object
+     * @param name the name of the user
+     * @return true if user signed up for conference.
+     */
     public boolean addAttendeesToConference(Conference c, String name){
         Entities.Attendee u = (Entities.Attendee) um.findUser(name);
         ArrayList<Event> vip = vipEvents(c);
@@ -190,7 +190,12 @@ public class ConferenceManager implements Serializable {
         return flag;
     }
 
-    // NEED TO FIX - Tanya
+    /**
+     * Removes attendee from all events in the conference
+     * @param c the conference object
+     * @param name the name of user
+     * @return true if user cancelled registration from all events in conference
+     */
     public  boolean removeAttendeeConference(Conference c, String name){
         Entities.Attendee u = (Entities.Attendee) um.findUser(name);
         ArrayList<Event> vip = vipEvents(c);
@@ -221,6 +226,11 @@ public class ConferenceManager implements Serializable {
         return flag;
     }
 
+    /**
+     * Returns an array list of String of the conferences in the system
+     * @return a list of conference names in the system
+     */
+
     public ArrayList<String> getConferenceList() {
         ArrayList<String> conferenceNames = new ArrayList<>();
         if(conferences.size()==0){
@@ -237,6 +247,5 @@ public class ConferenceManager implements Serializable {
         return c.getEventIds();
     }
 
-    //Need to commit
 
 }

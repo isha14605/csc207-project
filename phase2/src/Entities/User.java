@@ -79,9 +79,11 @@ public abstract class User implements Serializable {
      * @param email of the user that is added to their contact.
      */
     public void addContact(String email){
-        this.contacts.add(email);
-        this.messagesSent.put(email, new ArrayList<String>());
-        this.messagesReceived.put(email, new ArrayList<String>());
+        if(!(this.contacts.contains(email))){
+            this.contacts.add(email);
+            this.messagesSent.put(email, new ArrayList<String>());
+            this.messagesReceived.put(email, new ArrayList<String>());
+        }
     }
 
     /**
@@ -116,7 +118,7 @@ public abstract class User implements Serializable {
     public abstract char userType();
 
     /**
-     *
+     * Removes contact of user
      * @param who the email of the user who this user can no longer message.
      */
     public void removeContact(String who){

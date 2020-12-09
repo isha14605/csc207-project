@@ -38,6 +38,15 @@ public class LoginSystem {
         return false;
     }
 
+    /**
+     * Returns true if account was created
+     * @param email the email of the Entities.User
+     * @param password the password of the Entities.User
+     * @param name the name of the Entities.User
+     * @param typeOfUser the type of User
+     * @return boolean if an account was created.
+     */
+
     public boolean createAccount(String email, String password, String name, String typeOfUser){
         if(userManager.checkUserExists(email)){
             return false; //user already exists

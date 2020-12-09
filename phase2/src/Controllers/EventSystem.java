@@ -54,7 +54,7 @@ public class EventSystem{
      * @param date date of the event
      * @param capacity
      * @param event_only
-     * @return
+     * @return true if event was created
      */
     public boolean addEvent(String type, String name, String description, String start, String end, String date,
                             int capacity, boolean event_only) throws IOException {
@@ -107,6 +107,15 @@ public class EventSystem{
         return em.deleteEvent(id);
     }
 
+    /**
+     * Returns true if Entities.Conference was created according to parameters
+     * @param name of the conference
+     * @param confDescription description of the conference
+     * @param startTime the start time of the conference
+     * @param endTime the end time of the conference
+     * @param confDate the date of the conference
+     * @return true if conference was created
+     */
     public boolean addConference(String name, String confDescription, String startTime, String endTime, String confDate){
         for(String con: cm.getConferenceList()){
             if(con.equals(name)){
