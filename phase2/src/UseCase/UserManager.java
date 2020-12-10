@@ -51,16 +51,22 @@ public class UserManager implements Serializable {
                 Organizer o = new Organizer(name, password, email);
                 users.add(o);
                 addListContacts(o,this.email);
+                this.email.add(email);
 
             case "Speaker":
                 Speaker s = new Speaker(name, password, email);
-                users.add(s);speakerAccounts.add(s);speaker.add(email);
+                users.add(s);
+                speakerAccounts.add(s);
+                speaker.add(email);
+                this.email.add(email);
 
             case "Attendee":
                 users.add(new Attendee(name, password, email));
+                this.email.add(email);
 
             case "vip":
                 users.add(new VIP(name, password, email));
+                this.email.add(email);
         }
     }
 
