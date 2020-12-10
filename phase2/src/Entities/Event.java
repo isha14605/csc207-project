@@ -181,6 +181,14 @@ public abstract class Event implements Serializable {
         organizerEmails.add(email);
     }
 
+    public void setStartTime(LocalTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+    }
+
     /**
      * Removes an Entities.Organizer's email from this event
      * @param email the email of an organizer that will no longer organize this event.

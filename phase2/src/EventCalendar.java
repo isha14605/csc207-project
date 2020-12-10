@@ -1,3 +1,4 @@
+import Gateway.EventSave;
 import UseCase.EventManager;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ public class EventCalendar extends JFrame implements ItemListener {
 
 	public EventCalendar(String title) throws IOException {
 		super();
-		eventManager = new EventManager();
+		eventManager = new EventSave().read();
 		eventManager.createEvent("panel", "Event for today", "This event will be reoccur eveyday", LocalTime.now(),
 				LocalTime.now(), LocalDate.now(), 10, true);
 		setTitle(title);

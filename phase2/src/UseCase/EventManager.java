@@ -194,6 +194,18 @@ public class EventManager implements Serializable {
                 endC.isBefore(event.getEndTime());
     }
 
+    public boolean changeTime(String start, String end, Integer event){
+        Event event1 = findEvent(event);
+        LocalTime startC = dateFormattingTime(start);
+        LocalTime endC = dateFormattingTime(end);
+        if(startC.isBefore(endC)){
+            return false;
+        }
+        event1.setStartTime(startC);
+        event1.setEndTime(endC);
+        return true;
+    }
+
     /** Checks if a value was in valid format
      * @param check check can be anything making sure the value isn't null,
      @return  event */

@@ -277,37 +277,6 @@ public class EventSystem{
         return false;
     }
 
-    public void changeTime(Integer event, String start, String end,String organizer) throws IOException {
-        Event event1 = em.findEvent(event);
-
-        for(String attendee: event1.getAttendeeEmails()){
-            Attendee attendees = (Attendee) um.findUser(attendee);
-            for(Integer e: attendees.getEventsAttending()){
-                if(em.changeTimeConflict(start,end,e)){
-                    SignUpSystem su = new SignUpSystem();
-                    MessagingSystem ms = new MessagingSystem();
-                    su.cancelRegEvent(attendee,event);
-                    ms.sendMessage(organizer,new ArrayList<String>(Collections.singleton(attendee)),
-                            "You have been removed from this event: " + event + " due to time conflict");
-                    event1.removeAttendee(attendee);
-                }
-            }
-        }
-        for(String org: event1.getOrganizerEmails()){
-            Organizer organizer1 = (Organizer) um.findUser(org);
-            for(Integer e: organizer1.getEventsOrganizing()){
-                if(em.changeTimeConflict(start,end,e)){
-                    SignUpSystem su = new SignUpSystem();
-                    MessagingSystem ms = new MessagingSystem();
-                    su.cancelRegEvent(org,event);
-                    ms.sendMessage(organizer,new ArrayList<String>(Collections.singleton(org)),
-                            "You have been removed from this event: " + event + " due to time conflict");
-                    event1.removeOrganizer(org);
-                }
-            }
-        }
-
-    }
 
     public ArrayList<String> usableRooms(Integer event){
         ArrayList<String> usable = new ArrayList<>();

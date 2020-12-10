@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Objects;
 
 
@@ -412,6 +413,20 @@ class Test {
                 attendeeScreen.add(org);
                 y = y + space;
             }
+            JButton calender = new JButton("View Calander");
+            calender.setBounds(150,y,200,25);
+            calender.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        new EventCalendar("Events");
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            });
+            attendeeScreen.add(calender);
+            y = y + space;
 
             back = new JButton("Back");
             if(new UserSave().read().findUser(user).userType()=='A'){
@@ -635,7 +650,8 @@ class Test {
 
             select = new JButton("Select");
             select.addActionListener(e -> {
-                if(!(eventsAttending.getSelectedItem() =="") && !(eventsAttending.getSelectedItem() =="None")){
+                if(!(eventsAttending.getSelectedItem() =="") && !(eventsAttending.getSelectedItem() =="None")||
+                eventsAttending.getSelectedItem()!=null){
                     SignUpSystem sus = null;
                     try {
                         sus = new SignUpSystem();
@@ -675,34 +691,64 @@ class Test {
             backCE.addActionListener(this);
             backCE.setBounds(75,125,100,25);
 
-            Attendee a = (Attendee) userAccount;
-            ArrayList<Integer> con = a.getEventsAttending();
-            Integer[] conference = con.toArray(new Integer[0]);
-            eventsAttending = new JComboBox<>(conference);
-            eventsAttending.addActionListener(e -> {
-                if(!Objects.equals(eventsAttending.getSelectedItem(), "")) {
-                    System.out.println(eventsAttending.getSelectedItem());
-                    Event event = em.findEvent(Integer.parseInt(Objects.requireNonNull(eventsAttending
-                            .getSelectedItem()).toString())) ;
-                    System.out.println(event);
-                    timeInfo.setText("\nDate: " + event.getEventDate() +
-                            "\n\nStart Time: " + event.getStartTime() +
-                            "\n\nEnd Time: " + event.getEndTime());
+            if(userAccount.userType()=='A'||userAccount.userType()=='V') {
+                Attendee a = (Attendee) userAccount;
+                ArrayList<Integer> con = a.getEventsAttending();
+                Integer[] conference = con.toArray(new Integer[0]);
+                eventsAttending = new JComboBox<>(conference);
+                eventsAttending.addActionListener(e -> {
+                    if (!Objects.equals(eventsAttending.getSelectedItem(), "")) {
+                        System.out.println(eventsAttending.getSelectedItem());
+                        Event event = em.findEvent(Integer.parseInt(Objects.requireNonNull(eventsAttending
+                                .getSelectedItem()).toString()));
+                        System.out.println(event);
+                        timeInfo.setText("\nDate: " + event.getEventDate() +
+                                "\n\nStart Time: " + event.getStartTime() +
+                                "\n\nEnd Time: " + event.getEndTime());
 
-                    eventViewer.setText("Event Name: " + event.getName() +
-                            "\nEvent Id :" + event.getEventId() +
-                            "\n\nDescription : " + event.getEventDescription() +
-                            "\n\nRoom : " + event.getRoomName() +
-                            "\n\nTech Requirements : " + event.getTechRequirements() +
-                            "\n\nCapacity : " + event.getAttendeeCapacity() +
-                            "");
-                }
-                else {
-                    timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
-                }
-            });
-            eventsAttending.setBounds(25,50,200,25);
-            cancelScreen.add(eventsAttending);
+                        eventViewer.setText("Event Name: " + event.getName() +
+                                "\nEvent Id :" + event.getEventId() +
+                                "\n\nDescription : " + event.getEventDescription() +
+                                "\n\nRoom : " + event.getRoomName() +
+                                "\n\nTech Requirements : " + event.getTechRequirements() +
+                                "\n\nCapacity : " + event.getAttendeeCapacity() +
+                                "");
+                    } else {
+                        timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+                    }
+                });
+                eventsAttending.setBounds(25, 50, 200, 25);
+                cancelScreen.add(eventsAttending);
+            }
+            if(userAccount.userType()=='O'){
+                Organizer a = (Organizer) userAccount;
+                ArrayList<Integer> con = a.getEventsOrganizing();
+                Integer[] conference = con.toArray(new Integer[0]);
+                eventsAttending = new JComboBox<>(conference);
+                eventsAttending.addActionListener(e -> {
+                    if (!Objects.equals(eventsAttending.getSelectedItem(), "")) {
+                        System.out.println(eventsAttending.getSelectedItem());
+                        Event event = em.findEvent(Integer.parseInt(Objects.requireNonNull(eventsAttending
+                                .getSelectedItem()).toString()));
+                        System.out.println(event);
+                        timeInfo.setText("\nDate: " + event.getEventDate() +
+                                "\n\nStart Time: " + event.getStartTime() +
+                                "\n\nEnd Time: " + event.getEndTime());
+
+                        eventViewer.setText("Event Name: " + event.getName() +
+                                "\nEvent Id :" + event.getEventId() +
+                                "\n\nDescription : " + event.getEventDescription() +
+                                "\n\nRoom : " + event.getRoomName() +
+                                "\n\nTech Requirements : " + event.getTechRequirements() +
+                                "\n\nCapacity : " + event.getAttendeeCapacity() +
+                                "");
+                    } else {
+                        timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+                    }
+                });
+                eventsAttending.setBounds(25, 50, 200, 25);
+                cancelScreen.add(eventsAttending);
+            }
 
             TitledBorder event = BorderFactory.createTitledBorder(lowerLevel,"Event Info");
             event.setTitleJustification(TitledBorder.LEADING);
@@ -2469,8 +2515,16 @@ class Test {
             changeTime.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    JOptionPane.showMessageDialog(meo,
-                            "Not implemented");
+                    String[] timeslot = {"00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00",
+                            "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00",
+                            "18:00", "19:00", "20:00", "21:00", "22:00", "23:00"};
+                    String start =JOptionPane.showInputDialog(meo,"Pick a new start Time","Change time",
+                            JOptionPane.QUESTION_MESSAGE,null,timeslot,0).toString();
+                    String end = JOptionPane.showInputDialog(meo,"Pick a new end Time","Change time",
+                            JOptionPane.QUESTION_MESSAGE,null,timeslot,0).toString();
+                    if(!(start==null)&&!(end==null)){
+                        // eventSystem.changeTime(event,start,end,user);
+                    }
                 }
             });
 
@@ -2903,11 +2957,13 @@ class Test {
                     String[] options = rm.getTechOptions().toArray(new String[0]);
                     String tech = JOptionPane.showInputDialog(mro,"which tech would you like to add to this room?",null,
                             JOptionPane.PLAIN_MESSAGE, null, options, 0).toString();
-                    try {
-                        assert es != null;
-                        es.addTech(room,tech);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
+                    if(tech!="None"||tech!=null) {
+                        try {
+                            assert es != null;
+                            es.addTech(room, tech);
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
                     }
                 }
             });
@@ -2921,11 +2977,14 @@ class Test {
                     String[] options = r.getTechAvailable().toArray(new String[0]);
                     String removed = JOptionPane.showInputDialog(mro,"which tech would you like to remove from this room?",
                             null, JOptionPane.PLAIN_MESSAGE, null, options, 0).toString();
-                    rm.removeTech(r,removed);
-                    try {
-                        new RoomSave().save(rm);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
+                    if(!(removed==null)) {
+                        try {
+                            new EventSystem().removeTech(room, removed);
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        } catch (ClassNotFoundException classNotFoundException) {
+                            classNotFoundException.printStackTrace();
+                        }
                     }
                 }
             });
@@ -2938,12 +2997,14 @@ class Test {
                     Room r = rm.find_room(room);
                     int cap = Integer.parseInt(JOptionPane.showInputDialog(mro,
                             "What would you like to change the capacity of the room to?"));
-                    r.setRoomCapacity(cap);
                     try {
-                        new RoomSave().save(rm);
+                        new EventSystem().changeCap(room,cap);
+                    } catch (ClassNotFoundException classNotFoundException) {
+                        classNotFoundException.printStackTrace();
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
+
                 }
             });
 
