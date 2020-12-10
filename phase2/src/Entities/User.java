@@ -111,6 +111,10 @@ public abstract class User implements Serializable {
         this.messagesReceived.replace(email, y);
     }
 
+    public void updateMessage(String user,Integer message, String updatedMessage){
+        this.getMessagesReceived().get(user).set(message, updatedMessage);
+    }
+
     /**
      * Returns a character that determines what kind of a user this is.
      * @return a character that determines if this user is an attendee/ speaker.

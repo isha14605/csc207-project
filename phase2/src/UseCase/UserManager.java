@@ -16,8 +16,10 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class UserManager implements Serializable {
-    private ArrayList<User> users = new ArrayList<User>();
-    private ArrayList<String> email = new ArrayList<String>();
+    private final ArrayList<User> users ;
+    private final ArrayList<String> email ;
+    private final ArrayList<String> speaker;
+    private final ArrayList<Speaker> speakerAccounts;
     public EventManager em; // can we do this?
     public ConferenceManager cm;
 
@@ -26,10 +28,10 @@ public class UserManager implements Serializable {
      * UseCase.UserManager Constructor
      */
     public UserManager() throws IOException {
-        EventManager em = new EventSave().read(); // can we do this?
-        ConferenceManager cm = new ConferenceSave().read();
         users = new ArrayList<>();
         email = new ArrayList<>();
+        speaker = new ArrayList<>();
+        speakerAccounts = new ArrayList<>();
 
     }
 
@@ -43,20 +45,38 @@ public class UserManager implements Serializable {
      * @param email the email of this users account.
      */
     public void addUser(String name, String email, String password, String typeOfUser) {
+        this.email.add(email);
         switch (typeOfUser) {
             case "Organizer":
                 Organizer o = new Organizer(name, password, email);
                 users.add(o);
                 addListContacts(o,this.email);
+
             case "Speaker":
-                users.add(new Speaker(name, password, email));
+                Speaker s = new Speaker(name, password, email);
+                users.add(s);speakerAccounts.add(s);speaker.add(email);
+
             case "Attendee":
                 users.add(new Attendee(name, password, email));
+
             case "vip":
                 users.add(new VIP(name, password, email));
         }
-        this.email.add(email);
     }
+
+    public ArrayList<String> getSpeaker() {
+        return speaker;
+    }
+
+    public Speaker findSpeaker(String email){
+        for(Speaker s: speakerAccounts){
+            if(s.getEmail().equals(email)){
+                return s;
+            }
+        }
+        return null;
+    }
+
 
     /**
      * Verifies the login details of the user logging in.
@@ -91,14 +111,17 @@ public class UserManager implements Serializable {
      * @see Attendee#attendConference(String)
      */
     public boolean signUpEvent(Attendee attendee, Event event, Conference c){
+        if(event.getAttendeeEmails().contains(attendee.getEmail())){
+            return false;
+        }
         if(c== null && !(attendee.getEventsAttending().contains(event.getEventId()))
-                && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
+                && event.getAttendeeCapacity() > event.getAttendeeEmails().size()){
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
             return true;
         } else if ( c!= null && !(attendee.getEventsAttending().contains(event.getEventId()))
-                && event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
+                && event.getAttendeeCapacity() > event.getAttendeeEmails().size()){
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             attendee.addContact(c.getName());
@@ -127,8 +150,7 @@ public class UserManager implements Serializable {
      */
     public boolean cancelRegistrationEvent(Attendee attendee, Event event, Conference c){
         int ctr = 0;
-        if (attendee.getEventsAttending().contains(event.getEventId()) ||
-                event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
+        if (!attendee.getEventsAttending().contains(event.getEventId())){
             return false;
         }
         if(!(c== null)){
@@ -150,8 +172,10 @@ public class UserManager implements Serializable {
             }
         } else if(event.eventType().equals("Talk")){
             Entities.Talk t = (Talk) event;
-            removeSpeakerContacts(attendee, findUser(t.getSpeakerEmail()));
+            if(!(t.getSpeakerEmail() ==null)) {
+                removeSpeakerContacts(attendee, findUser(t.getSpeakerEmail()));
             }
+        }
         return true;
     }
 
@@ -176,7 +200,9 @@ public class UserManager implements Serializable {
         } else if (event instanceof Panel) {
             ((Panel) event).removeSpeakers();
         }
-        speaker.removeEvent(event.getEventId());
+        if(!(speaker ==null)) {
+            speaker.removeEvent(event.getEventId());
+        }
     }
 
 
@@ -352,6 +378,10 @@ public class UserManager implements Serializable {
         return this.email.contains(email);
     }
 
+    public ArrayList<String> getEmail() {
+        return email;
+    }
+
     /**
      * Returns the list of users that exist in the system
      * @param from is the Arraylist of emails whose existence we wish to check
@@ -382,6 +412,27 @@ public class UserManager implements Serializable {
                 findUser(i).addContact(attendee.getEmail());
             }
         }
+    }
+
+    public ArrayList<String> checkReadM(String user, String contact){
+        User u = findUser(user);
+        ArrayList<String> messages = new ArrayList<>();
+        for(String message: u.getMessagesReceived().get(contact)) {
+            if(!message.contains("(read) - ")){
+                messages.add("(Unread) - " + message);
+            }else{
+                messages.add(message);
+            }
+
+        }
+        return messages;
+    }
+
+    public String markRead(String message){
+        if(message.contains("(read) - ")){
+            return message;
+        }
+        return "(read) - " + message.substring(11);
     }
 
 
@@ -426,3 +477,4 @@ public class UserManager implements Serializable {
     }
 
 }
+

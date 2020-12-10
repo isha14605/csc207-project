@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class EventManager implements Serializable {
 
     private ArrayList<Event> events;
+    private int idTracker = 1;
 
     /** creates a empty Entities.Event Manager **/
     public EventManager() throws IOException {
@@ -48,17 +49,20 @@ public class EventManager implements Serializable {
         switch (eventType){
             case "panel":
                 events.add(new Panel(name,desc,start,end,date,capacity,event_only));
-                events.get(events.size()-1).setEventId(events.size());
+                events.get(events.size()-1).setEventId(idTracker);
+                idTracker = idTracker + 1;
                 return true;
 
             case "talk":
                 events.add(new Talk(name,desc,start,end,date,capacity,event_only));
-                events.get(events.size()-1).setEventId(events.size());
+                events.get(events.size()-1).setEventId(idTracker);
+                idTracker = idTracker + 1;
                 return true;
 
             case "party":
                 events.add(new Party(name,desc,start,end,date,capacity,event_only));
-                events.get(events.size()-1).setEventId(events.size());
+                events.get(events.size()-1).setEventId(idTracker);
+                idTracker = idTracker + 1;
                 return true;
 
         }
@@ -67,6 +71,14 @@ public class EventManager implements Serializable {
 
     public ArrayList<Event> getEvents() {
         return events;
+    }
+
+    public ArrayList<Integer> getEventIds(){
+        ArrayList<Integer> n = new ArrayList<>();
+        for(Event event: events){
+            n.add(event.getEventId());
+        }
+        return n;
     }
 
     public boolean deleteEvent(Integer id) {
@@ -103,10 +115,10 @@ public class EventManager implements Serializable {
      * @param speakerEmail email of the speaker you want to schedule
      * @return  returns a boolean that indicates whether speaker can be scheduled */
     public boolean canScheduleSpeaker(Event event, String speakerEmail){
-        if (event.eventType().equals("Entities.Talk")) {
+        if (event.eventType().equals("Talk")) {
             Talk t = (Talk) event;
-            return !t.getSpeakerEmail().equals(speakerEmail);
-        } else if (event.eventType().equals("Entities.Panel")) {
+            return (t.getSpeakerEmail()==null||!t.getSpeakerEmail().equals(speakerEmail));
+        } else if (event.eventType().equals("Panel")) {
             Panel p = (Panel) event;
             boolean canAdd = false;
             for (String s: p.getSpeakerEmails()) {
@@ -120,6 +132,8 @@ public class EventManager implements Serializable {
         return false;
     }
 
+
+
     public ArrayList<String> eventToStrings(LocalDate time){
         ArrayList<String> eventList = new ArrayList<>();
         ArrayList<Event> e = getEventsOn(time);
@@ -132,6 +146,8 @@ public class EventManager implements Serializable {
         return eventList;
     }
 
+
+
     public ArrayList<String> eventConferenceList(ArrayList<Integer> eventIds){
         ArrayList<String> events = new ArrayList<>();
 
@@ -142,6 +158,12 @@ public class EventManager implements Serializable {
             events.add("None");
         }
         return events;
+    }
+
+    public boolean checkValidTime(String t1, String t2){
+        LocalTime t1c = dateFormattingTime(t1);
+        LocalTime t2c = dateFormattingTime(t2);
+        return !t1c.isAfter(t2c) && !t1c.equals(t2c);
     }
 
 
@@ -157,6 +179,19 @@ public class EventManager implements Serializable {
             return true;
         } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
                 event1.getEndTime().isBefore(event2.getEndTime());
+    }
+
+    public boolean changeTimeConflict(String start,String end,Integer event1){
+        Event event = findEvent(event1);
+        LocalTime startC = dateFormattingTime(start);
+        LocalTime endC = dateFormattingTime(end);
+        if (startC.equals((event.getStartTime()))) {
+            return true;
+        } else if (startC.isAfter(event.getStartTime()) &&
+                startC.isBefore(event.getEndTime())) {
+            return true;
+        } else return endC.isAfter(event.getStartTime()) &&
+                endC.isBefore(event.getEndTime());
     }
 
     /** Checks if a value was in valid format

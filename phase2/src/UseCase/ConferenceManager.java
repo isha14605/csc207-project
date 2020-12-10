@@ -5,6 +5,7 @@ import Entities.Event;
 import Gateway.EventSave;
 import Gateway.UserSave;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,12 +17,12 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class ConferenceManager implements Serializable {
-    public static ArrayList<Conference> conferences;
-    EventManager em;
-    UserManager um;
+    private final ArrayList<Conference> conferences;
+    EventManager em = new EventSave().read();
+    UserManager um =  new UserSave().read();
 
     /** constructor*/
-    public ConferenceManager(){
+    public ConferenceManager() throws IOException {
         conferences = new ArrayList<>();
     }
 
@@ -233,10 +234,7 @@ public class ConferenceManager implements Serializable {
 
     public ArrayList<String> getConferenceList() {
         ArrayList<String> conferenceNames = new ArrayList<>();
-        if(conferences.size()==0){
-            conferenceNames.add("None");
-            return conferenceNames;
-        }
+        conferenceNames.add("");
         for(Conference booked: conferences){
             conferenceNames.add(booked.getName());
         }

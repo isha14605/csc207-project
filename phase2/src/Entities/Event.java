@@ -20,8 +20,8 @@ public abstract class Event implements Serializable {
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDate eventDate;
-    private ArrayList<String> attendeeEmails;
-    private ArrayList<String> organizerEmails;
+    private final ArrayList<String> attendeeEmails;
+    private final ArrayList<String> organizerEmails;
     private String roomName;
     private int attendeeCapacity;
     private boolean vipOnly;

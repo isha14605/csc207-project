@@ -46,7 +46,7 @@ public class ConferencePresenter {
         }
     }
 
-    public String addConf(String name, String confDescription, String startTime, String endTime, String confDate){
+    public String addConf(String name, String confDescription, String startTime, String endTime, String confDate) throws IOException {
         if (es.addConference(name, confDescription, startTime, endTime, confDate)){
             return "Conference was succesfully created!";
         } else {
@@ -70,7 +70,7 @@ public class ConferencePresenter {
         }
     }
 
-    public String scheduleSpeaker(String speakerEmail, Integer eventId){
+    public String scheduleSpeaker(String speakerEmail, Integer eventId) throws IOException {
         if (es.speakerSchedule(eventId,speakerEmail)){
             return "Speaker succesfully scheduled for this event!";
         } else{

@@ -35,7 +35,7 @@ public class MessagingSystem {
      * @param message the message that the User would like to send to someone
      * @return true or false, depending on whether sending the message was successful or not
      */
-    public boolean sendMessage(String from, ArrayList<String> to, String message){
+    public boolean sendMessage(String from, ArrayList<String> to, String message) throws IOException {
         if (!(userManager.checkUserExists(from))){
             return false;
         }
@@ -43,6 +43,7 @@ public class MessagingSystem {
                 userManager.findUser(from).userType() == 'V' ){
             ArrayList<String> recipients = userManager.checkUsers(to); // returns array of existing users
             userManager.message(from, recipients, message);
+            new UserSave().save(userManager);
             return true;
         } else if (userManager.findUser(from).userType() == 'S'){
             ArrayList<Event> events = new ArrayList<>();
@@ -51,6 +52,7 @@ public class MessagingSystem {
                 events.add(eventManager.findEvent(eventID));
             }
             userManager.message(from, eventManager.getAllEmails(events), message);
+            new UserSave().save(userManager);
             return true;
         }
         return false;

@@ -3,6 +3,9 @@ package Controllers;
 import Entities.Attendee;
 import Entities.Conference;
 import Entities.Event;
+import Gateway.ConferenceSave;
+import Gateway.EventSave;
+import Gateway.UserSave;
 import UseCase.ConferenceManager;
 import UseCase.EventManager;
 import UseCase.UserManager;
@@ -18,9 +21,9 @@ import java.util.ArrayList;
  */
 public class SignUpSystem {
 
-    UserManager uM = new UserManager(); // New instance of UseCase.UserManager
-    EventManager eM = new EventManager(); // New instance of UseCase.EventManager
-    ConferenceManager cM = new ConferenceManager(); // New instance of UseCase.ConferenceManager
+    public UserManager uM = new UserSave().read(); // New instance of UseCase.UserManager
+    public EventManager eM = new EventSave().read(); // New instance of UseCase.EventManager
+    public ConferenceManager cM = new ConferenceSave().read(); // New instance of UseCase.ConferenceManager
 
     public SignUpSystem() throws IOException {
     }
@@ -53,6 +56,7 @@ public class SignUpSystem {
                 return true;
             } else {
                 return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
+
             }
         }
         return false;

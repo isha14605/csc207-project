@@ -97,4 +97,12 @@ public class Room implements Serializable {
     public void addTechRequirement(String tech){
         this.techAvailable.add(tech);
     }
+
+    public void removeTech(String tech){
+        this.techAvailable.remove(tech);
+    }
+
+    public void setRoomCapacity(int roomCapacity) {
+        this.roomCapacity = roomCapacity;
+    }
 }

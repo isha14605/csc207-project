@@ -98,8 +98,19 @@ public class RoomManager implements Serializable {
      * @param room
      * @return String representation of the room*/
     public String roomToString(Room room){
-        return "Entities.Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
+        return "Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
                 + room.getCloseTime() + "\n";
+    }
+
+    public String bookingToString(Room room){
+        if(room.getBookings().size()==0){
+            return "No Bookings for this room";
+        }
+        String m = "";
+        for(Integer event: room.getBookings().keySet()){
+            m = m + "\nEvent Id - " + event + "\n Booked from: " + room.getBookings().get(event);
+        }
+        return m;
     }
 
     /** Checks if there is a time conflict between a event and talk that wants to be scheduled
@@ -107,14 +118,34 @@ public class RoomManager implements Serializable {
      * @param event2 the event the talk wants to be added to.
      * @return true if there is a time conflict within events*/
     public boolean time_conflict(Event event1, Event event2) {
+
         if (event1.getStartTime().equals((event2.getStartTime()))) {
-            System.out.println("time conflict");
             return true;
         } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
                 event1.getStartTime().isBefore(event2.getEndTime())) {
             return true;
         } else return event1.getEndTime().isAfter(event2.getStartTime()) &&
                 event1.getEndTime().isBefore(event2.getEndTime());
+    }
+
+    public boolean time_conflict(Room room, Event event1) {
+        for (Integer event : room.getBookings().keySet()) {
+            Event event2 = em.findEvent(event);
+            if(event2==null){
+                break;
+            }
+            if (event1.getStartTime().equals((event2.getStartTime()))) {
+                return true;
+            } else if (event1.getStartTime().isAfter(event2.getStartTime()) &&
+                    event1.getStartTime().isBefore(event2.getEndTime())) {
+                return true;
+            }
+            else if(event1.getEndTime().isAfter(event2.getStartTime()) &&
+                    event1.getEndTime().isBefore(event2.getEndTime())){
+                return true;
+            }
+        }
+        return false;
     }
 
     /** Filters user input by checking and converting input into a readable LocalTime
@@ -139,6 +170,10 @@ public class RoomManager implements Serializable {
 
     public boolean meetsRequirements(String roomName,Integer eventId){
         return find_room(roomName).getTechAvailable().containsAll(em.findEvent(eventId).getTechRequirements());
+    }
+
+    public void removeTech(Room r,String tech){
+        removeTech(r,tech);
     }
 
     public ArrayList<String> getRoomsString() {

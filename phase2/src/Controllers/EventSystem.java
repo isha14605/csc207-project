@@ -12,15 +12,16 @@ import UseCase.UserManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class EventSystem{
-    private ConferenceManager cm;
-    private EventManager em;
-    private RoomManager rm;
-    private UserManager um;
+    private final ConferenceManager cm;
+    private final EventManager em;
+    private final RoomManager rm;
+    private final UserManager um;
 
     /**
-     * Creates an EventSystem with a ConferenceManager, EventManager, RoomManager, and UserManager.
+     * EventController Constructor
      */
     public EventSystem() throws ClassNotFoundException, IOException {
         cm = new ConferenceSave().read();
@@ -54,7 +55,7 @@ public class EventSystem{
      * @param date date of the event
      * @param capacity
      * @param event_only
-     * @return true if event was created
+     * @return
      */
     public boolean addEvent(String type, String name, String description, String start, String end, String date,
                             int capacity, boolean event_only) throws IOException {
@@ -64,6 +65,7 @@ public class EventSystem{
         }else {
             em.createEvent(type, name, description, em.dateFormattingTime(start),
                     em.dateFormattingTime(end), em.dateFormattingDate(date), capacity, event_only);
+            new EventSave().save(em);
             return true;
         }
     }
@@ -73,7 +75,8 @@ public class EventSystem{
      * @param id the id of the Entities.Event to be cancelled
      * @return true if successful
      */
-    public boolean cancel_event(Integer id) { //NOT FULLY IMPLEMENTED
+
+    public boolean cancel_event(Integer id) throws IOException { //NOT FULLY IMPLEMENTED
         Event e = em.findEvent(id);
         if(e == null) {
             return false;
@@ -83,40 +86,41 @@ public class EventSystem{
         ArrayList<User> attendees = um.findUsers(e.getAttendeeEmails());
         for(User a : attendees) {
             um.cancelRegistrationEvent((Attendee) a, e, c);
+            new UserSave().save(um);
         }
         // cancel all organizers
         ArrayList<User> organizers = um.findUsers(e.getOrganizerEmails());
         for(User o : organizers) {
             um.cancelRegistrationEventOrganizer((Organizer) o, e);
+            new UserSave().save(um);
         }
         // cancel all speakers
         if (e instanceof Talk) {
             Speaker speaker = (Speaker) um.findUser(((Talk) e).getSpeakerEmail());
             um.cancelRegistrationEventSpeaker(speaker, e);
+            new UserSave().save(um);
         } else if (e instanceof Panel) {
             ArrayList<User> speakers = um.findUsers(((Panel) e).getSpeakerEmails());
             for(User s : speakers) {
                 um.cancelRegistrationEventSpeaker((Speaker) s, e);
             }
+            new UserSave().save(um);
         }
         // delete from any conference if applicable
-        if(!cm.cancelEvent(c, id)) {
+        if(!(c==null)&&!cm.cancelEvent(c, id)) {
             return false;
         }
         // delete from em
-        return em.deleteEvent(id);
+         if(em.deleteEvent(id)){
+             new EventSave().save(em);
+             return true;
+         }
+         return false;
     }
 
-    /**
-     * Returns true if Entities.Conference was created according to parameters
-     * @param name of the conference
-     * @param confDescription description of the conference
-     * @param startTime the start time of the conference
-     * @param endTime the end time of the conference
-     * @param confDate the date of the conference
-     * @return true if conference was created
-     */
-    public boolean addConference(String name, String confDescription, String startTime, String endTime, String confDate){
+
+
+    public boolean addConference(String name, String confDescription, String startTime, String endTime, String confDate) throws IOException {
         for(String con: cm.getConferenceList()){
             if(con.equals(name)){
                 return false;
@@ -127,6 +131,7 @@ public class EventSystem{
         }
         cm.addConference(name,confDescription,em.dateFormattingTime(startTime),
                 em.dateFormattingTime(endTime),em.dateFormattingDate(confDate));
+        new ConferenceSave().save(cm);
         return true;
 
     }
@@ -138,12 +143,34 @@ public class EventSystem{
     public boolean addRoom(String name, Integer capacity, String start, String end) throws IOException {
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))) {
             return false;
-        }else {
+        }if(!em.checkValidTime(start,end)){
+            return false;
+        }
+        else {
             rm.create_room(name, capacity, rm.date_formatting_time(start), rm.date_formatting_time(end));
+            new RoomSave().save(rm);
             return true;
         }
     }
 
+    public void addTech(String roomName, String tech) throws IOException {
+        rm.find_room(roomName).addTechRequirement(tech);
+        new RoomSave().save(rm);
+    }
+    public void addTechEvent(Integer event, String tech) throws IOException {
+        em.findEvent(event).addTechRequirements(tech);
+        new EventSave().save(em);
+    }
+
+    public void removeTech(String roomName, String tech) throws IOException {
+        rm.find_room(roomName).removeTech(tech);
+        new RoomSave().save(rm);
+    }
+
+    public void changeCap(String roomName, int new_cap) throws IOException {
+        rm.find_room(roomName).setRoomCapacity(new_cap);
+        new RoomSave().save(rm);
+    }
 
     /**
      * Returns true if the event was added to the conference
@@ -156,7 +183,12 @@ public class EventSystem{
         if (cm.conferenceExists(conferenceName) && em.findEvent(eventId) == null){
             return false;
         }
-        return cm.addEvent(cm.findConference(conferenceName),eventId);
+        if(cm.addEvent(cm.findConference(conferenceName),eventId)){
+            new ConferenceSave().save(cm);
+            new EventSave().save(em);
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -170,7 +202,12 @@ public class EventSystem{
         if (cm.conferenceExists(conferenceName) && em.findEvent(eventId) == null){
             return false;
         }
-        return cm.cancelEvent(cm.findConference(conferenceName),eventId);
+         if(cm.cancelEvent(cm.findConference(conferenceName),eventId)){
+             new ConferenceSave().save(cm);
+             new EventSave().save(em);
+             return true;
+         }
+         return false;
     }
 
     /**
@@ -182,10 +219,15 @@ public class EventSystem{
         if(room == null){
             return false;
         }
+        if(!event.getTechRequirements().isEmpty() &&!room.getTechAvailable().containsAll(event.getTechRequirements())){
+            return false;
+        }
         if(!rm.is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
             room.addBookings(event.getEventId(), em.getLocalDateTime(event.getEventDate(),event.getStartTime()),
                     em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
+            new EventSave().save(em);
+            new RoomSave().save(rm);
             return true;
         }else{
             return false;
@@ -194,29 +236,89 @@ public class EventSystem{
 
     /**
      * Schedules a Entities.Speaker for an existing Entities.Event
-     * @param eventID the ID of the event that the Organizer would like to schedule a speaker for
-     * @param speakerEmail the email of the Speaker that the Organizer wants to schedule for the event
-     * @return true if Entities.Speaker is scheduled successfully and false otherwise
+     *
+     * @return true if Entities.Speaker is scheduled successfully
      */
-    public boolean speakerSchedule(Integer eventID, String speakerEmail) {
-        Entities.Event event = em.findEvent(eventID);
+
+    public boolean speakerSchedule(Integer eventID, String speakerEmail) throws IOException {
+        Event event = em.findEvent(eventID);
         String eventType = event.eventType();
-        Entities.Speaker s = (Entities.Speaker) um.findUser(speakerEmail);
+        Speaker s = um.findSpeaker(speakerEmail);
+        if(speakerTC(event,s)){
+            return false;
+        }
         if(em.canScheduleSpeaker(event,speakerEmail)){
             s.addEvent(eventID);
             switch (eventType){
-                case "Entities.Panel":
+                case "Panel":
                     event.setSpeaker(speakerEmail);
+                    s.addEvent(eventID);
 
-                case "Entities.Talk":
+                case "Talk":
                     event.setSpeaker(speakerEmail);
+                    s.addEvent(eventID);
 
-                case "Entities.Party":
+                case "Party":
                     event.setSpeaker(speakerEmail);
             }
+            new UserSave().save(um);
+            new EventSave().save(em);
             return true;
         }
         return false;
+    }
+
+    public boolean speakerTC(Event event,Speaker speaker){
+        for(Integer speaking: speaker.getEventsSpeaking()){
+            if(em.timeConflict(event,em.findEvent(speaking))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void changeTime(Integer event, String start, String end,String organizer) throws IOException {
+        Event event1 = em.findEvent(event);
+
+        for(String attendee: event1.getAttendeeEmails()){
+            Attendee attendees = (Attendee) um.findUser(attendee);
+            for(Integer e: attendees.getEventsAttending()){
+                if(em.changeTimeConflict(start,end,e)){
+                    SignUpSystem su = new SignUpSystem();
+                    MessagingSystem ms = new MessagingSystem();
+                    su.cancelRegEvent(attendee,event);
+                    ms.sendMessage(organizer,new ArrayList<String>(Collections.singleton(attendee)),
+                            "You have been removed from this event: " + event + " due to time conflict");
+                    event1.removeAttendee(attendee);
+                }
+            }
+        }
+        for(String org: event1.getOrganizerEmails()){
+            Organizer organizer1 = (Organizer) um.findUser(org);
+            for(Integer e: organizer1.getEventsOrganizing()){
+                if(em.changeTimeConflict(start,end,e)){
+                    SignUpSystem su = new SignUpSystem();
+                    MessagingSystem ms = new MessagingSystem();
+                    su.cancelRegEvent(org,event);
+                    ms.sendMessage(organizer,new ArrayList<String>(Collections.singleton(org)),
+                            "You have been removed from this event: " + event + " due to time conflict");
+                    event1.removeOrganizer(org);
+                }
+            }
+        }
+
+    }
+
+    public ArrayList<String> usableRooms(Integer event){
+        ArrayList<String> usable = new ArrayList<>();
+        for(String rooms: rm.getRoomsString()){
+            if(rm.can_fit_event(em.findEvent(event), rm.find_room(rooms)) &&
+                    !rm.time_conflict(rm.find_room(rooms),em.findEvent(event))){
+                usable.add(rooms);
+            }
+
+        }
+        return usable;
     }
 
 
