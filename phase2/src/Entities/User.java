@@ -2,6 +2,7 @@ package Entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,6 +93,7 @@ public abstract class User implements Serializable {
      * @param  message is the content of the message they want to send.
      */
     public void sendMessage(String email, String message){
+        this.messagesSent.computeIfAbsent(email, k -> new ArrayList<String>(Collections.singleton(message)));
         ArrayList<String> x = this.messagesSent.get(email);
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);

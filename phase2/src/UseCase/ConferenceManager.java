@@ -49,7 +49,7 @@ public class ConferenceManager implements Serializable {
     public boolean addEvent(Conference c, Integer e){
         // haven't checked if event exists
         Event event = em.findEvent(e);
-        if (!(c.getConfDate() == event.getEventDate())){
+        if (!(c.getConfDate().equals(event.getEventDate()))){
             return false;
         }
         if (c.getEventIds().contains(event.getEventId())){

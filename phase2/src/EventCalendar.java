@@ -145,7 +145,7 @@ public class EventCalendar extends JFrame implements ItemListener {
 								Map<String, String> map = new HashMap<>();
 								for (Entities.Event event : events) {
 									map.put("Type", event.eventType());
-									map.put("Name", event.getName());
+									map.put("\nName", event.getName());
 									map.put("Description", event.getEventDescription());
 									map.put("Start time", event.getStartTime().toString());
 									map.put("End time", event.getEndTime().toString());

@@ -10,6 +10,7 @@ import UseCase.EventManager;
 import UseCase.RoomManager;
 import UseCase.UserManager;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -181,6 +182,7 @@ public class EventSystem{
      */
     public boolean addEventToConference(String conferenceName,Integer eventId) throws IOException {
         if (cm.conferenceExists(conferenceName) && em.findEvent(eventId) == null){
+            System.out.println("here");
             return false;
         }
         if(cm.addEvent(cm.findConference(conferenceName),eventId)){
