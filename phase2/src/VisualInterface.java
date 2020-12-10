@@ -390,7 +390,7 @@ class Test {
             y = y + space;
 
             if(userAccount.userType() == 'V'){
-                vipB = new JButton("Check VIP point");
+                vipB = new JButton("Check VIP points");
                 vipB.setBounds(150,y,200,25);
                 vipB.addActionListener(this);
                 attendeeScreen.add(vipB);
@@ -1650,7 +1650,7 @@ class Test {
                     l = new JLabel("Account Type:");
                     l.setBounds(x,y,100,25);
                     createAcc.add(l);
-                    String[] types = new String[]{"","Attendee","Organizer","Speaker","vip"};
+                    String[] types = new String[]{"","Attendee","Organizer","Speaker","VIP"};
                     usertype = new JComboBox<>(types);
                     usertype.setBounds(200, y,200,25);
                     createAcc.add(usertype);
@@ -2571,7 +2571,7 @@ class Test {
             }
 
             if(e.getSource()==submit){
-                int choice = JOptionPane.showConfirmDialog(null, "Is this a vip event?", "VIP?",
+                int choice = JOptionPane.showConfirmDialog(null, "Is this a VIP event?", "VIP?",
                         JOptionPane.YES_NO_CANCEL_OPTION);
 
                 if(choice == 0 ||choice == 1){
