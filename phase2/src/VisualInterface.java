@@ -2,9 +2,9 @@ import Controllers.EventSystem;
 import Controllers.LoginSystem;
 import Controllers.MessagingSystem;
 import Controllers.SignUpSystem;
-import Entities.*;
 import Entities.Event;
 import Entities.Panel;
+import Entities.*;
 import Gateway.ConferenceSave;
 import Gateway.EventSave;
 import Gateway.RoomSave;
@@ -22,7 +22,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.text.MaskFormatter;
-import javax.swing.text.html.Option;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,8 +30,6 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Objects;
 
 
@@ -413,7 +410,7 @@ class Test {
                 attendeeScreen.add(org);
                 y = y + space;
             }
-            JButton calender = new JButton("View Calander");
+            JButton calender = new JButton("View Calendar");
             calender.setBounds(150,y,200,25);
             calender.addActionListener(new ActionListener() {
                 @Override
