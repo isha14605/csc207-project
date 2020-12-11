@@ -193,7 +193,8 @@ public class ConferenceManager implements Serializable {
      * @return true if user cancelled registration from all events in conference
      */
     public  boolean removeAttendeeConference(Conference c, String name){
-        Entities.Attendee u = (Entities.Attendee) um.findUser(name);
+        System.out.println(um.getEmail());
+        Attendee u = (Attendee) um.findUser(name);
         ArrayList<Event> vip = vipEvents(c);
         ArrayList<Event> nonvip = nonVipEvents(c);
         boolean flag = false;
@@ -219,6 +220,7 @@ public class ConferenceManager implements Serializable {
                 }
             }
         }
+        u.removeConference(c.getName());
         return flag;
     }
 

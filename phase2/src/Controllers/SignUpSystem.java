@@ -135,6 +135,8 @@ public class SignUpSystem {
             for(Integer i: cM.getEvents(cM.findConference(conference))){
                 e.add(eM.findEvent(i));
             }
+            cM = new ConferenceSave().read();
+            uM = new UserSave().read();
             cM.removeAttendeeConference(cM.findConference(conference), a.getEmail());
             uM.cancelRegistrationConference(a,e, cM.findConference(conference));
             new ConferenceSave().save(cM);
