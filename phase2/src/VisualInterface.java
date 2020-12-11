@@ -539,9 +539,15 @@ class Test {
                     }
                     assert sus != null;
                     try {
-                        if(sus.signUpEvent(user, (em.getEventIds().indexOf(conferences.getSelectedIndex())))){
+                        if(sus.signUpEvent(user, (em.getEventIds().get(conferences.getSelectedIndex()-1)))){
                             JOptionPane.showMessageDialog(attendeeScreen,"SignUp was Successful");
-                            Event ev = em.findEvent(em.getEventIds().indexOf(conferences.getSelectedIndex()));
+                            try {
+                                new EventSave().save(sus.eM);
+                            } catch (IOException ioException) {
+                                ioException.printStackTrace();
+                            }
+                            em = new EventSave().read();
+                            Event ev = em.findEvent(em.getEventIds().get(conferences.getSelectedIndex()-1));
                             timeInfo.setText("\nDate: " + ev.getEventDate() +
                                     "\n\nStart Time: " + ev.getStartTime() +
                                     "\n\nEnd Time: " + ev.getEndTime());
@@ -553,11 +559,6 @@ class Test {
                                     "\n\nTech Requirements : " + ev.getTechRequirements() +
                                     "\n\nCapacity : " + (ev.getOrganizerEmails().size()+ev.getAttendeeEmails().size())+ "/"
                                     + ev.getAttendeeCapacity() + "");
-                            try {
-                                new EventSave().save(sus.eM);
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
-                            }
                             try {
                                 new UserSave().save(sus.uM);
                                 userAccount = sus.uM.findUser(user);
