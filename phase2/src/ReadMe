@@ -16,4 +16,4 @@ For a event to be scheduled to a room the rooms needs to have the tech requireme
 Rooms that are out of events time range or doesn't meets the tech requirement will not be offered to the organizer as
 suitable options of the event to be held in.
 
-
+A conference can only have 1 event at a time
