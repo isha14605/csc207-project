@@ -277,6 +277,7 @@ public class EventManager implements Serializable {
         return eventNames;
     }
 
+
     /**
      * Returns the emails of all Attendees attending a list of events
      * @param events a list containing all the events that someone is interested in viewing attendees for

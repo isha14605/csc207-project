@@ -660,7 +660,7 @@ class Test {
             conferencesSignUP.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if(conferencesSignUP.getSelectedItem()!=null){
+                    if(conferencesSignUP.getSelectedItem()!=null&&conferencesSignUP.getSelectedItem()!=""){
                         Conference conference1 = cm.findConference(conferencesSignUP.getSelectedItem().toString());
                         timeInfo1.setText("\nDate: " + conference1.getConfDate()+
                                 "\n\nStart Time: " + conference1.getStartTime() +

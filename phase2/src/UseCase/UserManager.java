@@ -66,7 +66,7 @@ public class UserManager implements Serializable {
             this.email.add(email);
         }
 
-        if (typeOfUser.equals("vip")) {
+        if (typeOfUser.equals("VIP")) {
             users.add(new VIP(name, password, email));
             this.email.add(email);
         }

@@ -1,24 +1,19 @@
-To start the program, go to UserInterface and run the main method.
-You will be prompted to login to see the multiple different interfaces that are created depending on the type of user.
-Please use of one of the login credentials below:
+To get started with the program you will ned to go to "visual Interface" and run the program. you will be given
+two options:
 
-Speakers:
-s1: Email - s1, Password - s1
-s2: Email - s2, Password - s2
-s3: Email - s3, Password - s3
+1.Login In
+2.Create Account
 
-Organizers:
-o1: Email - o1, Password - o1
-o2: Email - o2, Password - o2
-o3: Email - o3, Password - o3
+When creating a account you will input the your name email and password as well choosing your user type.
+We have 4 user types being attendee, speakers, organizers, vips.
+Vip(can only be created by a Organizer User)
+Each has their own hub of what they can interact with.
 
-Attendees:
-a1: Email - a1, Password - a1
-a2: Email - a2, Password - a2
-a3: Email - a3, Password - a3
+For everything to be ran and set up organizers will need to create rooms, events and conferences what can be added to
+each other.
 
-Each will print out the corresponding interface that you have access to with that user type.
-Then, interact with the program from there.
+For a event to be scheduled to a room the rooms needs to have the tech requirement that that event needs to operate.
+Rooms that are out of events time range or doesn't meets the tech requirement will not be offered to the organizer as
+suitable options of the event to be held in.
 
-:))
 
