@@ -127,8 +127,10 @@ public class ConferenceManager implements Serializable {
     public ArrayList<Event> nonVipEvents(Conference c){
         ArrayList<Event> events = new ArrayList<Event>();
         for(int e: c.getEventIds()){
-            if (!(em.findEvent(e).isVipOnly())){
-                events.add(em.findEvent(e));
+            if(em.findEvent(e) != null){
+                if (!(em.findEvent(e).isVipOnly())){
+                    events.add(em.findEvent(e));
+                }
             }
         }
         return events;
@@ -142,8 +144,11 @@ public class ConferenceManager implements Serializable {
     public ArrayList<Event> vipEvents(Conference c){
         ArrayList<Event> events = new ArrayList<Event>();
         for(int e: c.getEventIds()){
-            if (em.findEvent(e).isVipOnly()){
-                events.add(em.findEvent(e));
+            Event event = em.findEvent(e);
+            if (event != null){
+                if(event.isVipOnly()){
+                    events.add(em.findEvent(e));
+                }
             }
         }
         return events;
