@@ -3004,7 +3004,10 @@ class Test {
                                 timeOptionsS.getItemAt(timeOptionsS.getSelectedIndex()),
                                 timeOptionE.getItemAt(timeOptionE.getSelectedIndex()), date.getText(),
                                 Integer.parseInt(capacityText.getText()), vip));
-                        eventSystem.addTechEvent(eM.getEventIds().size()-1,list.getSelectedItem().toString());
+                        eventSystem = new EventSystem();
+                        eM = new EventSave().read();
+                        eventSystem.addTechEvent(eM.getEventIds().get(eM.getEventIds().size()-1),
+                                list.getSelectedItem().toString());
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }

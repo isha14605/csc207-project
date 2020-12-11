@@ -50,16 +50,24 @@ public class SignUpSystem {
      */
 //     Method to sign up an Entities.Attendee for an Entities.Event
     public boolean signUpEvent(String email, Integer event) throws IOException {
+        System.out.println("here1");
+        System.out.println(uM.checkUserExists(email));
+        System.out.println(eM.findEvent(event) == null);
+
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
             if (uM.findUser(email).userType() == 'V'){
                 uM.signUpVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
                 return true;
             }
-            else if(uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event))){
+            System.out.println("here2");
+            if(uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event))){
                 new ConferenceSave().save(cM);
                 new UserSave().save(uM);
+
+                return true;
             }
         }
+        System.out.println("here3");
         return false;
     }
 

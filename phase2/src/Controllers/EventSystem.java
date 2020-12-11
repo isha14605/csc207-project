@@ -152,6 +152,7 @@ public class EventSystem{
         new RoomSave().save(rm);
     }
     public void addTechEvent(Integer event, String tech) throws IOException {
+
         if(!tech.equals("None")) {
             em = new EventSave().read();
             em.findEvent(event).addTechRequirements(tech);
