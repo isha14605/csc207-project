@@ -1,5 +1,6 @@
 package UseCase;
 
+import Entities.Attendee;
 import Entities.Conference;
 import Entities.Event;
 import Gateway.EventSave;
@@ -43,22 +44,16 @@ public class ConferenceManager implements Serializable {
     /**
      * adds an event joining the conference
      * @param c the conference to which an event is to be added
-     * @param e the event we wish to add to the conference
+     * @param event the event we wish to add to the conference
      * @return true if event was successfully added
      */
-    public boolean addEvent(Conference c, Integer e){
+    public boolean addEvent(Conference c, Event event){
         // haven't checked if event exists
-        Event event = em.findEvent(e);
         if (!(c.getConfDate().equals(event.getEventDate()))){
             return false;
         }
         if (c.getEventIds().contains(event.getEventId())){
             return false; //couldnt add event
-        }
-        for(Integer i: c.getEventIds()){
-            if (em.timeConflict(em.findEvent(i), event)){
-                return false; //couldn't add event
-            }
         }
         c.addEvent(event.getEventId());
         c.addEventName(event.getName());
@@ -161,7 +156,7 @@ public class ConferenceManager implements Serializable {
      * @return true if user signed up for conference.
      */
     public boolean addAttendeesToConference(Conference c, String name){
-        Entities.Attendee u = (Entities.Attendee) um.findUser(name);
+        Attendee u = (Attendee) um.findUser(name);
         ArrayList<Event> vip = vipEvents(c);
         ArrayList<Event> nonvip = nonVipEvents(c);
         boolean flag = false;
@@ -171,12 +166,12 @@ public class ConferenceManager implements Serializable {
                 e.addAttendee(u.getEmail());
                 flag = true;
             }
-            if (u.userType() == 'V'){
+            if (u!=null&&u.userType() == 'V'){
                 Entities.VIP v = (Entities.VIP) u;
                 v.addPoints(10);
             }
         }
-        if (u.userType() == 'V'){
+        if (u!=null&&u.userType() == 'V'){
             for(Event event: vip){
                 if(event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
                     Entities.VIP v = (Entities.VIP) u;

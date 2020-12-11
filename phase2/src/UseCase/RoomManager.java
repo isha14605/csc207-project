@@ -63,20 +63,6 @@ public class RoomManager implements Serializable {
         return null;
     }
 
-    /** Checks if room is booked and can be scheduled for a unbooked event
-     * @param room room entity
-     * @param unbooked Unbooked room Entity
-     * */
-    public boolean is_room_booked(Room room, Event unbooked){
-        for(Integer booked: room.getBookings().keySet()){
-            if(em.findEvent(booked).getEventDate().equals(unbooked.getEventDate()))
-                if(time_conflict(unbooked, em.findEvent(booked))){
-                    return true;
-                }
-        }
-        return false;
-    }
-
     /** Checks if event can be scheduled for this room;
      * @param event event that room is be scheduled to.
      * @param room room that is being scheduled.
@@ -101,6 +87,7 @@ public class RoomManager implements Serializable {
         return "Room Name: " + room.getName() + ", open from " + room.getOpenTime() + " to "
                 + room.getCloseTime() + "\n";
     }
+
 
     public String bookingToString(Room room){
         if(room.getBookings().size()==0){

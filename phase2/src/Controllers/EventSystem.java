@@ -10,42 +10,30 @@ import UseCase.EventManager;
 import UseCase.RoomManager;
 import UseCase.UserManager;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class EventSystem{
-    private final ConferenceManager cm;
-    private final EventManager em;
-    private final RoomManager rm;
+    private ConferenceManager cm;
+    private EventManager em;
+    private RoomManager rm;
     private final UserManager um;
 
     /**
      * EventController Constructor
      */
-    public EventSystem() throws ClassNotFoundException, IOException {
+    public EventSystem() throws IOException {
         cm = new ConferenceSave().read();
         em = new EventSave().read();
         rm = new RoomSave().read();
         um = new UserSave().read();
     }
 
-    public ConferenceManager getCm() {
-        return cm;
-    }
-
     public EventManager getEm() {
         return em;
     }
 
-    public RoomManager getRm() {
-        return rm;
-    }
-
-    public UserManager getUm() {
-        return um;
-    }
 
     /**
      * Adds Entities.Event according to given parameters
@@ -63,7 +51,11 @@ public class EventSystem{
         if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
         || em.notValidFormat(em.dateFormattingDate(date))) {
             return false;
-        }else {
+        }
+        if(em.dateFormattingDate(date).isBefore(LocalDate.now())){
+            return false;
+        }
+        else {
             em.createEvent(type, name, description, em.dateFormattingTime(start),
                     em.dateFormattingTime(end), em.dateFormattingDate(date), capacity, event_only);
             new EventSave().save(em);
@@ -133,6 +125,7 @@ public class EventSystem{
         cm.addConference(name,confDescription,em.dateFormattingTime(startTime),
                 em.dateFormattingTime(endTime),em.dateFormattingDate(confDate));
         new ConferenceSave().save(cm);
+        new UserSave().save(um);
         return true;
 
     }
@@ -159,8 +152,11 @@ public class EventSystem{
         new RoomSave().save(rm);
     }
     public void addTechEvent(Integer event, String tech) throws IOException {
-        em.findEvent(event).addTechRequirements(tech);
-        new EventSave().save(em);
+        if(!tech.equals("None")) {
+            em = new EventSave().read();
+            em.findEvent(event).addTechRequirements(tech);
+            new EventSave().save(em);
+        }
     }
 
     public void removeTech(String roomName, String tech) throws IOException {
@@ -182,10 +178,15 @@ public class EventSystem{
      */
     public boolean addEventToConference(String conferenceName,Integer eventId) throws IOException {
         if (cm.conferenceExists(conferenceName) && em.findEvent(eventId) == null){
-            System.out.println("here");
             return false;
         }
-        if(cm.addEvent(cm.findConference(conferenceName),eventId)){
+        em = new EventSave().read();
+        cm = new ConferenceSave().read();
+        if(em.findEvent(eventId).getStartTime().isBefore(cm.findConference(conferenceName).getStartTime())||
+                em.findEvent(eventId).getEndTime().isAfter(cm.findConference(conferenceName).getEndTime())){
+            return false;
+        }
+        if(cm.addEvent(cm.findConference(conferenceName),em.findEvent(eventId))){
             new ConferenceSave().save(cm);
             new EventSave().save(em);
             return true;
@@ -221,10 +222,13 @@ public class EventSystem{
         if(room == null){
             return false;
         }
+        if(room.getRoomCapacity()<event.getAttendeeCapacity()){
+            return false;
+        }
         if(!event.getTechRequirements().isEmpty() &&!room.getTechAvailable().containsAll(event.getTechRequirements())){
             return false;
         }
-        if(!rm.is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
+        if(!is_room_booked(room, event) && event.getRoomName() == null && rm.can_fit_event(event,room)){
             rm.schedule_room(room, event);
             room.addBookings(event.getEventId(), em.getLocalDateTime(event.getEventDate(),event.getStartTime()),
                     em.getLocalDateTime(event.getEventDate(),event.getEndTime()));
@@ -234,6 +238,22 @@ public class EventSystem{
         }else{
             return false;
         }
+    }
+
+    /** Checks if room is booked and can be scheduled for a unbooked event
+     * @param room room entity
+     * @param unbooked Unbooked room Entity
+     * */
+    public boolean is_room_booked(Room room, Event unbooked) throws IOException {
+        for(Integer booked: room.getBookings().keySet()){
+            em = new EventSave().read();
+            rm = new RoomSave().read();
+            if(em.findEvent(booked).getEventDate().equals(unbooked.getEventDate()))
+                if(rm.time_conflict(unbooked, em.findEvent(booked))){
+                    return true;
+                }
+        }
+        return false;
     }
 
     /**
@@ -280,12 +300,16 @@ public class EventSystem{
     }
 
 
-    public ArrayList<String> usableRooms(Integer event){
+    public ArrayList<String> usableRooms(Integer event) throws IOException {
         ArrayList<String> usable = new ArrayList<>();
         for(String rooms: rm.getRoomsString()){
-            if(rm.can_fit_event(em.findEvent(event), rm.find_room(rooms)) &&
-                    !rm.time_conflict(rm.find_room(rooms),em.findEvent(event))){
-                usable.add(rooms);
+            rm = new RoomSave().read();
+            em = new EventSave().read();
+            if(!rooms.equals("None")) {
+                if (rm.can_fit_event(em.findEvent(event), rm.find_room(rooms)) &&
+                        !rm.time_conflict(rm.find_room(rooms), em.findEvent(event))) {
+                    usable.add(rooms);
+                }
             }
 
         }

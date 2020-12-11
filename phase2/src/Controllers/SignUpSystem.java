@@ -49,18 +49,20 @@ public class SignUpSystem {
      * @see UserManager#checkUserExists(String)
      */
 //     Method to sign up an Entities.Attendee for an Entities.Event
-    public boolean signUpEvent(String email, Integer event){
+    public boolean signUpEvent(String email, Integer event) throws IOException {
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
             if (uM.findUser(email).userType() == 'V'){
                 uM.signUpVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
                 return true;
-            } else {
-                return uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
-
+            }
+            else if(uM.signUpEvent((Attendee) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event))){
+                new ConferenceSave().save(cM);
+                new UserSave().save(uM);
             }
         }
         return false;
     }
+
 
     /**
      *
@@ -72,14 +74,17 @@ public class SignUpSystem {
      * @see UserManager#checkUserExists(String)
 
      */
-    public boolean cancelRegEvent(String email, Integer event){
+    public boolean cancelRegEvent(String email, Integer event) throws IOException {
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
             if (uM.findUser(email).userType() == 'V'){
                 uM.cancelVip((Entities.VIP) uM.findUser(email), eM.findEvent(event), cM.eventInConference(event));
                 return true;
-            } else {
-                return uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
-                        cM.eventInConference(event));
+            }
+            else if(uM.cancelRegistrationEvent((Attendee) uM.findUser(email), eM.findEvent(event),
+                    cM.eventInConference(event))) {
+                new ConferenceSave().save(cM);
+                new UserSave().save(uM);
+                return true;
             }
         }
         return false;
@@ -90,15 +95,20 @@ public class SignUpSystem {
      * @param email the email of the Entities.Attendee who wishes to join the conference
      * @return true if attendee successfully joined the conference
      */
-    public boolean attendConf(String conference, String email){
+    public boolean attendConf(String conference, String email) throws IOException {
         if(uM.checkUserExists(email) && !(cM.findConference(conference) == null)){
             Attendee a = (Attendee) uM.findUser(email);
             ArrayList<Event> e = new ArrayList<Event>();
+            if(a.getConferenceAttending().contains(conference)){
+                return false;
+            }
             for(Integer i: cM.getEvents(cM.findConference(conference))){
                 e.add(eM.findEvent(i));
             }
             cM.addAttendeesToConference(cM.findConference(conference), a.getEmail());
             uM.attendConference(a,e, cM.findConference(conference));
+            new ConferenceSave().save(cM);
+            new UserSave().save(uM);
             return true;
         }
         return false;
@@ -110,7 +120,7 @@ public class SignUpSystem {
      * @param email the email of the Entities.Attendee who wishes to cancel registration
      * @return true if attendee successfully cancelled registration for the conference
      */
-    public  boolean cancelRegConf(String conference, String email){
+    public  boolean cancelRegConf(String conference, String email) throws IOException {
         if(uM.checkUserExists(email) && !(cM.findConference(conference) == null)){
             Attendee a = (Attendee) uM.findUser(email);
             ArrayList<Event> e = new ArrayList<Event>();
@@ -119,6 +129,8 @@ public class SignUpSystem {
             }
             cM.removeAttendeeConference(cM.findConference(conference), a.getEmail());
             uM.cancelRegistrationConference(a,e, cM.findConference(conference));
+            new ConferenceSave().save(cM);
+            new UserSave().save(uM);
             return true;
         }
         return false;

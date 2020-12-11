@@ -16,8 +16,8 @@ import java.util.ArrayList;
  * @version 1.0
  */
 public class UserManager implements Serializable {
-    private final ArrayList<User> users ;
-    private final ArrayList<String> email ;
+    private final ArrayList<User> users;
+    private final ArrayList<String> email;
     private final ArrayList<String> speaker;
     private final ArrayList<Speaker> speakerAccounts;
     public EventManager em; // can we do this?
@@ -39,34 +39,36 @@ public class UserManager implements Serializable {
         return users;
     }
 
-    /** Allows a user to create a new account by checking if anyone with the same email id has already been registered.
-     * @param name the name of the user.
+    /**
+     * Allows a user to create a new account by checking if anyone with the same email id has already been registered.
+     *
+     * @param name     the name of the user.
      * @param password the password of this users account.
-     * @param email the email of this users account.
+     * @param email    the email of this users account.
      */
     public void addUser(String name, String email, String password, String typeOfUser) {
-        this.email.add(email);
-        switch (typeOfUser) {
-            case "Organizer":
-                Organizer o = new Organizer(name, password, email);
-                users.add(o);
-                addListContacts(o,this.email);
-                this.email.add(email);
+        if (typeOfUser.equals("Organizer")) {
+            Organizer o = new Organizer(name, password, email);
+            users.add(o);
+            addListContacts(o, this.email);
+            this.email.add(email);
+        }
 
-            case "Speaker":
-                Speaker s = new Speaker(name, password, email);
-                users.add(s);
-                speakerAccounts.add(s);
-                speaker.add(email);
-                this.email.add(email);
+        if (typeOfUser.equals("Speaker")) {
+            Speaker s = new Speaker(name, password, email);
+            users.add(s);
+            speakerAccounts.add(s);
+            speaker.add(email);
+            this.email.add(email);
+        }
+        if (typeOfUser.equals("Attendee")) {
+            users.add(new Attendee(name, password, email));
+            this.email.add(email);
+        }
 
-            case "Attendee":
-                users.add(new Attendee(name, password, email));
-                this.email.add(email);
-
-            case "vip":
-                users.add(new VIP(name, password, email));
-                this.email.add(email);
+        if (typeOfUser.equals("vip")) {
+            users.add(new VIP(name, password, email));
+            this.email.add(email);
         }
     }
 
@@ -83,6 +85,15 @@ public class UserManager implements Serializable {
         return null;
     }
 
+    public ArrayList<String> getSpeakerAccountsEmails() {
+        ArrayList<String> name = new ArrayList<>();
+        for(Speaker speaker: speakerAccounts){
+            if((speaker.userType() == 'O')){
+                name.add(speaker.getEmail());
+            }
+        }
+        return name;
+    }
 
     /**
      * Verifies the login details of the user logging in.
@@ -154,13 +165,14 @@ public class UserManager implements Serializable {
      * @see Event#getAttendeeCapacity()
      * @see Conference#getEventIds()
      */
-    public boolean cancelRegistrationEvent(Attendee attendee, Event event, Conference c){
+    public boolean cancelRegistrationEvent(Attendee attendee, Event event, Conference c) throws IOException {
         int ctr = 0;
         if (!attendee.getEventsAttending().contains(event.getEventId())){
             return false;
         }
         if(!(c== null)){
             for(int e: c.getEventIds()){
+                em = new EventSave().read();
                 if (em.findEvent(e).getAttendeeEmails().contains(attendee.getEmail())){ctr = ctr +1;}
                 // counts if attendee is part of more than 1
             }
@@ -238,7 +250,7 @@ public class UserManager implements Serializable {
      * @param event the event that the vip is being removed from
      * @param c the conference to which the event belongs
      */
-    public void cancelVip(VIP v, Event event, Conference c){
+    public void cancelVip(VIP v, Event event, Conference c) throws IOException {
         boolean flag = cancelRegistrationEvent(v, event, c);
         if (flag){
             if(event.isVipOnly()){

@@ -138,12 +138,21 @@ public class EventManager implements Serializable {
         ArrayList<String> eventList = new ArrayList<>();
         ArrayList<Event> e = getEventsOn(time);
         for (Event event: e){
-            eventList.add("Event id: "+ event.getEventId());
+            eventList.add("Event id: "+ event.getEventId() + " - Event Name: " + event.getName());
         }
         if(eventList.isEmpty()){
             eventList.add("None");
         }
         return eventList;
+    }
+
+    public ArrayList<Integer> eventToList(LocalDate time){
+        ArrayList<Integer> idList = new ArrayList<>();
+        ArrayList<Event> e = getEventsOn(time);
+        for (Event event: e){
+            idList.add(event.getEventId());
+        }
+        return idList;
     }
 
 
@@ -152,7 +161,8 @@ public class EventManager implements Serializable {
         ArrayList<String> events = new ArrayList<>();
 
         for(Integer ids: eventIds){
-            events.add("Event id: " + ids);
+            events.add("Event id: " + ids + " Event Name: " + findEvent(ids).getName() + " \n " +
+                    " From : " + findEvent(ids).getStartTime() + " to " + findEvent(ids).getEndTime());
         }
         if(events.isEmpty()){
             events.add("None");
