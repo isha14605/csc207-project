@@ -107,6 +107,7 @@ public abstract class User implements Serializable {
      *@param  message is the content of the message they received.
      */
     public void receiveMessage(String email, String message){
+        this.messagesReceived.computeIfAbsent(email, k -> new ArrayList<String>(Collections.singleton(message)));
         ArrayList<String> x = this.messagesReceived.get(email);
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);

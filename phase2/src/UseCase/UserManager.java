@@ -20,6 +20,7 @@ public class UserManager implements Serializable {
     private final ArrayList<String> email;
     private final ArrayList<String> speaker;
     private final ArrayList<Speaker> speakerAccounts;
+    private final ArrayList<String> OrganizerAccounts;
     public EventManager em; // can we do this?
     public ConferenceManager cm;
 
@@ -32,6 +33,7 @@ public class UserManager implements Serializable {
         email = new ArrayList<>();
         speaker = new ArrayList<>();
         speakerAccounts = new ArrayList<>();
+        OrganizerAccounts = new ArrayList<>();
 
     }
 
@@ -50,6 +52,7 @@ public class UserManager implements Serializable {
         if (typeOfUser.equals("Organizer")) {
             Organizer o = new Organizer(name, password, email);
             users.add(o);
+            OrganizerAccounts.add(o.getName());
             addListContacts(o, this.email);
             this.email.add(email);
         }
@@ -62,8 +65,10 @@ public class UserManager implements Serializable {
             this.email.add(email);
         }
         if (typeOfUser.equals("Attendee")) {
-            users.add(new Attendee(name, password, email));
+            Attendee a = new Attendee(name, password, email);
+            users.add(a);
             this.email.add(email);
+            addListContacts(a, OrganizerAccounts);
         }
 
         if (typeOfUser.equals("VIP")) {
@@ -135,14 +140,18 @@ public class UserManager implements Serializable {
                 && event.getAttendeeCapacity() > event.getAttendeeEmails().size()){
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
-            addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
+
+            addListContacts(attendee, event.getAttendeeEmails());
+
             return true;
         } else if ( c!= null && !(attendee.getEventsAttending().contains(event.getEventId()))
                 && event.getAttendeeCapacity() > event.getAttendeeEmails().size()){
             attendee.attendEvent(event.getEventId());
             event.addAttendee(attendee.getEmail());
             attendee.addContact(c.getName());
-            addListContacts(attendee, event.getAttendeeEmails()); // haven't added organizers/ speakers
+
+            addListContacts(attendee, event.getAttendeeEmails());
+
             return true;
         }
         return false;
@@ -424,12 +433,15 @@ public class UserManager implements Serializable {
 //    }
 
     private void addListContacts(User attendee, ArrayList<String> contacts){
-        for(String i: contacts){
-            if (!(attendee.getContacts().contains(i))){
-                attendee.addContact(i);
-                findUser(i).addContact(attendee.getEmail());
+        if (contacts.size()!=0){
+            for(String i: contacts){
+                if (!(attendee.getContacts().contains(i)) && findUser(i) != null){
+                    attendee.addContact(i);
+                    findUser(i).addContact(attendee.getEmail());
+                }
             }
         }
+
     }
 
     public ArrayList<String> checkReadM(String user, String contact){
