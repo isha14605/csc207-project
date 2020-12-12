@@ -373,7 +373,26 @@ class Test {
             attendeeScreen.setVisible(true);
 
             int y = 40, space = 40;
+
+
+
             if(!(userAccount.userType()=='O')) {
+                JButton browse = new JButton("Browse My Events");
+                browse.setBounds(150,y,200,25);
+                browse.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        try {
+                            browseEvents();
+                        } catch (IOException ioException) {
+                            ioException.printStackTrace();
+                        }
+                        attendeeScreen.setVisible(false);
+                    }
+                });
+                attendeeScreen.add(browse);
+                y = y + space;
+
                 signUp = new JButton("Sign Ups");
                 signUp.setBounds(150, y, 200, 25);
                 signUp.addActionListener(this);
@@ -473,6 +492,77 @@ class Test {
             back.setBounds(200,y,100,25);
             back.addActionListener(this);
             attendeeScreen.add(back);
+
+        }
+
+        void browseEvents() throws IOException {
+            JTextPane timeInfo = new JTextPane();
+            JTextArea eventViewer = new JTextArea();
+            JFrame browseEvent = new JFrame();
+            Border lowerLevel = BorderFactory.createLoweredBevelBorder();
+            setFrame(browseEvent, "Browse Event");
+
+            JButton backB = new JButton("Back");
+            browseEvent.add(backB);
+            backB.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    browseEvent.setVisible(false);
+                    attendeeScreen.setVisible(true);
+                }
+            });
+            backB.setBounds(75,125,100,25);
+
+            um = new UserSave().read();
+            Attendee a = (Attendee) userAccount;
+            ArrayList<Integer> con = a.getEventsAttending();
+            Integer[] events = con.toArray(new Integer[0]);
+            JComboBox<Integer> eventsSpeaking = new JComboBox<>(events);
+            eventsSpeaking.setBounds(25,50,200,25);
+            browseEvent.add(eventsSpeaking);
+            eventsSpeaking.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if(!Objects.equals(eventsSpeaking.getSelectedItem(), "")) {
+                        Event event = em.findEvent(Integer.parseInt(Objects.requireNonNull(eventsSpeaking
+                                .getSelectedItem()).toString())) ;
+                        timeInfo.setText("\nDate: " + event.getEventDate() +
+                                "\n\nStart Time: " + event.getStartTime() +
+                                "\n\nEnd Time: " + event.getEndTime());
+
+                        eventViewer.setText("Event Name: " + event.getName() +
+                                "\nEvent Id :" + event.getEventId() +
+                                "\n\nDescription : " + event.getEventDescription() +
+                                "\n\nRoom : " + event.getRoomName() +
+                                "\n\nTech Requirements : " + event.getTechRequirements() +
+                                "\n\nCapacity : " + event.getAttendeeCapacity() +
+                                "");
+                    }
+                    else {
+                        timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+                    }
+                }
+            });
+
+            TitledBorder event = BorderFactory.createTitledBorder(lowerLevel,"Event Info");
+            event.setTitleJustification(TitledBorder.LEADING);
+
+            //event box set up
+            eventViewer.setLineWrap(true);
+            eventViewer.setEditable(false);
+            eventViewer.setText("No event selected");
+            eventViewer.setBounds(250,25,240,320);
+            browseEvent.add(eventViewer);
+            eventViewer.setBorder(event);
+
+            //Time Box set up
+            TitledBorder time = BorderFactory.createTitledBorder(lowerLevel,"Time");
+            event.setTitleJustification(TitledBorder.LEADING);
+            timeInfo.setText("\nDate: N/A\n\nStart Time: N/A\n\nEnd Time: N/A");
+            timeInfo.setBounds(0,190,250,190);
+            timeInfo.setEditable(false);
+            browseEvent.add(timeInfo);
+            timeInfo.setBorder(time);
 
         }
 
@@ -1811,7 +1901,9 @@ class Test {
                     }
 
                     if(optionCB.getSelectedItem().equals("Sent Messages")){
-                        JOptionPane.showMessageDialog(ms,messages.getSelectedValue().toString());
+                        try {
+                            JOptionPane.showMessageDialog(ms, messages.getSelectedValue().toString());
+                        }catch (Exception e1){}
                     }
 
                 }
