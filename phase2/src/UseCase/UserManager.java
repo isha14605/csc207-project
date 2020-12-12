@@ -22,7 +22,6 @@ public class UserManager implements Serializable {
     private final ArrayList<Speaker> speakerAccounts;
     private final ArrayList<String> OrganizerAccounts;
     public EventManager em; // can we do this?
-    public ConferenceManager cm;
 
 
     /**
@@ -34,12 +33,14 @@ public class UserManager implements Serializable {
         speaker = new ArrayList<>();
         speakerAccounts = new ArrayList<>();
         OrganizerAccounts = new ArrayList<>();
+        addUser("Admin","Admin","Admin","Organizer");
 
     }
 
     public ArrayList<User> getUsers() {
         return users;
     }
+
 
     /**
      * Allows a user to create a new account by checking if anyone with the same email id has already been registered.
@@ -54,7 +55,9 @@ public class UserManager implements Serializable {
             users.add(o);
             OrganizerAccounts.add(o.getName());
             addListContacts(o, this.email);
+            updateAdmin(users.get(users.size()-1).getEmail());
             this.email.add(email);
+
         }
 
         if (typeOfUser.equals("Speaker")) {
@@ -62,18 +65,23 @@ public class UserManager implements Serializable {
             users.add(s);
             speakerAccounts.add(s);
             speaker.add(email);
+            updateAdmin(users.get(users.size()-1).getEmail());
             this.email.add(email);
         }
+
         if (typeOfUser.equals("Attendee")) {
             Attendee a = new Attendee(name, password, email);
             users.add(a);
             this.email.add(email);
             addListContacts(a, OrganizerAccounts);
+            updateAdmin(users.get(users.size()-1).getEmail());
+
         }
 
         if (typeOfUser.equals("VIP")) {
             users.add(new VIP(name, password, email));
             this.email.add(email);
+            updateAdmin(users.get(users.size()-1).getEmail());
         }
     }
 
@@ -99,6 +107,14 @@ public class UserManager implements Serializable {
         }
         return name;
     }
+
+    public void updateAdmin(String email){
+        if(!email.equals("Admin")) {
+            findUser("Admin").addContact(email);
+            findUser(email).addContact("Admin");
+        }
+    }
+
 
     /**
      * Verifies the login details of the user logging in.

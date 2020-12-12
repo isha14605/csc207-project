@@ -140,17 +140,14 @@ public class EventSystem{
         }if(!em.checkValidTime(start,end)){
             return false;
         }
-        else {
-            rm.create_room(name, capacity, rm.date_formatting_time(start), rm.date_formatting_time(end));
-            new RoomSave().save(rm);
-            return true;
-        }
+        return true;
     }
 
     public void addTech(String roomName, String tech) throws IOException {
         rm.find_room(roomName).addTechRequirement(tech);
         new RoomSave().save(rm);
     }
+
     public void addTechEvent(Integer event, String tech) throws IOException {
 
         if(!tech.equals("None")) {

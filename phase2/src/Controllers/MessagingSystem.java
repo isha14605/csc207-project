@@ -1,6 +1,8 @@
 package Controllers;
 
 import Entities.Event;
+import Entities.Organizer;
+import Entities.User;
 import Gateway.EventSave;
 import Gateway.UserSave;
 import UseCase.EventManager;
@@ -44,8 +46,8 @@ public class MessagingSystem {
             ArrayList<String> recipients = userManager.checkUsers(to); // returns array of existing users
             userManager.message(from, recipients, message);
             new UserSave().save(userManager);
-            return true;
-        } else if (userManager.findUser(from).userType() == 'S'){
+            return true; }
+        else if (userManager.findUser(from).userType() == 'S'){
             ArrayList<Event> events = new ArrayList<>();
             for (String s: to) {
                 int eventID = Integer.parseInt(s);
@@ -58,6 +60,18 @@ public class MessagingSystem {
         return false;
     }
 
+    public void updateNewOrganizer(User newOrg) throws IOException {
+        if (userManager.getEmail() != null) {
+            for (User emails : userManager.getUsers()) {
+                if(!emails.getEmail().equals(newOrg.getEmail())) {
+                    newOrg.addContact(emails.getEmail());
+                    emails.addContact(newOrg.getEmail());
+                }
+            }
+        }
+        new UserSave().read();
+
+    }
 
 }
 

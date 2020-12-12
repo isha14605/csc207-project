@@ -30,6 +30,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -209,6 +210,10 @@ class Test {
 
                 try {
                     new UserSave().save(um);
+                    if(type.equals("Organizer")){
+                        new MessagingSystem().updateNewOrganizer(um.findUser(email.getText()));
+                    }
+                    new UserSave().save(um);
                 } catch (IOException ioException) {
                     ioException.printStackTrace();
                 }
@@ -368,40 +373,43 @@ class Test {
             attendeeScreen.setVisible(true);
 
             int y = 40, space = 40;
-            signUp = new JButton("Sign Ups");
-            signUp.setBounds(150,y,200,25);
-            signUp.addActionListener(this);
-            attendeeScreen.add(signUp);
-            y = y + space;
+            if(!(userAccount.userType()=='O')) {
+                signUp = new JButton("Sign Ups");
+                signUp.setBounds(150, y, 200, 25);
+                signUp.addActionListener(this);
+                attendeeScreen.add(signUp);
+                y = y + space;
 
-            cancelRegistration = new JButton("Cancel Registration");
-            cancelRegistration.setBounds(150,y,200,25);
-            cancelRegistration.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String[] option = {"Cancel Event Registration","Cancel Conference Registration"};
-                    Object reply = JOptionPane.showInputDialog(signUpCon,"What would you like to cancel",
-                            "cancel",JOptionPane.QUESTION_MESSAGE,null,option,0);
-                    try {
-                        if (reply.equals("Cancel Event Registration")) {
-                            attendeeScreen.setVisible(false);
-                            try {
-                                CancelRegistration();
-                            } catch (IOException ioException) {
-                                ioException.printStackTrace();
+                cancelRegistration = new JButton("Cancel Registration");
+                cancelRegistration.setBounds(150, y, 200, 25);
+                cancelRegistration.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String[] option = {"Cancel Event Registration", "Cancel Conference Registration"};
+                        Object reply = JOptionPane.showInputDialog(signUpCon, "What would you like to cancel",
+                                "cancel", JOptionPane.QUESTION_MESSAGE, null, option, 0);
+                        try {
+                            if (reply.equals("Cancel Event Registration")) {
+                                attendeeScreen.setVisible(false);
+                                try {
+                                    CancelRegistration();
+                                } catch (IOException ioException) {
+                                    ioException.printStackTrace();
+                                }
                             }
+
+                            if (reply.equals("Cancel Conference Registration")) {
+                                attendeeScreen.setVisible(false);
+                                CancelRegCon();
+                            }
+
+                        } catch (Exception e1) {
                         }
-
-                        if(reply.equals("Cancel Conference Registration")){
-                        attendeeScreen.setVisible(false);
-                        CancelRegCon();
                     }
-
-                    }catch (Exception e1){}
-                }
-            });
-            attendeeScreen.add(cancelRegistration);
-            y = y + space;
+                });
+                attendeeScreen.add(cancelRegistration);
+                y = y + space;
+            }
 
             inbox = new JButton("Inbox");
             inbox.setBounds(150,y,200,25);
@@ -634,6 +642,8 @@ class Test {
                         if(sus.attendConf(Objects.requireNonNull(conferencesSignUP.getSelectedItem()).toString(),
                                 user)){
                             JOptionPane.showMessageDialog(attendeeScreen,"SignUp was Successful");
+                            ArrayList<String> useremail = new ArrayList<>();useremail.add(user);
+                            new UserSave().save(um);
                         }else{
                             JOptionPane.showMessageDialog(attendeeScreen,"Unable to Join event");
                         }
@@ -998,7 +1008,7 @@ class Test {
                                 ArrayList<String> users = um.getEmail();
                                 assert ms != null;
                                 try {
-                                    if(ms.sendMessage(user,users,messaging.getText())){
+                                    if(ms.sendMessage("Admin",users,messaging.getText())){
                                         JOptionPane.showMessageDialog(inboxScreen,"Message Was Sent");
                                         messageEvent.setVisible(false);
                                         inboxScreen.setVisible(true);
@@ -1060,7 +1070,7 @@ class Test {
                                 ArrayList<String> users = um.getSpeaker();
                                 assert ms != null;
                                 try {
-                                    if(ms.sendMessage(user,users,messaging.getText())){
+                                    if(ms.sendMessage("Admin",users,messaging.getText())){
                                         JOptionPane.showMessageDialog(inboxScreen,"Message Was Sent");
                                         messageEvent.setVisible(false);
                                         inboxScreen.setVisible(true);
@@ -1495,17 +1505,28 @@ class Test {
 
             sendMessageEvent = new JButton("Message Event");
             sendMessageEvent.setBounds(150,60,200,40);
-            sendMessageEvent.addActionListener(this);
+            sendMessageEvent.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    inboxScreen.setVisible(false);
+                    messageEventScreen();
+                }
+            });
             inboxScreen.add(sendMessageEvent);
-
-            sendMessageUser = new JButton("Message User");
-            sendMessageUser.setBounds(150,110,200,40);
-            sendMessageUser.addActionListener(this);
-            inboxScreen.add(sendMessageUser);
 
             viewMessage = new JButton("View Message History");
             viewMessage.setBounds(150,160,200,40);
-            viewMessage.addActionListener(this);
+            viewMessage.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    inboxScreen.setVisible(false);
+                    try {
+                        new MessageScreen(user);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
+                }
+            });
             inboxScreen.add(viewMessage);
 
             back =  new JButton("Back");
@@ -1572,37 +1593,7 @@ class Test {
             back.setBounds(200, 235,100,25);
         }
 
-        void messageUserScreen(){
-            messageUser = new JFrame();
-            current = messageUser;
-            setFrame(messageUser, "Message Screen");
-            Border raisedEtched = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
 
-            ArrayList<String> contacts = speaker.getContacts();
-            String[] contact = contacts.toArray(new String[0]);
-            JComboBox<String> comboBox = new JComboBox<>(contact);
-            comboBox.setBounds(200,50,200,30);
-            messageUser.add(comboBox);
-
-            Font f = new Font(Font.DIALOG_INPUT,Font.BOLD,13);
-            JLabel l = new JLabel("Contacts:");
-            l.setBounds(100,50,100,30);
-            l.setFont(f);
-            messageUser.add(l);
-
-            messaging = new JTextArea();
-            messaging.setBounds(100,90,300,80);
-            messaging.setBorder(raisedEtched);
-            messageUser.add(messaging);
-
-            sendMessage = new JButton("Send");
-            sendMessage.setBounds(200,190,100,25);
-            sendMessage.addActionListener(this);
-            messageUser.add(sendMessage);
-
-            messageUser.add(back);
-            back.setBounds(200, 235,100,25);
-        }
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -1623,10 +1614,6 @@ class Test {
             if(e.getSource()==sendMessageEvent){
                 inboxScreen.setVisible(false);
                 messageEventScreen();
-            }
-            if(e.getSource()==sendMessageUser){
-                inboxScreen.setVisible(false);
-                messageUserScreen();
             }
 
             if(e.getSource()==logOut){
@@ -1677,11 +1664,17 @@ class Test {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     ms.setVisible(false);
+
                     try {
-                        new AttendeeScreen(user);
+                        if (new UserSave().read().findUser(user).userType() == 'S') {
+                            new SpeakerScreen(user);
+                        }else {
+                            new AttendeeScreen(user);
+                        }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
+
                 }
             });
             back.setBounds(60,90,100,25);
@@ -2982,14 +2975,18 @@ class Test {
                              "What type of event is this?","Event Type",
                             JOptionPane.QUESTION_MESSAGE,null,types,0);
 
-                    ConferencePresenter p =  new ConferencePresenter(eventSystem);
+                    ConferencePresenter p = null;
+                    try {
+                        p = new ConferencePresenter(eventSystem);
+                    } catch (IOException ioException) {
+                        ioException.printStackTrace();
+                    }
 
                     try {
-                        JOptionPane.showMessageDialog(null,p.addingEvents(type.toString(),
-                                nameText.getText(),descText.getText(),
+                        eventSystem.addEvent(type.toString(),nameText.getText(),descText.getText(),
                                 timeOptionsS.getItemAt(timeOptionsS.getSelectedIndex()),
                                 timeOptionE.getItemAt(timeOptionE.getSelectedIndex()), date.getText(),
-                                Integer.parseInt(capacityText.getText()), vip));
+                                Integer.parseInt(capacityText.getText()), vip);
                         eventSystem = new EventSystem();
                         eM = new EventSave().read();
                         eventSystem.addTechEvent(eM.getEventIds().get(eM.getEventIds().size()-1),
@@ -2997,16 +2994,6 @@ class Test {
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
-                    try {
-                        eventSystem.addEvent(type.toString(),nameText.getText(),descText.getText(),
-                                timeOptionsS.getItemAt(timeOptionsS.getSelectedIndex()),
-                                timeOptionE.getItemAt(timeOptionE.getSelectedIndex()), date.getText(),
-                                Integer.parseInt(capacityText.getText()), vip);
-                    } catch (IOException ioException) {
-                        ioException.printStackTrace();
-                    }
-
-
                 }
 
             }

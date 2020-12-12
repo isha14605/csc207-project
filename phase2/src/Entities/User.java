@@ -93,8 +93,10 @@ public abstract class User implements Serializable {
      * @param  message is the content of the message they want to send.
      */
     public void sendMessage(String email, String message){
-        this.messagesSent.computeIfAbsent(email, k -> new ArrayList<String>(Collections.singleton(message)));
         ArrayList<String> x = this.messagesSent.get(email);
+        if(x== null){
+            x = new ArrayList<>();
+        }
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);
         this.messagesSent.replace(email, y);
@@ -109,6 +111,9 @@ public abstract class User implements Serializable {
     public void receiveMessage(String email, String message){
         this.messagesReceived.computeIfAbsent(email, k -> new ArrayList<String>(Collections.singleton(message)));
         ArrayList<String> x = this.messagesReceived.get(email);
+        if(x==null){
+            x =  new ArrayList<>();
+        }
         ArrayList<String> y = new ArrayList<String>(x);
         y.add(message);
         this.messagesReceived.replace(email, y);

@@ -1,40 +1,56 @@
 package Presenter;
 
 import Controllers.EventSystem;
+import Gateway.ConferenceSave;
+import Gateway.EventSave;
+import Gateway.RoomSave;
+import Gateway.UserSave;
+import UseCase.ConferenceManager;
+import UseCase.EventManager;
+import UseCase.RoomManager;
+import UseCase.UserManager;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.time.LocalDate;
 
 public class ConferencePresenter {
+    private ConferenceManager cm;
+    private EventManager em;
+    private RoomManager rm;
+    private final UserManager um;
     private EventSystem es;
 
-    public ConferencePresenter(EventSystem e){
+    public ConferencePresenter(EventSystem e) throws IOException {
+        cm = new ConferenceManager();
+        em = new EventManager();
+        rm = new RoomManager(em);
+        um = new UserManager();
         this.es = e;
     }
 
-    public String addingEvents(String type, String name, String description, String start, String end, String date,
-                               int capacity, boolean event_only) throws IOException {
-        if (es.addEvent(type,  name, description, start, end, date, capacity,  event_only)){
-            return "Event added";
-        } else {
-            return "Wrong date/ time format. Try Again.";
+    public void addingEvents(String type, String name, String description, String start, String end, String date,
+                               int capacity, boolean event_only){
+        if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))
+                || em.notValidFormat(em.dateFormattingDate(date))) {
+            JOptionPane.showMessageDialog(null,"Invalid Date Format");
+        }
+        if(em.dateFormattingDate(date).isBefore(LocalDate.now())){
+            JOptionPane.showMessageDialog(null,"Invalid Date Format, No dates before today's date!");
+        }
+        else{
+            JOptionPane.showMessageDialog(null, "Event has been added");
         }
 
     }
 
-    /*
-    public String cancellingEvents(Integer id){
-        if(es.cancel_event(id)){
-            return "Event sucessfully cancelled.";
-        } else {
-            return "Try again! Event couldn't be deleted";
-        }
-    }*/
 
-    public String addingRoom(String name, Integer capacity, String start, String end) throws IOException {
-        if (es.addRoom(name, capacity, start, end)){
-            return "Room successfully added.";
-        } else {
-            return "Room was not added. Try Again!";
+    public void addingRoom(String name, Integer capacity, String start, String end){
+        if(em.notValidFormat(em.dateFormattingTime(start))|| em.notValidFormat(em.dateFormattingTime(end))) {
+            JOptionPane.showMessageDialog(null,"Invalid Date Format");
+        }if(!em.checkValidTime(start,end)){
+            JOptionPane.showMessageDialog(null,"Invalid Date Format, Start time cannot be after " +
+                    "end time");
         }
     }
 
