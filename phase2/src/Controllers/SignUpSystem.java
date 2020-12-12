@@ -53,6 +53,18 @@ public class SignUpSystem {
         System.out.println("here1");
         System.out.println(uM.checkUserExists(email));
         System.out.println(eM.findEvent(event) == null);
+        if(eM.findEvent(event).eventType().equals("Talk")){
+            Entities.Talk t = (Entities.Talk) eM.findEvent(event);
+            if(t.getSpeakerEmail() == null){
+                return false;
+            }
+        }
+        if(eM.findEvent(event).eventType().equals("Panel")) {
+            Entities.Panel t = (Entities.Panel) eM.findEvent(event);
+            if (t.getSpeakerEmails().size() != 5) {
+                return false;
+            }
+        }
 
         if (uM.checkUserExists(email) && !(eM.findEvent(event) == null)){
             if (uM.findUser(email).userType() == 'V'){

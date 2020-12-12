@@ -166,7 +166,8 @@ public class ConferenceManager implements Serializable {
         ArrayList<Event> nonvip = nonVipEvents(c);
         boolean flag = false;
         for(Event e: nonvip) {
-            if (e.getAttendeeCapacity() < e.getAttendeeEmails().size()) {
+            if (e.getAttendeeCapacity() > e.getAttendeeEmails().size()) {
+                assert u != null;
                 u.attendEvent(e.getEventId());
                 e.addAttendee(u.getEmail());
                 flag = true;
@@ -178,7 +179,7 @@ public class ConferenceManager implements Serializable {
         }
         if (u!=null&&u.userType() == 'V'){
             for(Event event: vip){
-                if(event.getAttendeeCapacity() < event.getAttendeeEmails().size()){
+                if(event.getAttendeeCapacity() > event.getAttendeeEmails().size()){
                     Entities.VIP v = (Entities.VIP) u;
                     v.attendVipEvent(event.getEventId());
                     event.addAttendee(u.getEmail());
