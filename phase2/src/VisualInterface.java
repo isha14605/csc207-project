@@ -3083,6 +3083,10 @@ class Test {
                         eM = new EventSave().read();
                         eventSystem.addTechEvent(eM.getEventIds().get(eM.getEventIds().size()-1),
                                 list.getSelectedItem().toString());
+                        new ConferencePresenter(eventSystem).addingEvents(type.toString(),nameText.getText(),
+                                descText.getText(), timeOptionsS.getItemAt(timeOptionsS.getSelectedIndex()),
+                                timeOptionE.getItemAt(timeOptionE.getSelectedIndex()), date.getText(),
+                                Integer.parseInt(capacityText.getText()), vip);
                     } catch (IOException ioException) {
                         ioException.printStackTrace();
                     }
@@ -3270,6 +3274,10 @@ class Test {
                             rS.setVisible(true);
                         }else{
                             JOptionPane.showMessageDialog(cr, "Room wasn't added");
+                            new ConferencePresenter(es).addingRoom(roomNameI.getText(),
+                                    Integer.parseInt(capacity.getText()),
+                                    Objects.requireNonNull(timeOptionsS.getSelectedItem()).toString(),
+                                    Objects.requireNonNull(timeOptionE.getSelectedItem()).toString());
                         }
                     } catch (IOException ioException) {
                         ioException.printStackTrace();

@@ -140,6 +140,8 @@ public class EventSystem{
         }if(!em.checkValidTime(start,end)){
             return false;
         }
+        rm.create_room(name,capacity,em.dateFormattingTime(start),em.dateFormattingTime(end));
+        new RoomSave().save(rm);
         return true;
     }
 
